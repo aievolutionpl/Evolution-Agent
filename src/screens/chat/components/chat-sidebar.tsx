@@ -933,19 +933,27 @@ function ChatSidebarComponent({
                 to="/chat"
                 className={cn(
                   buttonVariants({ variant: 'ghost', size: 'sm' }),
-                  'w-full pl-1.5 justify-start gap-2',
+                  'w-full pl-1.5 justify-start gap-2 h-auto py-1.5',
                 )}
               >
                 <img
-                  src="/claude-avatar.webp"
-                  alt="Hermes Agent"
-                  className="size-6 rounded-lg"
+                  src="/aievolutionlabs-logo.svg"
+                  alt="AI Evolution Labs"
+                  className="size-7 rounded-md"
                 />
-                <span
-                  className="text-sm font-semibold tracking-tight"
-                  style={{ color: 'var(--theme-text)' }}
-                >
-                  Hermes Workspace
+                <span className="flex flex-col items-start leading-tight">
+                  <span
+                    className="text-sm font-semibold tracking-tight"
+                    style={{ color: 'var(--theme-text)' }}
+                  >
+                    Hermes
+                  </span>
+                  <span
+                    className="text-[10px] uppercase tracking-[0.12em]"
+                    style={{ color: 'var(--theme-accent)' }}
+                  >
+                    AI Evolution Labs
+                  </span>
                 </span>
               </Link>
             </motion.div>

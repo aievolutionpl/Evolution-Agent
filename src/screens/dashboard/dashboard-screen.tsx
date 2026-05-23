@@ -51,6 +51,7 @@ import { cn } from '@/lib/utils'
 import { applyTheme, useSettingsStore } from '@/hooks/use-settings'
 import { openHamburgerMenu } from '@/components/mobile-hamburger-menu'
 import { useFeatureAvailable } from '@/hooks/use-feature-available'
+import { AIEvolutionLabsHeroCard } from '@/screens/dashboard/components/aievolutionlabs-hero-card'
 
 // `IconSvgObject` isn't exported from @hugeicons/react; reuse the
 // inferred type from a real icon import for prop typing.
@@ -873,6 +874,9 @@ export function DashboardScreen() {
         </button>
       </div>
       <div className="px-4 pt-14 md:pt-4 py-4 md:px-8 md:py-6 lg:px-10 space-y-5 pb-28">
+      {/* AI Evolution Labs brand hero — links to aievolutionlabs.io */}
+      <AIEvolutionLabsHeroCard />
+
       {/* ── Header: brand lockup left, action cluster right.
            Iteration 010: dropped redundant "Dashboard" eyebrow (the
            page IS the dashboard); promoted "Hermes Workspace" to

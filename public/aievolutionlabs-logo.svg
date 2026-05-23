@@ -1,0 +1,65 @@
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AI Evolution Labs">
+  <defs>
+    <linearGradient id="ael-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#02110F"/>
+      <stop offset="55%" stop-color="#03261F"/>
+      <stop offset="100%" stop-color="#000A08"/>
+    </linearGradient>
+    <linearGradient id="ael-cyan" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#7DF9FF"/>
+      <stop offset="55%" stop-color="#00E5FF"/>
+      <stop offset="100%" stop-color="#00B8D4"/>
+    </linearGradient>
+    <linearGradient id="ael-cyan-bevel" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#B8FFFF"/>
+      <stop offset="50%" stop-color="#00E5FF"/>
+      <stop offset="100%" stop-color="#0085A8"/>
+    </linearGradient>
+    <filter id="ael-glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <pattern id="ael-pcb" x="0" y="0" width="64" height="64" patternUnits="userSpaceOnUse">
+      <rect width="64" height="64" fill="transparent"/>
+      <path d="M 0 32 L 22 32 L 28 26 L 36 26 L 42 32 L 64 32" stroke="#0EAA63" stroke-width="0.6" fill="none" opacity="0.45"/>
+      <path d="M 32 0 L 32 22 L 26 28 L 26 36 L 32 42 L 32 64" stroke="#0EAA63" stroke-width="0.6" fill="none" opacity="0.45"/>
+      <circle cx="32" cy="32" r="1.6" fill="#7DFF8A" opacity="0.6"/>
+      <circle cx="0" cy="0" r="0.9" fill="#00E5FF" opacity="0.5"/>
+    </pattern>
+  </defs>
+
+  <!-- rounded square plate with subtle PCB texture -->
+  <rect x="12" y="12" width="488" height="488" rx="96" fill="url(#ael-bg)"/>
+  <rect x="12" y="12" width="488" height="488" rx="96" fill="url(#ael-pcb)" opacity="0.5"/>
+  <rect x="12" y="12" width="488" height="488" rx="96" fill="none" stroke="url(#ael-cyan)" stroke-width="3" opacity="0.85"/>
+
+  <!-- AI monogram – inspired by AI Evolution Labs brand mark -->
+  <g filter="url(#ael-glow)">
+    <!-- letter A -->
+    <g fill="none" stroke="url(#ael-cyan-bevel)" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M 122 360 L 196 152 L 270 360" stroke-width="34"/>
+      <line x1="150" y1="288" x2="242" y2="288" stroke-width="22"/>
+    </g>
+    <!-- letter I -->
+    <rect x="320" y="148" width="38" height="218" rx="6" fill="url(#ael-cyan-bevel)"/>
+
+    <!-- inner cyan highlight to suggest glass / depth -->
+    <g fill="none" stroke="#B8FFFF" stroke-width="3" opacity="0.55">
+      <path d="M 132 358 L 200 168 L 262 358"/>
+      <line x1="156" y1="290" x2="236" y2="290"/>
+      <rect x="324" y="152" width="30" height="210" rx="4"/>
+    </g>
+  </g>
+
+  <!-- evolution labs wordmark -->
+  <g font-family="Inter, sans-serif" font-weight="600" letter-spacing="4">
+    <text x="256" y="430" font-size="40" fill="url(#ael-cyan)" text-anchor="middle">EVOLUTION LABS</text>
+  </g>
+
+  <!-- corner accent dots (lime + cyan) -->
+  <circle cx="456" cy="56" r="4" fill="#7DFF8A"/>
+  <circle cx="56" cy="456" r="4" fill="#00E5FF" opacity="0.7"/>
+</svg>

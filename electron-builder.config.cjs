@@ -1,8 +1,8 @@
 module.exports = {
-  appId: 'com.hermesworkspace.app',
-  productName: 'hermes-workspace',
-  copyright: 'Copyright © 2026 hermes-workspace',
-  icon: 'assets/icon.png',
+  appId: 'io.aievolutionlabs.hermes',
+  productName: 'Hermes AIEL',
+  copyright: 'Copyright © 2026 AI Evolution Labs',
+  icon: 'public/aievolutionlabs-icon-1024.png',
   directories: {
     output: 'release',
     buildResources: 'assets',
@@ -23,15 +23,15 @@ module.exports = {
   npmArgs: ['--ignore-scripts'],
   nodeGypRebuild: false,
   mac: {
-    category: 'public.app-category.developer-tools',
+    category: 'public.app-category.business',
     target: [{ target: 'dmg', arch: ['arm64', 'x64'] }],
     darkModeSupport: true,
     hardenedRuntime: false,
     gatekeeperAssess: false,
   },
   dmg: {
-    title: 'Hermes Workspace',
-    iconSize: 80,
+    title: 'Hermes — AI Evolution Labs',
+    iconSize: 96,
     contents: [
       { x: 130, y: 220 },
       { x: 410, y: 220, type: 'link', path: '/Applications' },
@@ -45,11 +45,12 @@ module.exports = {
     perMachine: false,
     allowToChangeInstallationDirectory: false,
     deleteAppDataOnUninstall: false,
+    shortcutName: 'Hermes AIEL',
   },
   publish: {
     provider: 'github',
-    owner: 'outsourc-e',
-    repo: 'hermes-workspace',
+    owner: 'aievolutionpl',
+    repo: 'hermes-aievolutionlaba',
     releaseType: 'release',
   },
   asar: false,

@@ -1,8 +1,13 @@
 {
-  "name": "hermes-workspace",
-  "version": "2.3.0",
-  "description": "Desktop workspace for Hermes Agent — chat, orchestration, and multi-agent coding pipelines",
-  "author": "Eric (https://github.com/outsourc-e)",
+  "name": "hermes-aievolutionlabs",
+  "version": "3.0.0",
+  "description": "Hermes by AI Evolution Labs — business AI agent workspace for sales, ops, marketing & automation",
+  "author": "AI Evolution Labs (https://aievolutionlabs.io)",
+  "homepage": "https://aievolutionlabs.io",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aievolutionpl/hermes-aievolutionlaba"
+  },
   "license": "MIT",
   "private": true,
   "type": "module",

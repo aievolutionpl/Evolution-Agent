@@ -1,5 +1,10 @@
 import { HugeiconsIcon } from '@hugeicons/react'
-import { BrainIcon, CodeIcon, PuzzleIcon } from '@hugeicons/core-free-icons'
+import {
+  Analytics01Icon,
+  Mail01Icon,
+  Search01Icon,
+  Settings02Icon,
+} from '@hugeicons/core-free-icons'
 import { motion } from 'motion/react'
 import { useEffect, useState } from 'react'
 
@@ -11,27 +16,42 @@ type ProfileSummary = {
 
 type SuggestionChip = {
   label: string
+  description: string
   prompt: string
   icon: unknown
 }
 
+// Business-focused shortcuts — AI Evolution Labs flagship workflows.
+// Click a chip → composer is pre-filled with a prompt that produces a
+// real deliverable on the first turn.
 const SUGGESTIONS: Array<SuggestionChip> = [
   {
-    label: 'Analyze workspace',
+    label: 'Client brief / proposal',
+    description: 'Draft a tailored proposal or pitch in minutes',
     prompt:
-      'Analyze this workspace structure and give me 3 engineering risks. Use tools and keep it concise.',
-    icon: CodeIcon,
+      'Draft a 1-page client proposal. Ask me 3 short questions first (industry, goal, budget band), then produce: problem framing, proposed approach (3 phases), deliverables, timeline, price band. Keep it executive, no fluff.',
+    icon: Mail01Icon,
   },
   {
-    label: 'Save a preference',
+    label: 'Business report / analysis',
+    description: 'KPIs, executive recaps, weekly reviews',
     prompt:
-      'Save this to memory exactly: "For demos, respond in 3 bullets max and put risk first." Then confirm saved.',
-    icon: BrainIcon,
+      'Help me produce a weekly business report. Ask which data sources I have (sheet, CRM, file). Then generate: headline KPIs, week-over-week deltas, 3 wins, 3 risks, 3 next-week priorities. Output as markdown ready to paste into Notion.',
+    icon: Analytics01Icon,
   },
   {
-    label: 'Create a file',
-    prompt: 'Create demo-checklist.md with 5 launch checks for this app.',
-    icon: PuzzleIcon,
+    label: 'Workflow automation',
+    description: 'Multi-step recipes — cron, MCP, integrations',
+    prompt:
+      'Design a workflow automation for me. Ask what manual task I want to remove (1-2 sentences). Then propose: trigger, steps, tools/MCP integrations to use, exit criteria, and how I can run it from this workspace. End with a runnable plan.',
+    icon: Settings02Icon,
+  },
+  {
+    label: 'Market intelligence',
+    description: 'Competitor scan, news monitor, due diligence',
+    prompt:
+      'Run a competitor scan. Ask for 2-4 competitor names or URLs and my own positioning. Then deliver a teardown: positioning, pricing tier, audience, channels, top claims, content cadence, gaps I can exploit. Output as a comparison table + 5-bullet "where we win".',
+    icon: Search01Icon,
   },
 ]
 
@@ -66,60 +86,58 @@ export function ChatEmptyState({
       transition={{ duration: 0.3, ease: 'easeOut' }}
       className="flex h-full flex-col items-center justify-center px-4 py-8"
     >
-      <div className="flex max-w-xl flex-col items-center text-center">
-        {/* Avatar in editorial frame, no glow — architectural restraint */}
+      <div className="flex max-w-2xl flex-col items-center text-center">
+        {/* AI Evolution Labs brand mark */}
         <div className="relative mb-6">
           <img
-            src="/claude-avatar.webp"
-            alt="Hermes Agent"
-            className="relative size-20 rounded-md"
+            src="/aievolutionlabs-logo.svg"
+            alt="AI Evolution Labs"
+            className="relative size-20 rounded-lg"
             style={{
-              border: '1px solid var(--theme-border)',
-              padding: '4px',
+              border: '1px solid var(--theme-accent-border)',
+              padding: '6px',
               background: 'var(--theme-card)',
+              boxShadow:
+                '0 0 32px color-mix(in srgb, var(--theme-accent) 22%, transparent)',
             }}
           />
         </div>
 
-        {/* Editorial micro-label */}
         <p
           className="micro-label mb-2"
-          style={{ color: 'var(--theme-muted)' }}
+          style={{ color: 'var(--theme-accent)' }}
         >
-          Hermes Workspace
+          AI Evolution Labs · Hermes
         </p>
 
-        {/* Editorial display title */}
         <h2
           className="editorial-display text-3xl"
           style={{ color: 'var(--theme-text)' }}
         >
-          Begin a session
+          Your business. Automated.
         </h2>
 
         {activeProfile && (
-          <span className="mt-2 text-xs" style={{ color: 'var(--theme-accent)' }}>
+          <span className="mt-2 text-xs" style={{ color: 'var(--theme-accent-secondary)' }}>
             {activeProfile.name}
             {activeProfile.model ? ` · ${activeProfile.model}` : ''}
           </span>
         )}
 
         {!compact && (
-          <>
-            <p className="mt-3 text-sm" style={{ color: 'var(--theme-muted)' }}>
-              Agent chat · live tools · memory · full observability
-            </p>
-          </>
+          <p className="mt-3 text-sm" style={{ color: 'var(--theme-muted)' }}>
+            Pick a business workflow — or just describe what you need.
+          </p>
         )}
 
-        {/* Prompt chips */}
-        <div className="mt-6 flex flex-wrap justify-center gap-2">
+        {/* Business shortcuts — 2x2 grid on >sm, stacked on mobile */}
+        <div className="mt-7 grid w-full grid-cols-1 gap-2.5 sm:grid-cols-2">
           {SUGGESTIONS.map((suggestion) => (
             <button
               key={suggestion.label}
               type="button"
               onClick={() => onSuggestionClick?.(suggestion.prompt)}
-              className="flex cursor-pointer items-center gap-2 rounded-md px-3.5 py-2 text-xs font-medium transition-all"
+              className="group flex cursor-pointer items-start gap-3 rounded-lg p-3.5 text-left transition-all"
               style={{
                 background: 'var(--theme-card)',
                 border: '1px solid var(--theme-border)',
@@ -128,19 +146,43 @@ export function ChatEmptyState({
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = 'var(--theme-card2)'
                 e.currentTarget.style.borderColor = 'var(--theme-accent-border)'
+                e.currentTarget.style.boxShadow =
+                  '0 0 18px color-mix(in srgb, var(--theme-accent) 16%, transparent)'
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = 'var(--theme-card)'
                 e.currentTarget.style.borderColor = 'var(--theme-border)'
+                e.currentTarget.style.boxShadow = 'none'
               }}
             >
-              <HugeiconsIcon
-                icon={suggestion.icon as any}
-                size={14}
-                strokeWidth={1.5}
-                style={{ color: 'var(--theme-accent)' }}
-              />
-              {suggestion.label}
+              <div
+                className="flex size-9 shrink-0 items-center justify-center rounded-md"
+                style={{
+                  background: 'var(--theme-accent-subtle)',
+                  border: '1px solid var(--theme-accent-border)',
+                }}
+              >
+                <HugeiconsIcon
+                  icon={suggestion.icon as any}
+                  size={18}
+                  strokeWidth={1.6}
+                  style={{ color: 'var(--theme-accent)' }}
+                />
+              </div>
+              <div className="flex flex-col items-start gap-0.5">
+                <span
+                  className="text-sm font-semibold"
+                  style={{ color: 'var(--theme-text)' }}
+                >
+                  {suggestion.label}
+                </span>
+                <span
+                  className="text-[11px] leading-snug"
+                  style={{ color: 'var(--theme-muted)' }}
+                >
+                  {suggestion.description}
+                </span>
+              </div>
             </button>
           ))}
         </div>

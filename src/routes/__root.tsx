@@ -47,8 +47,10 @@ const APP_CSP = [
 ].join('; ')
 
 const THEME_STORAGE_KEY = 'claude-theme'
-const DEFAULT_THEME = 'claude-nous'
+const DEFAULT_THEME = 'aievolution'
 const VALID_THEMES = [
+  'aievolution',
+  'aievolution-light',
   'claude-nous',
   'claude-nous-light',
   'claude-official',
@@ -67,7 +69,7 @@ const themeScript = `
     const root = document.documentElement
     const storedTheme = localStorage.getItem('${THEME_STORAGE_KEY}')
     const theme = ${JSON.stringify(VALID_THEMES)}.includes(storedTheme) ? storedTheme : '${DEFAULT_THEME}'
-    const lightThemes = ['claude-nous-light', 'claude-official-light', 'claude-classic-light', 'claude-slate-light']
+    const lightThemes = ['aievolution-light', 'claude-nous-light', 'claude-official-light', 'claude-classic-light', 'claude-slate-light']
     const isDark = !lightThemes.includes(theme)
     root.classList.remove('light', 'dark', 'system')
     root.classList.add(isDark ? 'dark' : 'light')
@@ -90,6 +92,8 @@ const themeColorScript = `
     const root = document.documentElement
     const theme = root.getAttribute('data-theme') || '${DEFAULT_THEME}'
     const colors = {
+      'aievolution': '#02110F',
+      'aievolution-light': '#F0FCFC',
       'claude-nous': '#031A1A',
       'claude-nous-light': '#F8FAF8',
       'claude-official': '#0A0E1A',
@@ -100,7 +104,7 @@ const themeColorScript = `
       'claude-slate-light': '#F6F8FA',
     }
     const nextColor = colors[theme] || colors['${DEFAULT_THEME}']
-    const isDark = !['claude-nous-light', 'claude-official-light', 'claude-classic-light', 'claude-slate-light'].includes(String(theme))
+    const isDark = !['aievolution-light', 'claude-nous-light', 'claude-official-light', 'claude-classic-light', 'claude-slate-light'].includes(String(theme))
 
     let meta = document.querySelector('meta[name="theme-color"]')
     if (!meta) {
@@ -126,12 +130,12 @@ export const Route = createRootRoute({
           'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-visual',
       },
       {
-        title: 'Hermes Workspace',
+        title: 'Hermes — AI Evolution Labs',
       },
       {
         name: 'description',
         content:
-          'Hermes Agent workspace for chat, tools, files, memory, and jobs.',
+          'Hermes by AI Evolution Labs — business AI agent for briefs, reports, automations, and market research.',
       },
       {
         property: 'og:image',
@@ -170,8 +174,14 @@ export const Route = createRootRoute({
       },
       {
         rel: 'icon',
+        type: 'image/svg+xml',
+        href: '/favicon.svg',
+      },
+      {
+        rel: 'icon',
         type: 'image/png',
-        href: '/claude-avatar.png',
+        sizes: '192x192',
+        href: '/aievolutionlabs-icon-192.png',
       },
       // PWA manifest and icons
       {
