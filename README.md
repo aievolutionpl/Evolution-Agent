@@ -2,7 +2,7 @@
 
 <img src="./public/aievolutionlabs-logo.svg" alt="AI Evolution Labs" width="140" />
 
-# Hermes — AI Evolution Labs
+# Jarvis — AI Evolution Labs
 
 ### **Your business. Automated.**
 
@@ -29,9 +29,17 @@ The business AI agent workspace from **[AI Evolution Labs](https://aievolutionla
 
 ---
 
-## 🤖 What is Hermes?
+<div align="center">
+  <img src="./public/screenshots/dashboard-v3.png" alt="Jarvis dashboard preview" width="88%" />
+  <br />
+  <sub><b>Jarvis</b> — AI Evolution Labs agent dashboard preview.</sub>
+</div>
 
-**Hermes** is the flagship AI agent of **AI Evolution Labs** — a complete business operations workspace that runs autonomous agents for your company.
+---
+
+## 🤖 What is Jarvis?
+
+**Jarvis** is the flagship AI agent of **AI Evolution Labs** — a complete business operations workspace that runs autonomous agents for your company.
 
 It is **not** another chat wrapper. It is a full command center where one or many AI agents work alongside your team — preparing client briefs, generating reports, automating workflows, monitoring competitors, and handling repetitive business tasks while your humans focus on decisions.
 
@@ -41,7 +49,7 @@ It is **not** another chat wrapper. It is a full command center where one or man
 
 ## 💼 Built for business
 
-Hermes ships with first-class **business shortcuts** on the home screen — one click to launch the workflows your team actually runs:
+Jarvis ships with first-class **business shortcuts** on the home screen — one click to launch the workflows your team actually runs:
 
 <table>
 <tr>
@@ -74,7 +82,7 @@ Competitor scans, market scans, news monitoring, due-diligence packages. Output 
 </tr>
 </table>
 
-Hermes turns every team — sales, ops, marketing, finance, customer success — into an AI-augmented team.
+Jarvis turns every team — sales, ops, marketing, finance, customer success — into an AI-augmented team.
 
 ---
 
@@ -127,7 +135,7 @@ cp .env.example .env
 docker compose up -d
 ```
 
-Pulls pre-built images (`hermes-agent` gateway + Hermes UI). Open **[http://localhost:3000](http://localhost:3000)**.
+Pulls pre-built images (`hermes-agent` gateway + Jarvis UI). Open **[http://localhost:3000](http://localhost:3000)**.
 
 ### Path 3 — Local dev
 
@@ -145,20 +153,20 @@ pnpm dev
 
 ## 📦 Install as a desktop app
 
-Hermes ships as a real desktop application with a branded icon.
+Jarvis ships as a real desktop application with a branded icon.
 
 ### Install as PWA (any platform, 1 click)
 
 1. Open **[http://localhost:3000](http://localhost:3000)** in Chrome / Edge / Safari
-2. Click the **install icon** in the address bar (or `⋮ → Install Hermes AIEL`)
+2. Click the **install icon** in the address bar (or `⋮ → Install Jarvis AIEL`)
 3. The shortcut lands on your desktop with the **AI Evolution Labs logo**
 4. Launches as a standalone window — no browser chrome
 
 ### Build as native Electron app (`.dmg` / `.exe`)
 
 ```bash
-pnpm electron:build:mac      # → release/Hermes AIEL-3.0.0.dmg
-pnpm electron:build:win      # → release/Hermes AIEL Setup 3.0.0.exe
+pnpm electron:build:mac      # → release/Jarvis AIEL-3.0.0.dmg
+pnpm electron:build:win      # → release/Jarvis AIEL Setup 3.0.0.exe
 ```
 
 The installer creates a desktop shortcut using `public/aievolutionlabs-icon-1024.png`. See **[docs/branding.md](./docs/branding.md)** for the icon export workflow.
@@ -167,9 +175,9 @@ The installer creates a desktop shortcut using `public/aievolutionlabs-icon-1024
 
 ## 🌍 Onboarding — in your language
 
-First time opening Hermes? A **welcome panel** opens automatically and explains:
+First time opening Jarvis? A **welcome panel** opens automatically and explains:
 
-- 🤖 **What Hermes is** — an autonomous business agent, not a chatbot
+- 🤖 **What Jarvis is** — an autonomous business agent, not a chatbot
 - 🎯 **What it can do** — briefs, reports, automations, research
 - 🧭 **How to use it** — chat, conductor, swarm, MCP, skills
 - 🚀 **A starter task** — one click launches your first real deliverable
@@ -184,17 +192,17 @@ Re-open it any time from the sidebar footer.
 
 The default theme matches the AI Evolution Labs brand identity — **deep black surfaces, electric cyan accents (`#00E5FF`), neon lime PCB highlights (`#7DFF8A`)**. A flagship-grade business interface inspired by the energy of the brand.
 
-Want something else? Hermes ships with **13 other themes** — Nous, Matrix, Bronze, Slate, SciFi, light + dark variants. Pick from **Settings → Appearance**.
+Want something else? Jarvis ships with **13 other themes** — Nous, Matrix, Bronze, Slate, SciFi, light + dark variants. Pick from **Settings → Appearance**.
 
 ---
 
 ## 🧱 Architecture
 
-Hermes by AI Evolution Labs is a **zero-fork workspace** built on top of vanilla [`hermes-agent`](https://github.com/NousResearch/hermes-agent) by Nous Research. We don't patch the agent runtime — we wrap it with a business-first UI, brand identity, business shortcuts, multilingual onboarding, and integrations.
+Jarvis by AI Evolution Labs is a **zero-fork workspace** built on top of vanilla [`hermes-agent`](https://github.com/NousResearch/hermes-agent) by Nous Research. We don't patch the agent runtime — we wrap it with a business-first UI, brand identity, business shortcuts, multilingual onboarding, and integrations.
 
 ```
 ┌───────────────────────────────────────────────────────────────┐
-│           Hermes by AI Evolution Labs (this repo)             │
+│           Jarvis by AI Evolution Labs (this repo)             │
 │                                                                │
 │   Chat · Dashboard · Conductor · Swarm · Skills · MCP · …     │
 │   AI Evolution Labs brand · Business shortcuts · Onboarding   │
@@ -269,7 +277,7 @@ If you discover a vulnerability, please follow the responsible disclosure proces
 
 [MIT](./LICENSE) — © 2026 AI Evolution Labs.
 
-Built on top of [`hermes-agent`](https://github.com/NousResearch/hermes-agent) by [Nous Research](https://nousresearch.com/), used under its license. Original Hermes Workspace UI scaffolding © 2026 Eric (outsourc-e), MIT.
+Built on top of [`hermes-agent`](https://github.com/NousResearch/hermes-agent) by [Nous Research](https://nousresearch.com/), used under its license. Original Jarvis Workspace UI scaffolding © 2026 Eric (outsourc-e), MIT.
 
 ---
 
