@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🌐 AI Evolution Labs
+    url: https://aievolutionlabs.io
+    about: Visit the company website
+  - name: 🛡️ Security disclosure
+    url: https://github.com/aievolutionpl/hermes-aievolutionlaba/blob/main/SECURITY.md
+    about: Report a security vulnerability privately

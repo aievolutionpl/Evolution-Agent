@@ -1,0 +1,41 @@
+name: ✨ Feature request
+description: Suggest an idea for Hermes by AI Evolution Labs
+title: "feat: "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: What business workflow is currently painful?
+      placeholder: I want Hermes to draft my weekly sales recap automatically each Friday at 5pm…
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Your proposal
+      description: What would Hermes do? Where in the UI would it live?
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which area?
+      options:
+        - Chat / business shortcuts
+        - Dashboard
+        - Conductor / Swarm
+        - Skills library
+        - MCP integrations
+        - Onboarding / translation
+        - Theming / brand
+        - Desktop install
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you considered
+      description: What workarounds exist today? Why isn't a skill / a custom prompt enough?

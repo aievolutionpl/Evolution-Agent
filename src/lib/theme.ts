@@ -1,4 +1,6 @@
 export type ThemeId =
+  | 'aievolution'
+  | 'aievolution-light'
   | 'claude-nous'
   | 'claude-nous-light'
   | 'matrix'
@@ -18,6 +20,18 @@ export const THEMES: Array<{
   description: string
   icon: string
 }> = [
+  {
+    id: 'aievolution',
+    label: 'AI Evolution Labs',
+    description: 'Brand theme — black surfaces with electric cyan and lime PCB accents',
+    icon: '⚡',
+  },
+  {
+    id: 'aievolution-light',
+    label: 'AI Evolution Light',
+    description: 'Cool paper white with cyan accents — brand theme, daylight mode',
+    icon: '⚡',
+  },
   {
     id: 'claude-nous',
     label: 'Nous',
@@ -93,12 +107,13 @@ export const THEMES: Array<{
 ]
 
 const STORAGE_KEY = 'claude-theme'
-const DEFAULT_THEME: ThemeId = 'claude-nous'
+const DEFAULT_THEME: ThemeId = 'aievolution'
 const THEME_SET = new Set<ThemeId>(THEMES.map((theme) => theme.id))
 const LIGHT_THEME_MAP: Record<
   Exclude<ThemeId, `${string}-light`>,
   Extract<ThemeId, `${string}-light`>
 > = {
+  aievolution: 'aievolution-light',
   'claude-nous': 'claude-nous-light',
   matrix: 'matrix-light',
   'claude-official': 'claude-official-light',
@@ -110,6 +125,7 @@ const DARK_THEME_MAP: Record<
   Extract<ThemeId, `${string}-light`>,
   Exclude<ThemeId, `${string}-light`>
 > = {
+  'aievolution-light': 'aievolution',
   'claude-nous-light': 'claude-nous',
   'matrix-light': 'matrix',
   'claude-official-light': 'claude-official',
@@ -119,6 +135,7 @@ const DARK_THEME_MAP: Record<
 }
 
 const LIGHT_THEMES = new Set<ThemeId>([
+  'aievolution-light',
   'claude-nous-light',
   'matrix-light',
   'claude-official-light',

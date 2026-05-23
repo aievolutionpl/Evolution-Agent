@@ -41,6 +41,7 @@ import { ClaudeReconnectBanner } from '@/components/claude-reconnect-banner'
 import { useMobileKeyboard } from '@/hooks/use-mobile-keyboard'
 import { SystemMetricsFooter } from '@/components/system-metrics-footer'
 import { CommandPalette } from '@/components/command-palette'
+import { WelcomeTourPanel } from '@/components/onboarding/welcome-tour-panel'
 import { useSettings } from '@/hooks/use-settings'
 // ActivityTicker moved to dashboard-only (too noisy for global header)
 
@@ -329,10 +330,10 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
             {/* Centered title */}
             <div className="flex-1 text-center">
               <span
-                className="text-[13px] font-medium select-none"
-                style={{ color: 'var(--theme-accent, #B98A44)' }}
+                className="text-[13px] font-medium select-none tracking-wide"
+                style={{ color: 'var(--theme-accent, #00E5FF)' }}
               >
-                Hermes
+                AI Evolution Labs · Hermes
               </span>
             </div>
             {/* Right spacer to balance */}
@@ -459,6 +460,7 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
         <SystemMetricsFooter leftOffsetPx={sidebarCollapsed ? 48 : 300} />
       ) : null}
       {!isChromeFreeSurface ? <CommandPalette pathname={pathname} sessions={sessions} /> : null}
+      {!isChromeFreeSurface ? <WelcomeTourPanel /> : null}
     </>
   )
 }

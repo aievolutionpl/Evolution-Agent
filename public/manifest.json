@@ -1,28 +1,54 @@
 {
-  "name": "Hermes Workspace",
-  "short_name": "Hermes",
-  "description": "Installable control surface for Hermes Agent chat, tools, files, memory, jobs, and agent workflows.",
-  "id": "/?app=hermes-workspace",
+  "name": "Hermes — AI Evolution Labs",
+  "short_name": "Hermes AIEL",
+  "description": "Business AI agent workspace by AI Evolution Labs — briefs, reports, automations, market research.",
+  "id": "/?app=hermes-aievolutionlabs",
   "start_url": "/?source=pwa",
   "scope": "/",
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone", "browser"],
   "orientation": "any",
-  "background_color": "#0A0E1A",
-  "theme_color": "#031A1A",
-  "categories": ["productivity", "utilities", "developer"],
+  "background_color": "#000000",
+  "theme_color": "#00E5FF",
+  "categories": ["productivity", "business", "utilities"],
   "icons": [
     {
-      "src": "/claude-icon-192.png",
+      "src": "/aievolutionlabs-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/aievolutionlabs-icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/claude-icon-512.png",
+      "src": "/aievolutionlabs-icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "New chat",
+      "short_name": "Chat",
+      "url": "/chat",
+      "description": "Open a fresh agent chat session"
+    },
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "url": "/dashboard",
+      "description": "Business KPIs, sessions, cost ledger"
+    },
+    {
+      "name": "Conductor",
+      "short_name": "Conductor",
+      "url": "/conductor",
+      "description": "Decompose a goal into a mission"
     }
   ]
 }

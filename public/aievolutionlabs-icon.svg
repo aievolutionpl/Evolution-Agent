@@ -1,0 +1,40 @@
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AI Evolution Labs icon">
+  <defs>
+    <linearGradient id="ic-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#02110F"/>
+      <stop offset="55%" stop-color="#03261F"/>
+      <stop offset="100%" stop-color="#000A08"/>
+    </linearGradient>
+    <linearGradient id="ic-cyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#B8FFFF"/>
+      <stop offset="55%" stop-color="#00E5FF"/>
+      <stop offset="100%" stop-color="#0085A8"/>
+    </linearGradient>
+    <pattern id="ic-pcb" x="0" y="0" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M 0 24 L 16 24 L 22 18 L 28 18 L 34 24 L 48 24" stroke="#0EAA63" stroke-width="0.5" fill="none" opacity="0.5"/>
+      <path d="M 24 0 L 24 16 L 18 22 L 18 28 L 24 34 L 24 48" stroke="#0EAA63" stroke-width="0.5" fill="none" opacity="0.5"/>
+      <circle cx="24" cy="24" r="1.2" fill="#7DFF8A" opacity="0.6"/>
+    </pattern>
+    <filter id="ic-glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- maskable safe-zone: 102px padding all sides (512 * 0.2) -->
+  <rect x="0" y="0" width="512" height="512" fill="url(#ic-bg)"/>
+  <rect x="0" y="0" width="512" height="512" fill="url(#ic-pcb)" opacity="0.55"/>
+
+  <g filter="url(#ic-glow)">
+    <!-- letter A (centered, large for maskable safe-zone) -->
+    <g fill="none" stroke="url(#ic-cyan)" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M 130 376 L 210 152 L 290 376" stroke-width="46"/>
+      <line x1="160" y1="298" x2="260" y2="298" stroke-width="30"/>
+    </g>
+    <!-- letter I -->
+    <rect x="338" y="148" width="50" height="232" rx="8" fill="url(#ic-cyan)"/>
+  </g>
+</svg>
