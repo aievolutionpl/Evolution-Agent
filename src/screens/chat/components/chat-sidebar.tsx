@@ -576,6 +576,7 @@ function ChatSidebarComponent({
     pathname === '/new' || pathname.startsWith('/chat/new')
   const _isSettingsActive = pathname === '/settings'
   const isSkillsActive = pathname === '/skills'
+  const isPlaybooksActive = pathname === '/playbooks'
   const isMcpActive = pathname === '/mcp'
   const isFilesActive = pathname === '/files'
   const isPlaygroundActive = pathname === '/playground'
@@ -855,6 +856,13 @@ function ChatSidebarComponent({
       icon: BrainIcon,
       label: t('nav.memory'),
       active: isMemoryActive,
+    },
+    {
+      kind: 'link',
+      to: '/playbooks',
+      icon: Rocket01Icon,
+      label: 'Playbooks',
+      active: isPlaybooksActive,
     },
     {
       kind: 'link',

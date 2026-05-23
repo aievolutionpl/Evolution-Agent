@@ -114,6 +114,20 @@ const THEME_PREVIEWS: Record<
   ThemeId,
   { bg: string; panel: string; border: string; accent: string; text: string }
 > = {
+  aievolution: {
+    bg: '#02110f',
+    panel: '#03191a',
+    border: 'rgba(0,229,255,0.22)',
+    accent: '#00e5ff',
+    text: '#e8fffb',
+  },
+  'aievolution-light': {
+    bg: '#f0fcfc',
+    panel: '#f2fdfd',
+    border: 'rgba(0,133,168,0.2)',
+    accent: '#008fb0',
+    text: '#032d33',
+  },
   'claude-nous': {
     bg: '#031a1a',
     panel: '#082224',
