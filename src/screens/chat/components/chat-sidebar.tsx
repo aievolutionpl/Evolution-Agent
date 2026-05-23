@@ -577,6 +577,7 @@ function ChatSidebarComponent({
   const _isSettingsActive = pathname === '/settings'
   const isSkillsActive = pathname === '/skills'
   const isPlaybooksActive = pathname === '/playbooks'
+  const isCanvasActive = pathname === '/canvas'
   const isMcpActive = pathname === '/mcp'
   const isFilesActive = pathname === '/files'
   const isPlaygroundActive = pathname === '/playground'
@@ -863,6 +864,13 @@ function ChatSidebarComponent({
       icon: Rocket01Icon,
       label: 'Playbooks',
       active: isPlaybooksActive,
+    },
+    {
+      kind: 'link',
+      to: '/canvas',
+      icon: PencilEdit02Icon,
+      label: 'Canvas',
+      active: isCanvasActive,
     },
     {
       kind: 'link',

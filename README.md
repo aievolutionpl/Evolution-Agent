@@ -83,6 +83,9 @@ Hermes turns every team — sales, ops, marketing, finance, customer success —
 | | |
 |---|---|
 | 💬 **Chat with the agent** | Real-time streaming, rich tool calls, multi-session memory, markdown + code highlighting |
+| 🚀 **Playbooks** | Reusable parameterised recipes — save successful workflows, share as JSON, run in 1 click |
+| ✍️ **Deliverable Canvas** | Focused asset-production mode — fill a 5-field brief, generate, edit in markdown, version history |
+| 🔌 **Business Connectors Hub** | One-click integrations: Gmail, Slack, Notion, Drive, HubSpot, GitHub, Calendar (each with 3 sample workflows) |
 | 🧠 **Memory** | Persistent business knowledge, searchable, editable in a live markdown editor |
 | 🧩 **Skills library** | 2,000+ ready-to-use skills, badges, filters, marketplace |
 | 🔌 **MCP integrations** | Notion, Gmail, Slack, GitHub, Supabase, Figma, Canva, Vercel and more |
