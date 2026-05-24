@@ -220,8 +220,8 @@ export function ConnectionStartupScreen({ onConnected }: Props) {
     >
       <div className="flex w-full max-w-lg flex-col items-center text-center">
         <img
-          src="/claude-avatar.webp"
-          alt="Hermes Agent"
+          src="/logo.png"
+          alt="Evolution Agent"
           className="mb-5 h-20 w-20 rounded-2xl object-cover shadow-[0_12px_40px_rgba(0,0,0,0.45)]"
         />
 

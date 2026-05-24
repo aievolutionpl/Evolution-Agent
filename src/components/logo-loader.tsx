@@ -10,9 +10,9 @@ function LogoLoader({ className }: LogoLoaderProps) {
   return (
     <span className="logo-loader-track" aria-hidden="true">
       <img
-        src="/claude-avatar.webp"
+        src="/logo.png"
         alt=""
-        className={cn('logo-loader-icon size-4 rounded', className)}
+        className={cn('logo-loader-icon size-4 rounded-sm', className)}
       />
     </span>
   )
