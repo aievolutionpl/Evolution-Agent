@@ -479,19 +479,25 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             var quips = ["Consulting the oracle...","Loading ancient knowledge...","Warming up the messenger...","Calibrating tool chain...","Summoning your agent...","Preparing the workspace...","Bridging realms...","Initializing agent runtime..."];
             var quip = quips[Math.floor(Math.random() * quips.length)];
 
-            d.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:'+bg+';transition:opacity 0.5s ease;';
-            d.innerHTML = '<img src="/claude-avatar.webp" alt="Hermes Agent" style="width:80px;height:80px;margin-bottom:20px;border-radius:16px;filter:drop-shadow(0 8px 32px color-mix(in srgb,'+accent+' 45%, transparent))" />'
-              + '<img src="'+(isDark ? '/claude-banner.png' : '/claude-banner-light.png')+'" alt="Hermes Workspace" style="width:280px;height:auto;margin-bottom:8px;filter:drop-shadow(0 4px 16px '+(isDark ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.1)')+')" />'
-              + '<div style="font:400 14px/1 system-ui,-apple-system,sans-serif;letter-spacing:0.04em;color:'+muted+'">Workspace</div>'
-              + '<div style="margin-top:28px;width:140px;height:3px;background:'+(isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)')+';border-radius:3px;overflow:hidden;position:relative"><div id=splash-bar style="width:0%;height:100%;background:'+accent+';border-radius:3px;transition:width 0.4s ease"></div></div>';
+            d.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 35%,'+(isDark ? 'color-mix(in srgb,'+accent+' 14%, '+bg+')' : 'rgba(37,87,183,0.08)')+', '+bg+' 64%);transition:opacity 0.5s ease;';
+            d.innerHTML =
+              '<div style="position:relative;width:124px;height:124px;display:grid;place-items:center;margin-bottom:18px">'
+              + '<div style="position:absolute;inset:0;border-radius:999px;border:1px solid '+(isDark ? 'rgba(255,255,255,0.14)' : 'rgba(22,49,95,0.16)')+';animation:splashPulse 1.8s ease-in-out infinite"></div>'
+              + '<div style="position:absolute;inset:10px;border-radius:999px;border:1px solid '+(isDark ? 'rgba(255,172,2,0.42)' : 'rgba(37,87,183,0.26)')+';animation:splashPulse 2.2s ease-in-out infinite reverse"></div>'
+              + '<img src="/claude-avatar.webp" alt="Hermes Agent" style="position:relative;width:80px;height:80px;border-radius:20px;filter:drop-shadow(0 10px 28px color-mix(in srgb,'+accent+' 44%, transparent));animation:splashFloat 2.4s ease-in-out infinite" />'
+              + '</div>'
+              + '<img src="'+(isDark ? '/claude-banner.png' : '/claude-banner-light.png')+'" alt="Hermes Workspace" style="width:300px;max-width:82vw;height:auto;margin-bottom:8px;filter:drop-shadow(0 4px 16px '+(isDark ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.1)')+')" />'
+              + '<div id="splash-quip" style="font:500 13px/1.3 system-ui,-apple-system,sans-serif;letter-spacing:0.04em;color:'+muted+';min-height:17px">'+quip+'</div>'
+              + '<div style="margin-top:22px;width:196px;height:4px;background:'+(isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)')+';border-radius:999px;overflow:hidden;position:relative"><div id=splash-bar style="width:0%;height:100%;background:linear-gradient(90deg,'+accent+',color-mix(in srgb,'+accent+' 66%, white));border-radius:999px;transition:width 0.45s ease"></div></div>'
+              + '<style>@keyframes splashPulse{0%,100%{transform:scale(0.98);opacity:.72}50%{transform:scale(1.04);opacity:1}}@keyframes splashFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}</style>';
 
             var bar = document.getElementById('splash-bar');
             if (bar) {
-              setTimeout(function(){ bar.style.width='15%' }, 300);
-              setTimeout(function(){ bar.style.width='40%' }, 800);
-              setTimeout(function(){ bar.style.width='65%' }, 1500);
-              setTimeout(function(){ bar.style.width='85%' }, 2500);
-              setTimeout(function(){ bar.style.width='92%' }, 3200);
+              setTimeout(function(){ bar.style.width='18%' }, 180);
+              setTimeout(function(){ bar.style.width='44%' }, 680);
+              setTimeout(function(){ bar.style.width='69%' }, 1300);
+              setTimeout(function(){ bar.style.width='86%' }, 2200);
+              setTimeout(function(){ bar.style.width='94%' }, 3000);
             }
 
             window.__dismissSplash = function() {

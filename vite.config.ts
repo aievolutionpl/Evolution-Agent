@@ -476,8 +476,8 @@ const config = defineConfig(({ mode, command }) => {
       // Port precedence:
       //   1. --port CLI flag (wins, but we no longer hardcode it in package.json)
       //   2. $PORT env var (for containers, reverse proxies, WhatsApp bridge collisions, etc. — see #96)
-      //   3. default 3000 (matches README/docs/docker-compose expectations)
-      port: process.env.PORT ? Number(process.env.PORT) : 3000,
+      //   3. default 888 (3000 is often occupied locally)
+      port: process.env.PORT ? Number(process.env.PORT) : 888,
       strictPort: false, // allow fallback if port is taken, but log clearly
       allowedHosts: true,
       watch: {
