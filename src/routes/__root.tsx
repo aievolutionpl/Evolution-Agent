@@ -484,7 +484,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
               '<div style="position:relative;width:124px;height:124px;display:grid;place-items:center;margin-bottom:18px">'
               + '<div style="position:absolute;inset:0;border-radius:999px;border:1px solid '+(isDark ? 'rgba(255,255,255,0.14)' : 'rgba(22,49,95,0.16)')+';animation:splashPulse 1.8s ease-in-out infinite"></div>'
               + '<div style="position:absolute;inset:10px;border-radius:999px;border:1px solid '+(isDark ? 'rgba(255,172,2,0.42)' : 'rgba(37,87,183,0.26)')+';animation:splashPulse 2.2s ease-in-out infinite reverse"></div>'
-              + '<img src="/claude-avatar.webp" alt="Hermes Agent" style="position:relative;width:80px;height:80px;border-radius:20px;filter:drop-shadow(0 10px 28px color-mix(in srgb,'+accent+' 44%, transparent));animation:splashFloat 2.4s ease-in-out infinite" />'
+              + '<img src="/logo.png" alt="Evolution Agent" style="position:relative;width:80px;height:80px;border-radius:16px;object-fit:cover;filter:drop-shadow(0 10px 28px color-mix(in srgb,'+accent+' 44%, transparent));animation:splashFloat 2.4s ease-in-out infinite" />'
               + '</div>'
               + '<img src="'+(isDark ? '/claude-banner.png' : '/claude-banner-light.png')+'" alt="Hermes Workspace" style="width:300px;max-width:82vw;height:auto;margin-bottom:8px;filter:drop-shadow(0 4px 16px '+(isDark ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.1)')+')" />'
               + '<div id="splash-quip" style="font:500 13px/1.3 system-ui,-apple-system,sans-serif;letter-spacing:0.04em;color:'+muted+';min-height:17px">'+quip+'</div>'
