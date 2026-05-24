@@ -54,6 +54,7 @@ Then open the local URL shown in your terminal and start from the **Business Sho
 ## ✨ Why teams choose Hermes
 
 - **Production-focused agent workspace** — not just chat, but a real ops cockpit.
+- **Forked from Hermes, extended by AI Evolution Labs** — with a business dashboard and operator workflow layer designed for SMB teams.
 - **Business deliverables by default** — proposals, reports, analyses, workflows, and summaries.
 - **Multi-agent orchestration** — role-based workers for building, reviewing, QA, and research.
 - **Reusable skills and playbooks** — consistent outputs across teams.
@@ -159,6 +160,30 @@ This structure enables fast delegation without losing accountability.
 
 ---
 
+## 🧩 Built-in skills (what’s most important)
+
+Hermes in this repo includes **11 built-in skills** in the local `skills/` catalog:
+
+1. `workspace-dispatch` — safe multi-worker delegation and handoff conventions.
+2. `deep-research` — structured research with evidence and confidence notes.
+3. `operator-humanizer` — humanizes outputs for client-ready communication.
+4. `viral-content-architect` — social content systems focused on reach and retention.
+5. `universal-copywriter` — conversion-oriented copy across formats.
+6. `seo-audit-engine` — SEO diagnostics and prioritized optimization plans.
+7. `saas-ideation-and-pricing` — SaaS concept design and monetization models.
+8. `paid-ads-strategist` — channel strategy, budget logic, and KPI-driven testing.
+9. `ad-creator` — ad creative/copy variants for campaign execution.
+10. `make-automation-hub` — Make.com workflow architecture and reliability checklists.
+11. `skill-builder` — framework to create new reusable team skills.
+
+### Why this matters for small businesses
+
+- **Virtual employee behavior**: Hermes can act like an always-on teammate for ops, sales, and marketing execution.
+- **Marketing-first toolkit**: content, SEO, paid ads, and ad creation skills are available out of the box.
+- **Automation-ready workflows**: skills are structured to produce reusable outputs, not one-off chat replies.
+
+---
+
 ## 🛠️ Product tour
 
 ### Dashboard gallery
@@ -245,6 +270,7 @@ Następnie otwórz lokalny adres z terminala i zacznij od panelu **Business Shor
 ## ✨ Dlaczego zespoły wybierają Hermes
 
 - **Workspace pod realną pracę** — nie tylko czat, ale kompletne centrum operacyjne.
+- **Fork Hermesa rozbudowany przez AI Evolution Labs** — z dashboardem i warstwą operacyjną dla małych firm.
 - **Gotowe materiały biznesowe** — oferty, raporty, analizy, automatyzacje i podsumowania.
 - **Orkiestracja wielu agentów** — role do budowania, review, QA i researchu.
 - **Skille i playbooki wielokrotnego użytku** — spójna jakość odpowiedzi w całym zespole.
@@ -292,6 +318,26 @@ Następnie otwórz lokalny adres z terminala i zacznij od panelu **Business Shor
 </td>
 </tr>
 </table>
+
+---
+
+## 🧩 Najważniejsze skille (wbudowane)
+
+W tym repo Hermes ma **11 wbudowanych skilli** w katalogu `skills/`:
+
+1. `workspace-dispatch`
+2. `deep-research`
+3. `operator-humanizer`
+4. `viral-content-architect`
+5. `universal-copywriter`
+6. `seo-audit-engine`
+7. `saas-ideation-and-pricing`
+8. `paid-ads-strategist`
+9. `ad-creator`
+10. `make-automation-hub`
+11. `skill-builder`
+
+To praktycznie oznacza, że Hermes działa jak **wirtualny pracownik** dla SMB: pomaga w marketingu, tworzeniu reklam, analizie rynku i automatyzacjach procesów.
 
 ---
 
