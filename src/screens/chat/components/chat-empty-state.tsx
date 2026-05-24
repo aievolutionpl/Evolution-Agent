@@ -87,18 +87,19 @@ export function ChatEmptyState({
       className="flex h-full flex-col items-center justify-center px-4 py-8"
     >
       <div className="flex max-w-2xl flex-col items-center text-center">
-        {/* AI Evolution Labs brand mark */}
+        {/* Evolution Agent brand mark */}
         <div className="relative mb-6">
           <img
-            src="/aievolutionlabs-logo.svg"
-            alt="AI Evolution Labs"
-            className="relative size-20 rounded-lg"
+            src="/logo.png"
+            alt="Evolution Agent"
+            className="relative size-20 rounded-xl object-cover"
             style={{
-              border: '1px solid var(--theme-accent-border)',
+              border: '1px solid color-mix(in srgb, var(--theme-accent) 45%, var(--theme-border))',
               padding: '6px',
-              background: 'var(--theme-card)',
+              background:
+                'linear-gradient(155deg, var(--theme-card) 0%, var(--theme-card2) 100%)',
               boxShadow:
-                '0 0 32px color-mix(in srgb, var(--theme-accent) 22%, transparent)',
+                '0 14px 42px color-mix(in srgb, var(--theme-accent) 28%, transparent)',
             }}
           />
         </div>
@@ -107,14 +108,14 @@ export function ChatEmptyState({
           className="micro-label mb-2"
           style={{ color: 'var(--theme-accent)' }}
         >
-          AI Evolution Labs · Hermes
+          Evolution Agent
         </p>
 
         <h2
           className="editorial-display text-3xl"
           style={{ color: 'var(--theme-text)' }}
         >
-          Your business. Automated.
+          Build faster with Evolution Agent
         </h2>
 
         {activeProfile && (
@@ -126,7 +127,7 @@ export function ChatEmptyState({
 
         {!compact && (
           <p className="mt-3 text-sm" style={{ color: 'var(--theme-muted)' }}>
-            Pick a business workflow — or just describe what you need.
+            Choose a workflow to start quickly, or describe what you want to build.
           </p>
         )}
 
@@ -137,17 +138,20 @@ export function ChatEmptyState({
               key={suggestion.label}
               type="button"
               onClick={() => onSuggestionClick?.(suggestion.prompt)}
-              className="group flex cursor-pointer items-start gap-3 rounded-lg p-3.5 text-left transition-all"
+              className="group flex cursor-pointer items-start gap-3 rounded-xl p-3.5 text-left transition-all duration-200"
               style={{
-                background: 'var(--theme-card)',
-                border: '1px solid var(--theme-border)',
+                background:
+                  'linear-gradient(165deg, var(--theme-card) 0%, color-mix(in srgb, var(--theme-card2) 75%, transparent) 100%)',
+                border: '1px solid color-mix(in srgb, var(--theme-border) 80%, var(--theme-accent) 20%)',
                 color: 'var(--theme-text)',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'var(--theme-card2)'
-                e.currentTarget.style.borderColor = 'var(--theme-accent-border)'
+                e.currentTarget.style.background =
+                  'linear-gradient(165deg, var(--theme-card2) 0%, color-mix(in srgb, var(--theme-accent-subtle) 30%, var(--theme-card2)) 100%)'
+                e.currentTarget.style.borderColor =
+                  'color-mix(in srgb, var(--theme-accent) 45%, var(--theme-border))'
                 e.currentTarget.style.boxShadow =
-                  '0 0 18px color-mix(in srgb, var(--theme-accent) 16%, transparent)'
+                  '0 12px 28px color-mix(in srgb, var(--theme-accent) 20%, transparent)'
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = 'var(--theme-card)'

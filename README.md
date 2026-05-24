@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="./logo.png" alt="Hermes — AI Evolution Labs" width="180" />
+<img src="./logo.png" alt="Evolution Agent — AI Evolution Labs" width="180" />
 
-# Hermes · AI Evolution Labs
+# Evolution Agent · AI Evolution Labs
 
 ### **Your business. Automated.**
 
@@ -20,20 +20,17 @@ The flagship business AI agent workspace from **[AI Evolution Labs](https://aiev
 ---
 
 <div align="center">
-  <picture>
-    <source srcset="./public/hermes-warrior.png" type="image/png">
-    <img src="./public/hermes-golden-hero.svg" alt="Hermes — Your business. Automated." width="100%" />
-  </picture>
+  <img src="./public/hermes-warrior.png" alt="Evolution Agent hero image" width="100%" />
   <br />
-  <sub>Drop your own hero image in <code>public/hermes-warrior.png</code> to override the default artwork.</sub>
+  <sub>Hero image loaded from <code>public/hermes-warrior.png</code>.</sub>
 </div>
 
 ---
 
 <div align="center">
-  <img src="./public/screenshots/dashboard-v3.png" alt="Hermes dashboard preview" width="92%" />
+  <img src="./public/screenshots/dashboard-v3.png" alt="Evolution Agent dashboard preview" width="96%" />
   <br />
-  <sub><b>Hermes Dashboard</b>: live sessions, model mix, skills catalog, cost ledger, and workflow controls.</sub>
+  <sub><b>Evolution Agent Dashboard</b>: live sessions, model mix, skills catalog, cost ledger, and workflow controls.</sub>
 </div>
 
 ---
@@ -188,22 +185,16 @@ Hermes in this repo includes **11 built-in skills** in the local `skills/` catal
 
 ### Dashboard gallery
 
-<table>
-<tr>
-<td width="33%" align="center" valign="top">
-
 <picture>
   <source srcset="./public/screenshots/dashboard-1.png" type="image/png">
   <img src="./public/screenshots/dashboard-1.svg" alt="Dashboard 1 — main view" width="100%" />
 </picture>
 
 **Dashboard 1**  
-Sessions, active models, cost ledger
-
+Sessions, active models, cost ledger  
 `public/screenshots/dashboard-1.png`
 
-</td>
-<td width="33%" align="center" valign="top">
+<br />
 
 <picture>
   <source srcset="./public/screenshots/dashboard-2.png" type="image/png">
@@ -211,12 +202,10 @@ Sessions, active models, cost ledger
 </picture>
 
 **Dashboard 2**  
-Skills library and multi-agent operations
-
+Skills library and multi-agent operations  
 `public/screenshots/dashboard-2.png`
 
-</td>
-<td width="33%" align="center" valign="top">
+<br />
 
 <picture>
   <source srcset="./public/screenshots/dashboard-3.png" type="image/png">
@@ -224,13 +213,8 @@ Skills library and multi-agent operations
 </picture>
 
 **Dashboard 3**  
-Chat + conductor with live agent execution
-
+Chat + conductor with live agent execution  
 `public/screenshots/dashboard-3.png`
-
-</td>
-</tr>
-</table>
 
 > PNG images automatically override SVG placeholders. For clean layout, keep screenshot ratio near **16:9**.
 
@@ -246,7 +230,7 @@ Chat + conductor with live agent execution
 
 # 🇵🇱 Wersja polska
 
-## Hermes · AI Evolution Labs
+## Evolution Agent · AI Evolution Labs
 
 ### **Twój biznes. Zautomatyzowany.**
 
