@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./public/hermes-golden-warrior.svg" alt="Hermes — AI Evolution Labs" width="180" />
+<img src="./logo.png" alt="Hermes — AI Evolution Labs" width="180" />
 
 # Hermes · AI Evolution Labs
 
@@ -111,11 +111,11 @@ This README is **bilingual**. Each section appears in both **English** and **Pol
 
 To README jest **dwujęzyczne**. Każda sekcja jest dostępna po **angielsku** i po **polsku**.
 
-| 🇬🇧 English | 🇵🇱 Polski |
-|---|---|
+| 🇬🇧 English                                     | 🇵🇱 Polski                                   |
+| ---------------------------------------------- | ------------------------------------------- |
 | Quickstart in 2 min on macOS / Linux / Windows | Start w 2 minuty na macOS / Linux / Windows |
-| Welcome tour translated into 5 languages | Tour powitalny w 5 językach |
-| Business shortcuts on the home screen | Skróty biznesowe na ekranie głównym |
+| Welcome tour translated into 5 languages       | Tour powitalny w 5 językach                 |
+| Business shortcuts on the home screen          | Skróty biznesowe na ekranie głównym         |
 
 ---
 
@@ -149,6 +149,7 @@ Hermes ma **skróty biznesowe** na ekranie głównym — jedno kliknięcie i dos
 <td width="50%" valign="top">
 
 ### 📄 Client brief / proposal
+
 **🇬🇧** Draft tailored briefs, proposals, quotes, and pitch emails from 3 short inputs. Executive tone, ready to send.
 
 **🇵🇱** Brief klienta, oferta, wycena, mail handlowy — z 3 krótkich pól. Ton biznesowy, gotowe do wysłania.
@@ -157,6 +158,7 @@ Hermes ma **skróty biznesowe** na ekranie głównym — jedno kliknięcie i dos
 <td width="50%" valign="top">
 
 ### 📊 Report / analysis · Raport / analiza
+
 **🇬🇧** KPI reports, meeting summaries, exec dashboards, financial recaps. Markdown ready to paste into Notion.
 
 **🇵🇱** Raporty KPI, podsumowania spotkań, dashboardy zarządu, recapy finansowe. Markdown gotowy do Notion.
@@ -167,6 +169,7 @@ Hermes ma **skróty biznesowe** na ekranie głównym — jedno kliknięcie i dos
 <td width="50%" valign="top">
 
 ### ⚙️ Workflow automation · Automatyzacja
+
 **🇬🇧** Multi-step automations — cron jobs, MCP integrations, recipe playbooks. Wired to your stack.
 
 **🇵🇱** Wieloetapowe automatyzacje — cron, integracje MCP, playbooki. Wpięte w Twój stack.
@@ -175,6 +178,7 @@ Hermes ma **skróty biznesowe** na ekranie głównym — jedno kliknięcie i dos
 <td width="50%" valign="top">
 
 ### 🔍 Market intelligence · Wywiad rynkowy
+
 **🇬🇧** Competitor scans, market scans, news monitoring, due-diligence packages. Output as comparison tables.
 
 **🇵🇱** Skany konkurencji, monitoring newsów, paczki due-diligence. Wynik w formie porównawczych tabel.
@@ -262,22 +266,22 @@ Hermes ma **skróty biznesowe** na ekranie głównym — jedno kliknięcie i dos
 
 ## ✨ What's inside · Co jest w środku
 
-| Feature | 🇬🇧 English | 🇵🇱 Polski |
-|---|---|---|
-| 💬 **Chat** | Real-time streaming, rich tool calls, multi-session memory | Strumieniowy czat, tool-calls na żywo, pamięć sesji |
-| 🧠 **Memory** | Persistent business knowledge, searchable markdown editor | Pamięć firmowa z edycją w markdownie |
-| 🧩 **Skills library** | 2,000+ ready-to-use skills, badges, marketplace, in-dashboard browser + editor | Biblioteka 2000+ skilli, marketplace, przeglądarka i edytor w dashboardzie |
-| 🔌 **MCP integrations** | Notion, Gmail, Slack, GitHub, Supabase, Figma, Canva, Vercel + more | Integracje z Notion, Gmail, Slack, GitHub, Supabase, Figma, Canva, Vercel + inne |
-| 📁 **Files + terminal** | Monaco editor + cross-platform PTY terminal | Edytor Monaco + terminal PTY |
-| 🎮 **Operations** | Multi-agent dashboard with role presets | Dashboard wieloagentowy z presetami ról |
-| 📡 **Conductor** | Break a goal into a mission, dispatch sub-agents | Dziel cel na misję, deleguj do sub-agentów |
-| 👥 **Agent View** | Live agent panel — avatar, queue, history, cost meter | Panel agenta na żywo — awatar, kolejka, koszt |
-| 🐝 **Swarm Mode** | Persistent multi-agent workers with role dispatch | Rojowy tryb wielu agentów z dyspozytorem ról |
-| 🗄️ **Dashboard** | Sessions, model mix, cost ledger, skills library, ops strip | Sesje, mix modeli, kosztorys, biblioteka skilli |
-| 🎨 **Brand theme** | AIEL gold-on-black flagship UI | Złoto-czarne flagowe UI AIEL |
-| 🌍 **Onboarding** | Polski · English · Español · Deutsch · Français | 5 języków, auto-detekcja |
-| 🔒 **Security** | Auth middleware, CSP, path-traversal guard | Middleware auth, CSP, ochrona przed path-traversal |
-| 📱 **PWA + desktop** | Install as PWA or build branded `.dmg`/`.exe` | Instalacja jako PWA lub natywna apka `.dmg`/`.exe` |
+| Feature                 | 🇬🇧 English                                                                     | 🇵🇱 Polski                                                                        |
+| ----------------------- | ------------------------------------------------------------------------------ | -------------------------------------------------------------------------------- |
+| 💬 **Chat**             | Real-time streaming, rich tool calls, multi-session memory                     | Strumieniowy czat, tool-calls na żywo, pamięć sesji                              |
+| 🧠 **Memory**           | Persistent business knowledge, searchable markdown editor                      | Pamięć firmowa z edycją w markdownie                                             |
+| 🧩 **Skills library**   | 2,000+ ready-to-use skills, badges, marketplace, in-dashboard browser + editor | Biblioteka 2000+ skilli, marketplace, przeglądarka i edytor w dashboardzie       |
+| 🔌 **MCP integrations** | Notion, Gmail, Slack, GitHub, Supabase, Figma, Canva, Vercel + more            | Integracje z Notion, Gmail, Slack, GitHub, Supabase, Figma, Canva, Vercel + inne |
+| 📁 **Files + terminal** | Monaco editor + cross-platform PTY terminal                                    | Edytor Monaco + terminal PTY                                                     |
+| 🎮 **Operations**       | Multi-agent dashboard with role presets                                        | Dashboard wieloagentowy z presetami ról                                          |
+| 📡 **Conductor**        | Break a goal into a mission, dispatch sub-agents                               | Dziel cel na misję, deleguj do sub-agentów                                       |
+| 👥 **Agent View**       | Live agent panel — avatar, queue, history, cost meter                          | Panel agenta na żywo — awatar, kolejka, koszt                                    |
+| 🐝 **Swarm Mode**       | Persistent multi-agent workers with role dispatch                              | Rojowy tryb wielu agentów z dyspozytorem ról                                     |
+| 🗄️ **Dashboard**        | Sessions, model mix, cost ledger, skills library, ops strip                    | Sesje, mix modeli, kosztorys, biblioteka skilli                                  |
+| 🎨 **Brand theme**      | AIEL gold-on-black flagship UI                                                 | Złoto-czarne flagowe UI AIEL                                                     |
+| 🌍 **Onboarding**       | Polski · English · Español · Deutsch · Français                                | 5 języków, auto-detekcja                                                         |
+| 🔒 **Security**         | Auth middleware, CSP, path-traversal guard                                     | Middleware auth, CSP, ochrona przed path-traversal                               |
+| 📱 **PWA + desktop**    | Install as PWA or build branded `.dmg`/`.exe`                                  | Instalacja jako PWA lub natywna apka `.dmg`/`.exe`                               |
 
 ---
 
@@ -339,14 +343,14 @@ pnpm dev
 
 ### ✅ First-run checklist · Lista kontrolna pierwszego uruchomienia
 
-| # | 🇬🇧 Step | 🇵🇱 Krok |
-|---|---|---|
-| 1 | Install Node.js ≥ 22 and pnpm | Zainstaluj Node.js ≥ 22 i pnpm |
-| 2 | Clone the repo or run the installer | Sklonuj repo lub odpal instalator |
-| 3 | Copy `.env.example` → `.env`, add your API key | Skopiuj `.env.example` na `.env`, wklej klucz API |
-| 4 | Run `pnpm dev` and open `localhost:3000` | Odpal `pnpm dev` i otwórz `localhost:3000` |
-| 5 | Pick your language in the welcome tour | Wybierz język w panelu powitalnym |
-| 6 | Click a business shortcut on the home screen | Kliknij skrót biznesowy na ekranie głównym |
+| #   | 🇬🇧 Step                                        | 🇵🇱 Krok                                           |
+| --- | ---------------------------------------------- | ------------------------------------------------- |
+| 1   | Install Node.js ≥ 22 and pnpm                  | Zainstaluj Node.js ≥ 22 i pnpm                    |
+| 2   | Clone the repo or run the installer            | Sklonuj repo lub odpal instalator                 |
+| 3   | Copy `.env.example` → `.env`, add your API key | Skopiuj `.env.example` na `.env`, wklej klucz API |
+| 4   | Run `pnpm dev` and open `localhost:3000`       | Odpal `pnpm dev` i otwórz `localhost:3000`        |
+| 5   | Pick your language in the welcome tour         | Wybierz język w panelu powitalnym                 |
+| 6   | Click a business shortcut on the home screen   | Kliknij skrót biznesowy na ekranie głównym        |
 
 ---
 
@@ -364,8 +368,8 @@ pnpm dev
 ### Build as native Electron app · Buduj natywną apkę
 
 ```bash
-pnpm electron:build:mac      # → release/Hermes AIEL-3.0.0.dmg
-pnpm electron:build:win      # → release/Hermes AIEL Setup 3.0.0.exe
+pnpm electron:build:mac      # → release/Hermes Evolution Agent-3.0.0.dmg
+pnpm electron:build:win      # → release/Hermes Evolution Agent Setup 3.0.0.exe
 ```
 
 ---
@@ -380,7 +384,7 @@ pnpm electron:build:win      # → release/Hermes AIEL Setup 3.0.0.exe
 
 ## 🎨 The AI Evolution Labs theme · Motyw AI Evolution Labs
 
-**🇬🇧** Default theme: **deep black surfaces, royal gold accents (`#F5C24A`), warm bronze highlights (`#FFE07A`)** — a flagship-grade business interface inspired by the AIEL warrior identity. Jarvis ships with **13 other themes** — Nous, Matrix, Bronze, Slate, SciFi, light + dark. Pick from **Settings → Appearance**.
+**🇬🇧** Default theme: **deep black surfaces, royal gold accents (`#F5C24A`), warm bronze highlights (`#FFE07A`)** — a flagship-grade business interface inspired by the AIEL warrior identity. Hermes Evolution Agent ships with **13 other themes** — Nous, Matrix, Bronze, Slate, SciFi, light + dark. Pick from **Settings → Appearance**.
 
 **🇵🇱** Motyw domyślny: **głęboka czerń, złoto królewskie (`#F5C24A`), ciepłe brązy (`#FFE07A`)** — flagowy interfejs inspirowany wojowniczym DNA marki AIEL. W zestawie **13 innych motywów** — Nous, Matrix, Bronze, Slate, SciFi, jasne + ciemne. Wybierasz w **Ustawienia → Wygląd**.
 
