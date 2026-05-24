@@ -630,6 +630,7 @@ function ChatSidebarComponent({
   const [deleteFriendlyId, setDeleteFriendlyId] = useState<string | null>(null)
   const [deleteSessionTitle, setDeleteSessionTitle] = useState('')
   const [providersOpen, setProvidersOpen] = useState(false)
+  const [isUpdatingHermes, setIsUpdatingHermes] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [isHoverExpanded, setIsHoverExpanded] = useState(false)
   const sidebarHoverExpand = useChatSettingsStore(selectSidebarHoverExpand)
@@ -845,6 +846,14 @@ function ChatSidebarComponent({
       label: 'Swarm',
       active: isSwarmActive,
     },
+    {
+      kind: 'link',
+      to: '/settings',
+      icon: Settings01Icon,
+      label: 'Settings',
+      active: pathname.startsWith('/settings'),
+      dataTour: 'settings',
+    },
 
   ]
 
@@ -937,8 +946,8 @@ function ChatSidebarComponent({
                 )}
               >
                 <img
-                  src="/aievolutionlabs-logo.svg"
-                  alt="AI Evolution Labs"
+                  src="/logo.png"
+                  alt="Evolution Agent"
                   className="size-7 rounded-md"
                 />
                 <span className="flex flex-col items-start leading-tight">
@@ -946,13 +955,13 @@ function ChatSidebarComponent({
                     className="text-sm font-semibold tracking-tight"
                     style={{ color: 'var(--theme-text)' }}
                   >
-                    Hermes
+                    Evolution Agent
                   </span>
                   <span
                     className="text-[10px] uppercase tracking-[0.12em]"
                     style={{ color: 'var(--theme-accent)' }}
                   >
-                    AI Evolution Labs
+                    Workspace
                   </span>
                 </span>
               </Link>
@@ -1222,6 +1231,26 @@ function ChatSidebarComponent({
           {/* Settings + Theme toggle */}
           {!isVisuallyCollapsed && (
             <div className="flex items-center gap-0.5">
+              <button
+                type="button"
+                onClick={async () => {
+                  if (isUpdatingHermes) return
+                  setIsUpdatingHermes(true)
+                  try {
+                    await fetch('/api/update/agent', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({}),
+                    })
+                  } finally {
+                    setIsUpdatingHermes(false)
+                  }
+                }}
+                className="shrink-0 rounded-lg px-2 py-1.5 text-xs font-medium text-primary-500 hover:bg-primary-200 dark:hover:bg-neutral-800 hover:text-primary-700 dark:hover:text-neutral-200 transition-colors"
+                aria-label="Update Hermes in background"
+              >
+                {isUpdatingHermes ? 'Updating…' : 'Update Hermes'}
+              </button>
               <button
                 type="button"
                 onClick={() => handleOpenSettings('claude')}
