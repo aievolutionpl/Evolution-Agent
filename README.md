@@ -20,12 +20,9 @@ The flagship business AI agent workspace from **[AI Evolution Labs](https://aiev
 ---
 
 <div align="center">
-  <picture>
-    <source srcset="./public/hermes-warrior.png" type="image/png">
-    <img src="./public/hermes-golden-hero.svg" alt="Hermes — Your business. Automated." width="100%" />
-  </picture>
+  <img src="./public/hermes-warrior.png" alt="Evolution Agent hero image" width="100%" />
   <br />
-  <sub>Drop your own hero image in <code>public/hermes-warrior.png</code> to override the default artwork.</sub>
+  <sub>Hero image loaded from <code>public/hermes-warrior.png</code>.</sub>
 </div>
 
 ---
