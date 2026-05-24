@@ -44,6 +44,67 @@ Flagowy workspace agenta AI dla biznesu od **[AI Evolution Labs](https://aievolu
 
 ---
 
+## 🖼️ Gallery · Galeria
+
+**🇬🇧** Three live dashboard captures. **Drop your PNGs at the paths below** — the placeholders will be replaced automatically.
+
+**🇵🇱** Trzy podglądy dashboardu na żywo. **Wrzuć swoje PNG-i pod te ścieżki** — placeholdery same się podmienią.
+
+<table>
+<tr>
+<td width="33%" align="center" valign="top">
+
+<picture>
+  <source srcset="./public/screenshots/dashboard-1.png" type="image/png">
+  <img src="./public/screenshots/dashboard-1.svg" alt="Dashboard 1 — main view" width="100%" />
+</picture>
+
+**Dashboard 1**
+
+**🇬🇧** Main dashboard — sessions, models, cost ledger
+**🇵🇱** Dashboard główny — sesje, modele, kosztorys
+
+`public/screenshots/dashboard-1.png`
+
+</td>
+<td width="33%" align="center" valign="top">
+
+<picture>
+  <source srcset="./public/screenshots/dashboard-2.png" type="image/png">
+  <img src="./public/screenshots/dashboard-2.svg" alt="Dashboard 2 — skills + ops" width="100%" />
+</picture>
+
+**Dashboard 2**
+
+**🇬🇧** Skills library + multi-agent operations
+**🇵🇱** Biblioteka skilli + operacje wieloagentowe
+
+`public/screenshots/dashboard-2.png`
+
+</td>
+<td width="33%" align="center" valign="top">
+
+<picture>
+  <source srcset="./public/screenshots/dashboard-3.png" type="image/png">
+  <img src="./public/screenshots/dashboard-3.svg" alt="Dashboard 3 — chat + conductor" width="100%" />
+</picture>
+
+**Dashboard 3**
+
+**🇬🇧** Chat + Conductor — agents working live
+**🇵🇱** Czat + Conductor — agenty pracujące na żywo
+
+`public/screenshots/dashboard-3.png`
+
+</td>
+</tr>
+</table>
+
+> 💡 **🇬🇧** PNG wins over the SVG placeholder automatically — no code edits required. Keep aspect ≈ **16:9** for the cleanest layout.
+> 💡 **🇵🇱** PNG automatycznie wygrywa z placeholderem SVG — nie trzeba ruszać kodu. Trzymaj proporcje ≈ **16:9**, żeby się ładnie składało.
+
+---
+
 ## 🌍 Language · Język
 
 This README is **bilingual**. Each section appears in both **English** and **Polski** side-by-side or stacked.
