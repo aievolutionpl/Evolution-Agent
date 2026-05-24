@@ -2,6 +2,13 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
+import { HugeiconsIcon } from '@hugeicons/react'
+import {
+  CheckmarkCircle02Icon,
+  Plug01Icon,
+  Rocket01Icon,
+  SparklesIcon,
+} from '@hugeicons/core-free-icons'
 import { cn } from '@/lib/utils'
 import { ProviderLogo } from '@/components/provider-logo'
 
@@ -240,7 +247,7 @@ export function ClaudeOnboarding() {
         setBackendStatus('ready')
         setBackendMessage(
           data.capabilities.sessions
-            ? 'Backend connected. Core chat works, and Hermes Agent gateway enhancements are available.'
+            ? 'Backend connected. Core chat works, and Hermes gateway enhancements are available.'
             : 'Backend connected. Core chat is ready.',
         )
         return
@@ -500,6 +507,16 @@ export function ClaudeOnboarding() {
     color: 'var(--theme-text)',
   }
 
+  const stepOrder: Array<Step> = ['welcome', 'connect', 'provider', 'test', 'done']
+  const stepIndex = stepOrder.indexOf(step)
+  const stepLabels: Record<Step, string> = {
+    welcome: 'Welcome',
+    connect: 'Connect',
+    provider: 'Provider',
+    test: 'Test',
+    done: 'Ready',
+  }
+
   return (
     <div
       className="fixed inset-0 z-[99999] flex items-center justify-center px-4"
@@ -508,6 +525,34 @@ export function ClaudeOnboarding() {
         backdropFilter: 'blur(12px)',
       }}
     >
+      <div className="relative w-full max-w-md">
+        {/* Step progress (outside the animating card so it doesn't flicker) */}
+        <div className="mb-3 flex items-center justify-center gap-2">
+          {stepOrder.map((id, index) => {
+            const isActive = index === stepIndex
+            const isComplete = index < stepIndex
+            return (
+              <div
+                key={id}
+                className={cn(
+                  'h-1.5 rounded-full transition-all duration-300',
+                  isActive
+                    ? 'w-8 bg-accent-500'
+                    : isComplete
+                      ? 'w-4 bg-accent-500/60'
+                      : 'w-4 bg-white/15',
+                )}
+                title={stepLabels[id]}
+              />
+            )
+          })}
+        </div>
+        <p
+          className="mb-2 text-center text-[10px] font-medium uppercase tracking-[0.2em]"
+          style={mutedStyle}
+        >
+          Step {stepIndex + 1} of {stepOrder.length} · {stepLabels[step]}
+        </p>
       <AnimatePresence mode="wait">
         <motion.div
           key={step}
@@ -515,24 +560,59 @@ export function ClaudeOnboarding() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -20, scale: 0.97 }}
           transition={{ duration: 0.25, ease: 'easeOut' }}
-          className="w-full max-w-md rounded-2xl p-8"
+          className="w-full rounded-2xl p-8"
           style={cardStyle}
         >
           {step === 'welcome' && (
-            <div className="space-y-4 text-center">
+            <div className="space-y-5 text-center">
               <img
-                src="/claude-avatar.webp"
-                alt="Hermes Agent"
+                src="/aievolutionlabs-icon.svg"
+                alt="AI Evolution Labs"
                 className="mx-auto size-20 rounded-2xl"
                 style={{
-                  filter: 'drop-shadow(0 8px 24px rgba(99,102,241,0.3))',
+                  filter:
+                    'drop-shadow(0 8px 24px color-mix(in srgb, #00E5FF 35%, transparent))',
                 }}
               />
-              <h2 className="text-xl font-bold">Welcome to Hermes Workspace</h2>
+              <div className="space-y-1.5">
+                <h2 className="text-xl font-bold">Welcome to Evolution Agent</h2>
+                <p
+                  className="text-[11px] font-medium uppercase tracking-[0.18em]"
+                  style={mutedStyle}
+                >
+                  by AI Evolution Labs
+                </p>
+              </div>
               <p className="text-sm" style={mutedStyle}>
-                Works with any OpenAI-compatible backend. Hermes Agent gateway APIs
-                unlock sessions, memory, skills, and other extras automatically.
+                Connect an OpenAI Codex / ChatGPT account, paste an API key, or
+                run a local model — and you&apos;re ready to chat.
               </p>
+              <div
+                className="grid grid-cols-3 gap-2 pt-1 text-[11px]"
+                style={mutedStyle}
+              >
+                <div
+                  className="flex flex-col items-center gap-1 rounded-xl p-2.5"
+                  style={cardStyle}
+                >
+                  <HugeiconsIcon icon={Plug01Icon} className="size-4" />
+                  <span>Connect</span>
+                </div>
+                <div
+                  className="flex flex-col items-center gap-1 rounded-xl p-2.5"
+                  style={cardStyle}
+                >
+                  <HugeiconsIcon icon={SparklesIcon} className="size-4" />
+                  <span>Configure</span>
+                </div>
+                <div
+                  className="flex flex-col items-center gap-1 rounded-xl p-2.5"
+                  style={cardStyle}
+                >
+                  <HugeiconsIcon icon={Rocket01Icon} className="size-4" />
+                  <span>Launch</span>
+                </div>
+              </div>
               <button
                 onClick={() => {
                   setStep('connect')
@@ -540,7 +620,7 @@ export function ClaudeOnboarding() {
                 }}
                 className="w-full rounded-xl bg-accent-500 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent-600"
               >
-                Connect Backend
+                Get Started
               </button>
               <button onClick={complete} className="text-xs" style={mutedStyle}>
                 Skip setup
@@ -550,10 +630,19 @@ export function ClaudeOnboarding() {
 
           {step === 'connect' && (
             <div className="space-y-4 text-center">
-              <div className="text-4xl">🔌</div>
+              <div
+                className="mx-auto flex size-14 items-center justify-center rounded-2xl"
+                style={{
+                  background:
+                    'color-mix(in srgb, var(--theme-accent, #00E5FF) 12%, transparent)',
+                  color: 'var(--theme-accent, #00E5FF)',
+                }}
+              >
+                <HugeiconsIcon icon={Plug01Icon} className="size-7" />
+              </div>
               <h2 className="text-lg font-bold">Connect Your Backend</h2>
               <p className="text-sm" style={mutedStyle}>
-                Start by verifying that Hermes Workspace can reach your
+                Start by verifying that Evolution Agent can reach your
                 OpenAI-compatible backend.
               </p>
 
@@ -600,8 +689,8 @@ export function ClaudeOnboarding() {
                     </p>
                     <p className="mt-2" style={mutedStyle}>
                       Use any backend that exposes{' '}
-                      <code>/v1/chat/completions</code>. If you point Hermes Agent
-                      Workspace at a Hermes Agent gateway, enhanced features unlock
+                      <code>/v1/chat/completions</code>. If you point Evolution
+                      Agent at a Hermes gateway, enhanced features unlock
                       automatically.
                     </p>
                     <div
@@ -644,20 +733,22 @@ export function ClaudeOnboarding() {
 
           {step === 'provider' && (
             <div className="space-y-4">
-              <h2 className="text-center text-lg font-bold">
-                Choose Provider and Model
-              </h2>
-              <p className="text-center text-xs" style={mutedStyle}>
-                {canEditConfig
-                  ? 'Save provider settings here, then choose a model before testing chat.'
-                  : 'This backend manages provider settings outside Hermes Workspace. Confirm the model you expect to use, then test chat.'}
-              </p>
+              <div className="text-center">
+                <h2 className="text-lg font-bold">
+                  Choose how to connect
+                </h2>
+                <p className="mt-1 text-xs" style={mutedStyle}>
+                  {canEditConfig
+                    ? 'Pick a provider, sign in or paste a key, then choose a model.'
+                    : 'This backend manages provider settings externally. Confirm the model, then test chat.'}
+                </p>
+              </div>
 
               <div className="rounded-xl p-3 text-xs" style={cardStyle}>
                 <p style={mutedStyle}>Backend mode</p>
                 <p className="mt-1">
                   {backendInfo?.capabilities?.sessions
-                    ? 'Hermes Agent gateway detected'
+                    ? 'Hermes gateway detected'
                     : 'Portable OpenAI-compatible backend'}
                 </p>
                 {configuredModel ? (
@@ -670,7 +761,7 @@ export function ClaudeOnboarding() {
                 ) : null}
               </div>
 
-              <div className="grid max-h-56 grid-cols-1 gap-2 overflow-y-auto pr-1">
+              <div className="grid max-h-72 grid-cols-1 gap-2 overflow-y-auto pr-1">
                 {(() => {
                   const seen = new Set(PROVIDERS.map((p) => p.id))
                   const merged = [
@@ -685,37 +776,87 @@ export function ClaudeOnboarding() {
                         authType: 'custom' as const,
                       })),
                   ]
-                  return merged.map((p) => (
-                    <button
-                      key={p.id}
-                      onClick={() => {
-                        setSelectedProvider(p.id)
-                        setApiKey('')
-                        setBaseUrl('')
-                        setSaveError('')
-                      }}
-                      className={cn(
-                        'flex items-center gap-3 rounded-xl px-4 py-3 text-left transition-all',
-                        selectedProvider === p.id ? 'ring-2 ring-accent-500' : '',
-                      )}
-                      style={cardStyle}
-                    >
-                      <ProviderLogo
-                        provider={p.id}
-                        size={40}
-                        className="shrink-0 rounded-xl"
-                      />
-                      <div className="min-w-0 flex-1">
-                        <div className="text-sm font-semibold">{p.name}</div>
-                        <div className="text-xs" style={mutedStyle}>
-                          {p.desc}
+
+                  // Sort: OAuth (sign-in) options first, then API key, then local/custom.
+                  const order: Record<string, number> = {
+                    oauth: 0,
+                    api_key: 1,
+                    none: 2,
+                    custom: 3,
+                  }
+                  const sorted = [...merged].sort(
+                    (a, b) =>
+                      (order[String(a.authType)] ?? 9) -
+                      (order[String(b.authType)] ?? 9),
+                  )
+
+                  const badgeFor = (authType: string | undefined) => {
+                    if (authType === 'oauth')
+                      return { text: 'Sign in', tone: 'accent' as const }
+                    if (authType === 'api_key')
+                      return { text: 'API key', tone: 'neutral' as const }
+                    if (authType === 'none')
+                      return { text: 'Local', tone: 'green' as const }
+                    return { text: 'Custom', tone: 'neutral' as const }
+                  }
+
+                  return sorted.map((p) => {
+                    const badge = badgeFor(p.authType)
+                    const isSelected = selectedProvider === p.id
+                    return (
+                      <button
+                        key={p.id}
+                        onClick={() => {
+                          setSelectedProvider(p.id)
+                          setApiKey('')
+                          setBaseUrl('')
+                          setSaveError('')
+                        }}
+                        className={cn(
+                          'flex items-center gap-3 rounded-xl px-4 py-3 text-left transition-all',
+                          isSelected ? 'ring-2 ring-accent-500' : '',
+                        )}
+                        style={cardStyle}
+                      >
+                        <ProviderLogo
+                          provider={p.id}
+                          size={40}
+                          className="shrink-0 rounded-xl"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-semibold">
+                              {p.name}
+                            </span>
+                            <span
+                              className={cn(
+                                'rounded-md px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide',
+                                badge.tone === 'accent' &&
+                                  'bg-accent-500/15 text-accent-400',
+                                badge.tone === 'green' &&
+                                  'bg-green-500/15 text-green-400',
+                                badge.tone === 'neutral' &&
+                                  'bg-white/10 text-current',
+                              )}
+                              style={
+                                badge.tone === 'neutral'
+                                  ? mutedStyle
+                                  : undefined
+                              }
+                            >
+                              {badge.text}
+                            </span>
+                          </div>
+                          <div className="text-xs" style={mutedStyle}>
+                            {p.desc}
+                          </div>
                         </div>
-                      </div>
-                      {selectedProvider === p.id ? (
-                        <span className="ml-auto size-2.5 shrink-0 rounded-full bg-green-500" />
-                      ) : null}
-                    </button>
-                  ))
+                        {isSelected ? (
+                          <span className="ml-auto size-2.5 shrink-0 rounded-full bg-green-500" />
+                        ) : null}
+                      </button>
+                    )
+                  })
                 })()}
               </div>
 
@@ -803,28 +944,48 @@ export function ClaudeOnboarding() {
                 selectedProvider === 'openai-codex' &&
                 canEditConfig && (
                   <div
-                    className="space-y-2 rounded-xl p-4 text-left"
+                    className="space-y-3 rounded-xl p-4 text-left"
                     style={{ ...cardStyle, borderColor: 'var(--theme-border)' }}
                   >
-                    <p className="text-sm font-medium">Run in your terminal</p>
-                    <div
-                      className="rounded-lg px-3 py-2 font-mono text-xs"
-                      style={{ background: 'rgba(0,0,0,0.2)' }}
-                    >
-                      claude auth login openai-codex
+                    <div>
+                      <p className="text-sm font-semibold">
+                        Sign in with your ChatGPT account
+                      </p>
+                      <p className="mt-1 text-xs" style={mutedStyle}>
+                        Re-uses your Codex / ChatGPT Pro login — no API key
+                        needed. Run the command below in a terminal:
+                      </p>
                     </div>
-                    <p className="text-xs" style={mutedStyle}>
-                      After the login flow completes, click below to refresh
-                      provider settings.
-                    </p>
+                    <div className="flex items-center gap-2">
+                      <code
+                        className="flex-1 rounded-lg px-3 py-2 font-mono text-xs"
+                        style={{ background: 'rgba(0,0,0,0.25)' }}
+                      >
+                        claude auth login openai-codex
+                      </code>
+                      <button
+                        onClick={() => {
+                          try {
+                            void navigator.clipboard.writeText(
+                              'claude auth login openai-codex',
+                            )
+                          } catch {}
+                        }}
+                        className="rounded-lg border px-2.5 py-2 text-[11px] font-medium"
+                        style={{ borderColor: 'var(--theme-border)' }}
+                        title="Copy command"
+                      >
+                        Copy
+                      </button>
+                    </div>
                     <button
                       onClick={async () => {
                         await saveProviderConfig()
                         await loadModels()
                       }}
-                      className="w-full rounded-lg bg-accent-500 py-2 text-xs font-medium text-white"
+                      className="w-full rounded-lg bg-accent-500 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-accent-600"
                     >
-                      I&apos;ve authenticated
+                      I&apos;ve signed in — refresh
                     </button>
                   </div>
                 )}
@@ -975,11 +1136,20 @@ export function ClaudeOnboarding() {
 
           {step === 'test' && (
             <div className="space-y-4 text-center">
-              <div className="text-4xl">🧪</div>
+              <div
+                className="mx-auto flex size-14 items-center justify-center rounded-2xl"
+                style={{
+                  background:
+                    'color-mix(in srgb, var(--theme-accent, #00E5FF) 12%, transparent)',
+                  color: 'var(--theme-accent, #00E5FF)',
+                }}
+              >
+                <HugeiconsIcon icon={SparklesIcon} className="size-7" />
+              </div>
               <h2 className="text-lg font-bold">Test Chat</h2>
               <p className="text-sm" style={mutedStyle}>
-                Verify that core chat works first. Enhanced Hermes Agent features are
-                optional and appear automatically when supported.
+                Verify that core chat works first. Enhanced gateway features
+                are optional and appear automatically when supported.
               </p>
 
               <div
@@ -1060,7 +1230,7 @@ export function ClaudeOnboarding() {
                     ) : (
                       <p className="mt-2 text-xs text-yellow-400">
                         Confirm the backend is running and still reachable from
-                        Hermes Workspace.
+                        Evolution Agent.
                       </p>
                     )}
                   </div>
@@ -1093,35 +1263,58 @@ export function ClaudeOnboarding() {
 
           {step === 'done' && (
             <div className="space-y-4 text-center">
-              <div className="text-5xl">🎉</div>
+              <div
+                className="mx-auto flex size-16 items-center justify-center rounded-2xl"
+                style={{
+                  background:
+                    'color-mix(in srgb, #10b981 18%, transparent)',
+                  color: '#10b981',
+                }}
+              >
+                <HugeiconsIcon
+                  icon={CheckmarkCircle02Icon}
+                  className="size-9"
+                />
+              </div>
               <h2 className="text-xl font-bold">Workspace Ready</h2>
               <p className="text-sm" style={mutedStyle}>
                 Core chat is set up.{' '}
                 {enhancedFeatures.length > 0
-                  ? 'This backend also exposes Hermes Agent gateway enhancements.'
-                  : 'If you later connect a Hermes Agent gateway, enhanced features unlock automatically.'}
+                  ? 'This backend also exposes Hermes gateway enhancements.'
+                  : 'If you later connect a Hermes gateway, enhanced features unlock automatically.'}
               </p>
               <div
                 className="grid grid-cols-3 gap-2 text-xs"
                 style={mutedStyle}
               >
-                <div className="rounded-xl p-2" style={cardStyle}>
-                  <div className="mb-1 text-lg">💬</div>
+                <div
+                  className="flex flex-col items-center gap-1 rounded-xl p-2.5"
+                  style={cardStyle}
+                >
+                  <HugeiconsIcon
+                    icon={CheckmarkCircle02Icon}
+                    className="size-4 text-green-500"
+                  />
                   <div>Chat Ready</div>
                 </div>
-                <div className="rounded-xl p-2" style={cardStyle}>
-                  <div className="mb-1 text-lg">🔗</div>
+                <div
+                  className="flex flex-col items-center gap-1 rounded-xl p-2.5"
+                  style={cardStyle}
+                >
+                  <HugeiconsIcon icon={Plug01Icon} className="size-4" />
                   <div>
                     {enhancedFeatures.length > 0 ? 'Enhanced' : 'Portable'}
                   </div>
                 </div>
-                <div className="rounded-xl p-2" style={cardStyle}>
-                  <div className="mb-1 text-lg">🧠</div>
+                <div
+                  className="flex flex-col items-center gap-1 rounded-xl p-2.5"
+                  style={cardStyle}
+                >
+                  <HugeiconsIcon icon={SparklesIcon} className="size-4" />
                   <div>
                     {enhancedFeatures.length > 0
-                      ? enhancedFeatures.length
-                      : 'Optional'}{' '}
-                    Extras
+                      ? `${enhancedFeatures.length} Extras`
+                      : 'Optional'}
                   </div>
                 </div>
               </div>
@@ -1134,12 +1327,16 @@ export function ClaudeOnboarding() {
                 onClick={complete}
                 className="w-full rounded-xl bg-accent-500 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent-600"
               >
-                Open Workspace
+                <span className="inline-flex items-center justify-center gap-2">
+                  <HugeiconsIcon icon={Rocket01Icon} className="size-4" />
+                  Open Workspace
+                </span>
               </button>
             </div>
           )}
         </motion.div>
       </AnimatePresence>
+      </div>
     </div>
   )
 }

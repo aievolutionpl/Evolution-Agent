@@ -130,12 +130,12 @@ export const Route = createRootRoute({
           'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-visual',
       },
       {
-        title: 'Hermes — AI Evolution Labs',
+        title: 'Evolution Agent — AI Evolution Labs',
       },
       {
         name: 'description',
         content:
-          'Hermes by AI Evolution Labs — business AI agent for briefs, reports, automations, and market research.',
+          'Evolution Agent by AI Evolution Labs — business AI workspace for briefs, reports, automations, and market research.',
       },
       {
         property: 'og:image',
@@ -179,9 +179,9 @@ export const Route = createRootRoute({
       },
       {
         rel: 'icon',
-        type: 'image/png',
-        sizes: '192x192',
-        href: '/aievolutionlabs-icon-192.png',
+        type: 'image/svg+xml',
+        sizes: 'any',
+        href: '/aievolutionlabs-icon.svg',
       },
       // PWA manifest and icons
       {
