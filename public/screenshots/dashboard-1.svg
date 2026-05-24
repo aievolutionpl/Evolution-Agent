@@ -1,0 +1,47 @@
+<svg viewBox="0 0 1400 800" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Dashboard screenshot placeholder">
+  <defs>
+    <linearGradient id="ph1-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0A0703"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </linearGradient>
+    <linearGradient id="ph1-gold" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFEAA0"/>
+      <stop offset="55%" stop-color="#F5C24A"/>
+      <stop offset="100%" stop-color="#7A5410"/>
+    </linearGradient>
+    <pattern id="ph1-grid" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#3A2A0E" stroke-width="0.5" opacity="0.45"/>
+    </pattern>
+  </defs>
+  <rect width="1400" height="800" fill="url(#ph1-bg)"/>
+  <rect width="1400" height="800" fill="url(#ph1-grid)"/>
+  <rect x="40" y="40" width="1320" height="720" rx="20" fill="none" stroke="url(#ph1-gold)" stroke-width="2" opacity="0.9"/>
+
+  <!-- corner ticks -->
+  <g stroke="url(#ph1-gold)" stroke-width="3" fill="none">
+    <path d="M 60 60 L 110 60 M 60 60 L 60 110"/>
+    <path d="M 1340 60 L 1290 60 M 1340 60 L 1340 110"/>
+    <path d="M 60 740 L 110 740 M 60 740 L 60 690"/>
+    <path d="M 1340 740 L 1290 740 M 1340 740 L 1340 690"/>
+  </g>
+
+  <!-- centerpiece -->
+  <g text-anchor="middle" font-family="Inter, sans-serif">
+    <text x="700" y="340" font-size="84" font-weight="800" fill="url(#ph1-gold)" letter-spacing="8">DASHBOARD 1</text>
+    <text x="700" y="400" font-size="22" font-weight="600" fill="#FFE07A" letter-spacing="6">DROP YOUR SCREENSHOT HERE</text>
+    <text x="700" y="445" font-size="18" font-weight="500" fill="#C8902A" letter-spacing="3">WRZUĆ TUTAJ ZRZUT EKRANU</text>
+  </g>
+
+  <!-- filename hint -->
+  <g text-anchor="middle" font-family="JetBrains Mono, monospace">
+    <rect x="430" y="500" width="540" height="58" rx="10" fill="#1A0E03" stroke="url(#ph1-gold)" stroke-width="1.4"/>
+    <text x="700" y="538" font-size="20" font-weight="600" fill="#F5C24A">public/screenshots/dashboard-1.png</text>
+  </g>
+
+  <!-- bottom caption guidance -->
+  <g text-anchor="middle" font-family="Inter, sans-serif" fill="#8C5E15">
+    <text x="700" y="630" font-size="16" font-weight="500">Suggested caption · Sugerowany podpis</text>
+    <text x="700" y="660" font-size="18" font-weight="700" fill="#F5C24A">"Main dashboard — sessions, models, cost ledger"</text>
+    <text x="700" y="686" font-size="16" font-weight="500" fill="#C8902A">"Dashboard główny — sesje, modele, kosztorys"</text>
+  </g>
+</svg>

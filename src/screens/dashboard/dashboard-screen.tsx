@@ -34,7 +34,7 @@ import { OperatorTipCard } from './components/operator-tip-card'
 import { OpsStrip } from './components/ops-strip'
 import { ProviderMixCard } from './components/provider-mix-card'
 import { SessionsIntelligenceCard } from './components/sessions-intelligence-card'
-import { SkillsUsageCard } from './components/skills-usage-card'
+import { SkillsLibraryCard } from './components/skills-library-card'
 import { TokenMixHourCard } from './components/token-mix-hour-card'
 import { TopModelsCard } from './components/top-models-card'
 import { VelocityCard } from './components/velocity-card'
@@ -762,25 +762,6 @@ export function DashboardScreen() {
     return max
   }, [recentSessions])
 
-  // Skills count for the SkillsUsageCard sub-text. Cheap query, used
-  // only for the "X of Y used" microcopy.
-  const skillsCountQuery = useQuery({
-    queryKey: ['dashboard', 'skills-count'],
-    queryFn: async () => {
-      const res = await fetch(
-        '/api/skills?tab=installed&limit=200&summary=search',
-      )
-      if (!res.ok) return 0
-      const data = (await res.json()) as {
-        skills?: Array<unknown>
-      }
-      return data.skills?.length ?? 0
-    },
-    staleTime: 60_000,
-    enabled: skillsAvailable,
-  })
-  const skillsInstalled = skillsCountQuery.data ?? 0
-
   // Per-user widget visibility + edit-mode state (localStorage backed).
   const layout = useDashboardLayout()
 
@@ -1180,9 +1161,8 @@ export function DashboardScreen() {
             />
           </WidgetShell>
           <WidgetShell id="skills_usage" layout={layout}>
-            <SkillsUsageCard
+            <SkillsLibraryCard
               usage={overview?.skillsUsage ?? null}
-              installedCount={skillsInstalled}
               onOpen={() => navigate({ to: '/skills' })}
             />
           </WidgetShell>
