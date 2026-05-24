@@ -1,17 +1,28 @@
 import { HugeiconsIcon } from '@hugeicons/react'
 import { ArrowUpRight01Icon } from '@hugeicons/core-free-icons'
+import { useState } from 'react'
 
 const BRAND_URL = 'https://aievolutionlabs.io'
 
 /**
  * Dashboard hero card — branded entrypoint that doubles as an outbound
- * link to aievolutionlabs.io. Shows the AIEL marketing hero photo with
- * a graceful SVG fallback when the .jpg is not present in /public yet.
+ * link to aievolutionlabs.io.
  *
- * The image stack uses two layered <img> tags. The JPG (when present) sits
- * on top; if it 404s we surface the SVG fallback underneath via onError.
+ * Image resolution order (each falls back if the previous 404s):
+ *   1. /hermes-warrior.png        — user-supplied photo / artwork
+ *   2. /hermes-golden-hero.svg    — gold-on-black SVG mock
+ *   3. /aievolutionlabs-hero.jpg  — legacy cyan hero (if uploaded)
+ *   4. /aievolutionlabs-hero.svg  — legacy SVG fallback (always present)
  */
 export function AIEvolutionLabsHeroCard() {
+  const sources = [
+    '/hermes-warrior.png',
+    '/hermes-golden-hero.svg',
+    '/aievolutionlabs-hero.jpg',
+    '/aievolutionlabs-hero.svg',
+  ]
+  const [sourceIndex, setSourceIndex] = useState(0)
+
   return (
     <a
       href={BRAND_URL}
@@ -27,36 +38,29 @@ export function AIEvolutionLabsHeroCard() {
       }}
     >
       <div className="relative aspect-[16/7] w-full sm:aspect-[16/6]">
-        {/* SVG fallback always renders; JPG overlays it when available */}
         <img
-          src="/aievolutionlabs-hero.svg"
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 size-full object-cover"
-        />
-        <img
-          src="/aievolutionlabs-hero.jpg"
-          alt="AI Evolution Labs — Your business. Automated."
+          src={sources[sourceIndex]}
+          alt="Hermes by AI Evolution Labs — Your business. Automated."
           loading="eager"
           className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-          onError={(e) => {
-            // If the JPG isn't uploaded yet, hide the broken img so the SVG below shows.
-            ;(e.currentTarget as HTMLImageElement).style.display = 'none'
+          onError={() => {
+            setSourceIndex((i) => Math.min(i + 1, sources.length - 1))
           }}
         />
         {/* gradient veil for legibility of overlay text */}
         <div
-          className="absolute inset-0 bg-gradient-to-tr"
+          className="absolute inset-0"
           style={{
             backgroundImage:
-              'linear-gradient(to top, rgba(0,8,6,0.78) 0%, rgba(0,8,6,0.18) 55%, rgba(0,8,6,0) 100%)',
+              'linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.22) 55%, rgba(0,0,0,0) 100%)',
           }}
         />
 
         {/* Top-right brand chip */}
-        <div className="pointer-events-none absolute right-4 top-4 flex items-center gap-2 rounded-full px-3 py-1.5 text-[11px] font-semibold tracking-wide"
+        <div
+          className="pointer-events-none absolute right-4 top-4 flex items-center gap-2 rounded-full px-3 py-1.5 text-[11px] font-semibold tracking-wide"
           style={{
-            background: 'rgba(2, 17, 15, 0.7)',
+            background: 'rgba(10, 7, 3, 0.72)',
             border: '1px solid var(--theme-accent-border)',
             color: 'var(--theme-accent)',
             backdropFilter: 'blur(6px)',
@@ -78,13 +82,15 @@ export function AIEvolutionLabsHeroCard() {
           >
             Hermes by AI Evolution Labs
           </p>
-          <h2 className="mt-1 text-xl font-semibold leading-tight sm:text-2xl"
-            style={{ color: '#E8FFFB' }}
+          <h2
+            className="mt-1 text-xl font-semibold leading-tight sm:text-2xl"
+            style={{ color: '#FFEAD0' }}
           >
             Your business. Automated.
           </h2>
-          <p className="mt-1 text-xs sm:text-sm"
-            style={{ color: 'rgba(232, 255, 251, 0.78)' }}
+          <p
+            className="mt-1 text-xs sm:text-sm"
+            style={{ color: 'rgba(255, 234, 208, 0.78)' }}
           >
             Visit aievolutionlabs.io →
           </p>

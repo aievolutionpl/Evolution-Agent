@@ -1,0 +1,112 @@
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hermes — AI Evolution Labs">
+  <defs>
+    <linearGradient id="hgw-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0A0703"/>
+      <stop offset="55%" stop-color="#120A02"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </linearGradient>
+    <linearGradient id="hgw-gold" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFE07A"/>
+      <stop offset="40%" stop-color="#F5C24A"/>
+      <stop offset="70%" stop-color="#C8902A"/>
+      <stop offset="100%" stop-color="#7A5410"/>
+    </linearGradient>
+    <linearGradient id="hgw-gold-soft" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFEAA0"/>
+      <stop offset="55%" stop-color="#E8B947"/>
+      <stop offset="100%" stop-color="#8C5E15"/>
+    </linearGradient>
+    <radialGradient id="hgw-aura" cx="80%" cy="42%" r="38%">
+      <stop offset="0%" stop-color="#FFD75B" stop-opacity="0.85"/>
+      <stop offset="55%" stop-color="#E89C1F" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="hgw-glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <pattern id="hgw-circuit" x="0" y="0" width="64" height="64" patternUnits="userSpaceOnUse">
+      <rect width="64" height="64" fill="transparent"/>
+      <path d="M 0 32 L 22 32 L 28 26 L 36 26 L 42 32 L 64 32" stroke="#7A5410" stroke-width="0.6" fill="none" opacity="0.55"/>
+      <path d="M 32 0 L 32 22 L 26 28 L 26 36 L 32 42 L 32 64" stroke="#7A5410" stroke-width="0.6" fill="none" opacity="0.55"/>
+      <circle cx="32" cy="32" r="1.4" fill="#F5C24A" opacity="0.6"/>
+    </pattern>
+  </defs>
+
+  <!-- plate -->
+  <rect x="10" y="10" width="492" height="492" rx="92" fill="url(#hgw-bg)"/>
+  <rect x="10" y="10" width="492" height="492" rx="92" fill="url(#hgw-circuit)" opacity="0.55"/>
+  <rect x="10" y="10" width="492" height="492" rx="92" fill="url(#hgw-aura)"/>
+  <rect x="10" y="10" width="492" height="492" rx="92" fill="none" stroke="url(#hgw-gold)" stroke-width="6"/>
+  <rect x="20" y="20" width="472" height="472" rx="82" fill="none" stroke="url(#hgw-gold-soft)" stroke-width="1.2" opacity="0.45"/>
+
+  <!-- lightning streaks -->
+  <g opacity="0.65" stroke="url(#hgw-gold)" stroke-width="1.6" fill="none">
+    <path d="M 70 110 L 110 150 L 95 175 L 140 210"/>
+    <path d="M 420 90 L 388 130 L 408 160 L 372 200"/>
+    <path d="M 440 360 L 410 400 L 430 420 L 392 448"/>
+    <path d="M 80 380 L 118 410 L 102 432 L 138 458"/>
+  </g>
+
+  <!-- right-side caduceus aura ring -->
+  <g transform="translate(384, 220)" filter="url(#hgw-glow)" opacity="0.95">
+    <circle r="56" fill="none" stroke="url(#hgw-gold)" stroke-width="1.6" opacity="0.85"/>
+    <circle r="44" fill="none" stroke="url(#hgw-gold-soft)" stroke-width="0.9" opacity="0.65"/>
+    <!-- mini caduceus -->
+    <g stroke="url(#hgw-gold)" stroke-linecap="round" fill="none">
+      <line x1="0" y1="-32" x2="0" y2="32" stroke-width="3"/>
+      <path d="M 0 -22 C -14 -14, -14 -2, 0 4 C 14 10, 14 22, 0 28" stroke-width="2.6"/>
+      <path d="M 0 -22 C 14 -14, 14 -2, 0 4 C -14 10, -14 22, 0 28" stroke-width="2.6"/>
+      <path d="M -16 -36 Q -4 -42, 0 -30 Q 4 -42, 16 -36" stroke-width="2.4"/>
+    </g>
+  </g>
+
+  <!-- central winged-helm + caduceus emblem (stylized warrior icon) -->
+  <g transform="translate(256, 256)" filter="url(#hgw-glow)">
+    <!-- shoulder/cape backdrop -->
+    <path d="M -150 80 Q -110 -20, -90 -60 Q -10 -90, 0 -110 Q 10 -90, 90 -60 Q 110 -20, 150 80 Z"
+          fill="#0A0703" stroke="url(#hgw-gold)" stroke-width="2.4" opacity="0.95"/>
+
+    <!-- chestplate caduceus -->
+    <g stroke="url(#hgw-gold)" stroke-linecap="round" fill="none">
+      <line x1="0" y1="-40" x2="0" y2="56" stroke-width="5"/>
+      <path d="M 0 -28 C -22 -16, -22 0, 0 10 C 22 20, 22 36, 0 46" stroke-width="4"/>
+      <path d="M 0 -28 C 22 -16, 22 0, 0 10 C -22 20, -22 36, 0 46" stroke-width="4"/>
+      <!-- wings on rod top -->
+      <path d="M -30 -48 Q -10 -62, 0 -40" stroke-width="3.4"/>
+      <path d="M 30 -48 Q 10 -62, 0 -40" stroke-width="3.4"/>
+      <path d="M -42 -38 Q -16 -54, -4 -32" stroke-width="2.4" opacity="0.8"/>
+      <path d="M 42 -38 Q 16 -54, 4 -32" stroke-width="2.4" opacity="0.8"/>
+      <circle cx="0" cy="-44" r="3.4" fill="url(#hgw-gold)" stroke="none"/>
+    </g>
+
+    <!-- helm above -->
+    <g transform="translate(0, -130)">
+      <path d="M -42 18 Q -50 -10, -30 -22 Q -10 -32, 10 -30 Q 36 -28, 44 -8 Q 48 12, 36 22 L -36 22 Z"
+            fill="url(#hgw-gold)" stroke="#7A5410" stroke-width="1.4"/>
+      <!-- wing left -->
+      <path d="M -42 -2 Q -76 -12, -84 -32 Q -60 -28, -46 -18 Q -52 -8, -44 0 Z"
+            fill="url(#hgw-gold-soft)" stroke="#7A5410" stroke-width="1"/>
+      <!-- wing right -->
+      <path d="M 44 -2 Q 78 -12, 86 -32 Q 62 -28, 48 -18 Q 54 -8, 46 0 Z"
+            fill="url(#hgw-gold-soft)" stroke="#7A5410" stroke-width="1"/>
+      <!-- helm brim highlight -->
+      <path d="M -36 22 L 36 22" stroke="#FFE07A" stroke-width="2" opacity="0.85"/>
+      <path d="M -22 -10 Q 0 -22, 22 -10" stroke="#FFE07A" stroke-width="1.4" fill="none" opacity="0.7"/>
+    </g>
+  </g>
+
+  <!-- corner accents -->
+  <circle cx="56" cy="56" r="5" fill="#F5C24A"/>
+  <circle cx="456" cy="456" r="5" fill="#F5C24A" opacity="0.85"/>
+  <circle cx="456" cy="56" r="3" fill="#FFE07A" opacity="0.9"/>
+  <circle cx="56" cy="456" r="3" fill="#FFE07A" opacity="0.7"/>
+
+  <!-- wordmark -->
+  <g font-family="Inter, sans-serif" font-weight="700" letter-spacing="6">
+    <text x="256" y="468" font-size="24" fill="url(#hgw-gold)" text-anchor="middle">HERMES · AIEL</text>
+  </g>
+</svg>
