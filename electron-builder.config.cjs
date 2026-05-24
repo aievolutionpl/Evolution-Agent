@@ -1,8 +1,8 @@
 module.exports = {
   appId: 'io.aievolutionlabs.hermes',
-  productName: 'Hermes AIEL',
+  productName: 'Hermes Evolution Agent',
   copyright: 'Copyright © 2026 AI Evolution Labs',
-  icon: 'public/aievolutionlabs-icon-1024.png',
+  icon: 'logo.png',
   directories: {
     output: 'release',
     buildResources: 'assets',
@@ -45,7 +45,7 @@ module.exports = {
     perMachine: false,
     allowToChangeInstallationDirectory: false,
     deleteAppDataOnUninstall: false,
-    shortcutName: 'Hermes AIEL',
+    shortcutName: 'Hermes Evolution Agent',
   },
   publish: {
     provider: 'github',

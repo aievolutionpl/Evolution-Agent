@@ -1,6 +1,6 @@
 {
   "name": "Evolution Agent — AI Evolution Labs",
-  "short_name": "Evolution Agent",
+  "short_name": "Hermes EA",
   "description": "Business AI agent workspace by AI Evolution Labs — briefs, reports, automations, market research.",
   "id": "/?app=evolution-agent",
   "start_url": "/?source=pwa",
@@ -9,13 +9,13 @@
   "display_override": ["window-controls-overlay", "standalone", "browser"],
   "orientation": "any",
   "background_color": "#02110F",
-  "theme_color": "#00E5FF",
+  "theme_color": "#F5C24A",
   "categories": ["productivity", "business", "utilities"],
   "icons": [
     {
-      "src": "/aievolutionlabs-icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
       "purpose": "any maskable"
     },
     {

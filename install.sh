@@ -18,6 +18,7 @@ set -euo pipefail
 REPO_URL="${REPO_URL:-https://github.com/outsourc-e/hermes-workspace.git}"
 INSTALL_DIR="${INSTALL_DIR:-$HOME/hermes-workspace}"
 GATEWAY_PORT="${GATEWAY_PORT:-8642}"
+WORKSPACE_PORT="${WORKSPACE_PORT:-3000}"
 NOUS_INSTALLER_URL="${NOUS_INSTALLER_URL:-https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh}"
 
 # ─── helpers ──────────────────────────────────────────────────────────────
@@ -183,6 +184,7 @@ if [[ ! -f .env ]]; then
   cp .env.example .env
 fi
 ensure_env_key "$INSTALL_DIR/.env" "HERMES_API_URL" "http://127.0.0.1:${GATEWAY_PORT}"
+ensure_env_key "$INSTALL_DIR/.env" "PORT" "${WORKSPACE_PORT}"
 green "  .env ready ✓"
 
 cyan "→ Enabling Hermes API server…"
@@ -233,6 +235,43 @@ if [[ -d "$INSTALL_DIR/skills" ]]; then
   done
 fi
 
+
+create_desktop_shortcut() {
+  local dashboard_url="http://localhost:${WORKSPACE_PORT}/dashboard"
+
+  if [[ "$(uname -s)" == "Darwin" ]]; then
+    local desktop="$HOME/Desktop"
+    local shortcut="$desktop/Hermes Evolution Agent.command"
+    mkdir -p "$desktop"
+    cat > "$shortcut" <<EOF
+#!/usr/bin/env bash
+open "${dashboard_url}"
+EOF
+    chmod +x "$shortcut"
+    green "  Desktop shortcut created: $shortcut ✓"
+    return
+  fi
+
+  if [[ "$(uname -s)" == "Linux" ]]; then
+    local desktop="$HOME/Desktop"
+    local shortcut="$desktop/hermes-evolution-agent.desktop"
+    mkdir -p "$desktop"
+    cat > "$shortcut" <<EOF
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Hermes Evolution Agent
+Comment=Open Hermes Evolution Agent dashboard
+Exec=xdg-open ${dashboard_url}
+Icon=${INSTALL_DIR}/logo.png
+Terminal=false
+Categories=Office;Productivity;
+EOF
+    chmod +x "$shortcut"
+    green "  Desktop shortcut created: $shortcut ✓"
+  fi
+}
+
 # ─── macOS LaunchAgent (plist) ───────────────────────────────────────────
 # Best-effort convenience for local macOS installs. This keeps the source of
 # truth in-repo and makes sure launchd runs server-entry.js (the thin HTTP
@@ -246,7 +285,7 @@ if [[ "$(uname -s)" == "Darwin" ]]; then
   mkdir -p "$HOME/Library/LaunchAgents"
 
   NODE_BIN="$(command -v node)"
-  HERMES_PORT="${PORT:-3000}"
+  HERMES_PORT="${PORT:-$WORKSPACE_PORT}"
   HERMES_API_GATEWAY="http://127.0.0.1:${GATEWAY_PORT}"
   TOKEN=""
 
@@ -274,6 +313,9 @@ if [[ "$(uname -s)" == "Darwin" ]]; then
   green "  Plist installed: $PLIST_DEST ✓"
 fi
 
+cyan "→ Creating desktop shortcut to Hermes dashboard…"
+create_desktop_shortcut
+
 # ─── done ─────────────────────────────────────────────────────────────────
 
 bold ""
@@ -291,7 +333,7 @@ Next steps (two terminals):
   2) Start the workspace UI:
        cd $INSTALL_DIR && pnpm dev
 
-  3) Open http://localhost:3000
+  3) Open http://localhost:${WORKSPACE_PORT}
 
 If the gateway was already running before this install,
 restart it so API_SERVER_ENABLED=true takes effect.
