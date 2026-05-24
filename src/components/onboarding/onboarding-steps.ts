@@ -32,16 +32,16 @@ export type OnboardingStep = {
 export const ONBOARDING_STEPS: Array<OnboardingStep> = [
   {
     id: 'welcome',
-    title: 'Welcome to Hermes Workspace',
-    description: 'Your AI workspace powered by Hermes Agent',
+    title: 'Welcome to Evolution Agent',
+    description: 'Your AI workspace by AI Evolution Labs',
     icon: Home01Icon,
-    iconBg: 'bg-orange-500',
+    iconBg: 'bg-accent-500',
     nextLabel: 'Get Started',
   },
   {
     id: 'connection-check',
     title: 'Connection Check',
-    description: 'Verify that Hermes Agent is running before you begin.',
+    description: 'Verify that the backend is running before you begin.',
     icon: Plug01Icon,
     iconBg: 'bg-emerald-500',
     component: ConnectionCheckStep,

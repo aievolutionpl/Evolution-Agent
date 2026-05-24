@@ -5,7 +5,7 @@ export const tourSteps: Array<Step> = [
   {
     target: 'body',
     placement: 'center',
-    title: 'Welcome to Hermes Workspace! ⚕',
+    title: 'Welcome to Evolution Agent',
     content: (
       <div
         style={{
@@ -16,13 +16,13 @@ export const tourSteps: Array<Step> = [
         }}
       >
         <img
-          src="/claude-avatar.webp"
-          alt="Hermes Agent"
+          src="/aievolutionlabs-icon.svg"
+          alt="AI Evolution Labs"
           style={{ width: 48, height: 48, borderRadius: 12 }}
         />
         <p style={{ textAlign: 'center', margin: 0 }}>
-          Your AI-powered command center for managing agents, chats, files, and
-          more. Let&apos;s take a quick tour!
+          Your AI-powered command center by AI Evolution Labs — for managing
+          agents, chats, files, and more. Let&apos;s take a quick tour!
         </p>
       </div>
     ),
@@ -74,7 +74,7 @@ export const tourSteps: Array<Step> = [
     placement: 'right',
     title: 'Built-in Terminal',
     content:
-      'Built-in terminal for quick commands. Execute shell commands without leaving Hermes Workspace.',
+      'Built-in terminal for quick commands. Execute shell commands without leaving the workspace.',
   },
   // Step 9: Usage Meter (in header)
   {
@@ -90,14 +90,14 @@ export const tourSteps: Array<Step> = [
     placement: 'right',
     title: 'Settings & Customization',
     content:
-      'Configure providers, themes, accent colors, and more. Make Hermes Workspace yours.',
+      'Configure providers, themes, accent colors, and more. Make Evolution Agent yours.',
   },
   // Step 11: Finish
   {
     target: 'body',
     placement: 'center',
-    title: "You're all set! 🎉",
+    title: "You're all set!",
     content:
-      'Start chatting with your AI, explore the tools, and customize Hermes Workspace to fit your workflow. Need help? Press ? to see all keyboard shortcuts.',
+      'Start chatting with your AI, explore the tools, and customize Evolution Agent to fit your workflow. Need help? Press ? to see all keyboard shortcuts.',
   },
 ]
