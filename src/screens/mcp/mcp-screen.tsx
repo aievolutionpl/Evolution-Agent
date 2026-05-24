@@ -18,6 +18,28 @@ type Tab = 'installed' | 'marketplace'
 const TOOLBAR_FIELD =
   'h-9 w-full min-w-0 rounded-lg border border-primary-200 bg-primary-100/60 px-3 text-sm text-ink outline-none transition-colors focus:border-primary sm:min-w-[220px]'
 
+const QUICK_MCP_TEMPLATES: Array<{ label: string; draft: McpClientInput }> = [
+  {
+    label: 'Quick add · stdio',
+    draft: {
+      name: 'new-stdio-server',
+      transport: 'stdio',
+      command: 'npx',
+      args: ['-y', '<mcp-package-name>'],
+      env: {},
+    },
+  },
+  {
+    label: 'Quick add · SSE',
+    draft: {
+      name: 'new-sse-server',
+      transport: 'sse',
+      url: 'https://example.com/mcp',
+      headers: {},
+    },
+  },
+]
+
 export function McpScreen() {
   const queryClient = useQueryClient()
   const [tab, setTab] = useState<Tab>('installed')
@@ -69,16 +91,31 @@ export function McpScreen() {
                 exposed to Hermes Agent.
               </p>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                setEditing(null)
-                setDialogOpen(true)
-              }}
-            >
-              Add Server
-            </Button>
+            <div className="flex flex-wrap items-center gap-2">
+              {QUICK_MCP_TEMPLATES.map((template) => (
+                <Button
+                  key={template.label}
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setEditing(template.draft)
+                    setDialogOpen(true)
+                  }}
+                >
+                  {template.label}
+                </Button>
+              ))}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setEditing(null)
+                  setDialogOpen(true)
+                }}
+              >
+                Add Server
+              </Button>
+            </div>
           </div>
           {capabilityMode === 'fallback' ? (
             <div
@@ -161,7 +198,7 @@ export function McpScreen() {
               </div>
 
               {hubQuery.data?.warnings && hubQuery.data.warnings.length > 0 ? (
-                hubQuery.data.results && hubQuery.data.results.length > 0 ? (
+                hubQuery.data.results.length > 0 ? (
                   <p className="text-xs text-amber-700 dark:text-amber-300">
                     ⚠ One or more sources unavailable; showing local results.
                     <span className="ml-1 text-[11px] text-primary-500">
