@@ -55,6 +55,10 @@ import { usePinnedModels } from '@/hooks/use-pinned-models'
 import { cn } from '@/lib/utils'
 import { useVoiceInput } from '@/hooks/use-voice-input'
 import { useVoiceRecorder } from '@/hooks/use-voice-recorder'
+import {
+  selectDictationLanguage,
+  useChatSettingsStore,
+} from '@/hooks/use-chat-settings'
 import { toast } from '@/components/ui/toast'
 import {
   SEARCH_MODAL_EVENTS,
@@ -1742,7 +1746,9 @@ function ChatComposerComponent({
   )
 
   // Voice input (tap = speech-to-text)
+  const dictationLang = useChatSettingsStore(selectDictationLanguage)
   const voiceInput = useVoiceInput({
+    lang: dictationLang,
     transcribe: useRemoteStt ? transcribeVoiceBlob : undefined,
     onResult: useCallback(
       (text: string) => {

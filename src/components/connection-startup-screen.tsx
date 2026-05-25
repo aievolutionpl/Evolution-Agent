@@ -5,7 +5,8 @@ import { writeTextToClipboard } from '@/lib/clipboard'
 import { fetchClaudeAuthStatus } from '@/lib/claude-auth'
 import { cn } from '@/lib/utils'
 
-const POLL_INTERVAL_MS = 2_000
+const POLL_INTERVAL_INITIAL_MS = 1_000
+const POLL_INTERVAL_MAX_MS = 8_000
 const FAILURE_REVEAL_MS = 5_000
 // Fire one silent auto-start attempt this many ms after we still can't connect.
 const AUTO_START_DELAY_MS = 4_000
@@ -211,6 +212,8 @@ export function ConnectionStartupScreen({ onConnected }: Props) {
       void fireSilentAutoStart()
     }, AUTO_START_DELAY_MS)
 
+    let pollDelay = POLL_INTERVAL_INITIAL_MS
+
     const tryConnect = async () => {
       try {
         const status = await fetchClaudeAuthStatus()
@@ -227,7 +230,8 @@ export function ConnectionStartupScreen({ onConnected }: Props) {
         if (showFailureState) {
           void refreshHermesStatus()
         }
-        pollTimer = setTimeout(tryConnect, POLL_INTERVAL_MS)
+        pollTimer = setTimeout(tryConnect, pollDelay)
+        pollDelay = Math.min(pollDelay * 2, POLL_INTERVAL_MAX_MS)
       }
     }
 
@@ -347,20 +351,15 @@ export function ConnectionStartupScreen({ onConnected }: Props) {
           Hermes Workspace
         </h1>
 
-        {/* Connecting spinner */}
+        {/* Connecting — staged checklist */}
         <div
           className={cn(
-            'mt-4 flex items-center gap-3 text-sm text-white/72 transition-opacity duration-300',
-            showFailureState ? 'h-0 opacity-0' : 'opacity-100',
+            'mt-5 w-full max-w-sm transition-opacity duration-300',
+            showFailureState ? 'pointer-events-none h-0 opacity-0' : 'opacity-100',
           )}
           aria-hidden={showFailureState}
         >
-          <span className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-white/20 border-t-white/80" />
-          <span>
-            Connecting to your backend
-            {elapsedSec > 0 ? ` (${elapsedSec}s)` : ''}
-            …
-          </span>
+          <BootChecklist elapsedSec={elapsedSec} hermesStatus={hermesStatus} />
         </div>
 
         {/* Failure state — setup guide */}
@@ -571,6 +570,97 @@ export function ConnectionStartupScreen({ onConnected }: Props) {
         )}
       </div>
     </div>
+  )
+}
+
+type BootStepState = 'pending' | 'active' | 'done'
+
+function BootChecklist({
+  elapsedSec,
+  hermesStatus,
+}: {
+  elapsedSec: number
+  hermesStatus: HermesInstallStatus | null
+}) {
+  const detected = hermesStatus !== null
+  const installed = Boolean(hermesStatus?.installed)
+  const running = Boolean(hermesStatus?.running)
+
+  const steps: Array<{ label: string; state: BootStepState }> = [
+    {
+      label: 'Detecting Hermes installation',
+      state: detected ? 'done' : elapsedSec >= 0 ? 'active' : 'pending',
+    },
+    {
+      label: 'Reaching gateway on localhost',
+      state: running ? 'done' : installed ? 'active' : 'pending',
+    },
+    {
+      label: 'Loading capabilities & skills',
+      state: 'pending',
+    },
+    {
+      label: 'Warming up models',
+      state: 'pending',
+    },
+  ]
+
+  return (
+    <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-4 backdrop-blur-sm">
+      <div className="flex items-center justify-between">
+        <span className="text-[11px] font-medium uppercase tracking-[0.12em] text-white/45">
+          Booting workspace
+        </span>
+        <span className="text-[11px] text-white/35 tabular-nums">
+          {elapsedSec}s
+        </span>
+      </div>
+      <ul className="mt-3 space-y-1.5 text-sm">
+        {steps.map((step, idx) => (
+          <li
+            key={idx}
+            className={cn(
+              'flex items-center gap-2.5 transition-colors',
+              step.state === 'done'
+                ? 'text-white/85'
+                : step.state === 'active'
+                  ? 'text-white/70'
+                  : 'text-white/30',
+            )}
+          >
+            <StepGlyph state={step.state} />
+            <span>{step.label}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+function StepGlyph({ state }: { state: BootStepState }) {
+  if (state === 'done') {
+    return (
+      <span
+        aria-hidden="true"
+        className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-emerald-400/20 text-[10px] font-semibold text-emerald-300"
+      >
+        ✓
+      </span>
+    )
+  }
+  if (state === 'active') {
+    return (
+      <span
+        aria-hidden="true"
+        className="inline-block h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-white/15 border-t-cyan-300"
+      />
+    )
+  }
+  return (
+    <span
+      aria-hidden="true"
+      className="inline-block h-4 w-4 shrink-0 rounded-full border border-white/10"
+    />
   )
 }
 

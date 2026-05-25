@@ -2341,6 +2341,70 @@ function VoiceContent() {
           </>
         )}
       </div>
+      <DictationCard />
+    </div>
+  )
+}
+
+const DICTATION_LANGUAGES: Array<{ value: string; label: string }> = [
+  { value: 'auto', label: 'Auto-detect (browser)' },
+  { value: 'en-US', label: 'English (US)' },
+  { value: 'en-GB', label: 'English (UK)' },
+  { value: 'pl-PL', label: 'Polski' },
+  { value: 'es-ES', label: 'Español' },
+  { value: 'de-DE', label: 'Deutsch' },
+  { value: 'fr-FR', label: 'Français' },
+  { value: 'it-IT', label: 'Italiano' },
+  { value: 'pt-PT', label: 'Português' },
+  { value: 'pt-BR', label: 'Português (BR)' },
+  { value: 'uk-UA', label: 'Українська' },
+  { value: 'ru-RU', label: 'Русский' },
+  { value: 'nl-NL', label: 'Nederlands' },
+  { value: 'sv-SE', label: 'Svenska' },
+  { value: 'tr-TR', label: 'Türkçe' },
+  { value: 'cs-CZ', label: 'Čeština' },
+  { value: 'ja-JP', label: '日本語' },
+  { value: 'ko-KR', label: '한국어' },
+  { value: 'zh-CN', label: '中文 (简体)' },
+]
+
+function DictationCard() {
+  const dictationLanguage = useChatSettingsStore(
+    (s) => s.settings.dictationLanguage,
+  )
+  const updateSettings = useChatSettingsStore((s) => s.updateSettings)
+  const browserLang =
+    typeof navigator !== 'undefined' ? navigator.language : 'en-US'
+
+  return (
+    <div className={SETTINGS_CARD_CLASS}>
+      <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-primary-500">
+        Browser Dictation (mic button)
+      </p>
+      <Row
+        label="Dictation language"
+        description={
+          dictationLanguage === 'auto'
+            ? `Auto: using ${browserLang}`
+            : 'Single language per session — pick the one you speak.'
+        }
+      >
+        <select
+          value={dictationLanguage}
+          onChange={(e) => updateSettings({ dictationLanguage: e.target.value })}
+          className="h-8 rounded-lg border border-primary-200 bg-primary-50 px-2 text-sm text-primary-900 outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
+        >
+          {DICTATION_LANGUAGES.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
+      </Row>
+      <p className="mt-1 text-[11px] text-primary-400 dark:text-neutral-500">
+        Tip: tap the mic in the chat composer to dictate. For multilingual
+        auto-detect, use a Whisper-based STT provider above.
+      </p>
     </div>
   )
 }
