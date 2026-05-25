@@ -8,6 +8,11 @@ import {
   getCapabilities,
   getGatewayMode,
 } from '../../server/gateway-capabilities'
+import {
+  isClaudeAgentHealthy,
+  resolveClaudeAgentDir,
+  resolveClaudeBinary,
+} from '../../server/claude-agent'
 
 export const Route = createFileRoute('/api/gateway-status')({
   server: {
@@ -18,6 +23,8 @@ export const Route = createFileRoute('/api/gateway-status')({
         }
 
         const capabilities = await ensureGatewayProbed()
+        const installed = Boolean(resolveClaudeBinary() || resolveClaudeAgentDir())
+        const running = await isClaudeAgentHealthy()
         return json({
           capabilities,
           mode: getGatewayMode(),
@@ -28,6 +35,10 @@ export const Route = createFileRoute('/api/gateway-status')({
             url: CLAUDE_API,
           },
           dashboard: capabilities.dashboard,
+          agent: {
+            installed,
+            running,
+          },
         })
       },
     },

@@ -52,6 +52,10 @@ function dispatchOnboardingCompletionChanged(completed: boolean) {
 type Step = 'welcome' | 'connect' | 'provider' | 'test' | 'done'
 
 type GatewayStatusResponse = {
+  agent?: {
+    installed?: boolean
+    running?: boolean
+  }
   capabilities?: {
     health?: boolean
     chatCompletions?: boolean
@@ -143,6 +147,7 @@ export function ClaudeOnboarding() {
   const [backendStatus, setBackendStatus] = useState<
     'idle' | 'checking' | 'ready' | 'error'
   >('idle')
+  const [startingAgent, setStartingAgent] = useState(false)
   const [backendInfo, setBackendInfo] = useState<GatewayStatusResponse | null>(
     null,
   )
@@ -271,6 +276,42 @@ export function ClaudeOnboarding() {
       )
     }
   }, [])
+
+
+  const startGateway = useCallback(async () => {
+    setStartingAgent(true)
+    setBackendMessage('')
+
+    try {
+      const response = await fetch('/api/start-agent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      })
+      const payload = (await response.json().catch(() => ({}))) as {
+        ok?: boolean
+        error?: string
+        message?: string
+      }
+
+      if (!response.ok || !payload.ok) {
+        throw new Error(payload.error || 'Failed to start Hermes Agent gateway')
+      }
+
+      setBackendMessage(
+        payload.message === 'already running'
+          ? 'Hermes Agent is already running.'
+          : 'Hermes Agent gateway start requested. Rechecking status…',
+      )
+      await checkBackend()
+    } catch (err) {
+      setBackendStatus('error')
+      setBackendMessage(
+        err instanceof Error ? err.message : 'Failed to start Hermes Agent gateway',
+      )
+    } finally {
+      setStartingAgent(false)
+    }
+  }, [checkBackend])
 
   const saveProviderConfig = useCallback(async () => {
     if (!selectedProvider) return true
@@ -680,34 +721,43 @@ export function ClaudeOnboarding() {
                     <span className="size-2 rounded-full bg-red-500" />
                     {backendMessage}
                   </div>
-                  <div
-                    className="rounded-xl p-3 text-left text-xs"
-                    style={{ ...cardStyle, borderColor: 'var(--theme-border)' }}
-                  >
-                    <p className="font-medium text-white">
-                      Compatible backends
-                    </p>
-                    <p className="mt-2" style={mutedStyle}>
-                      Use any backend that exposes{' '}
-                      <code>/v1/chat/completions</code>. If you point Evolution
-                      Agent at a Hermes gateway, enhanced features unlock
-                      automatically.
-                    </p>
-                    <div
-                      className="mt-3 rounded-lg px-3 py-2 font-mono text-[11px]"
-                      style={{ background: 'rgba(0,0,0,0.2)' }}
-                    >
-                      pnpm dev
-                    </div>
-                    <div
-                      className="mt-2 rounded-lg px-3 py-2 font-mono text-[11px]"
-                      style={{ background: 'rgba(0,0,0,0.2)' }}
-                    >
-                      hermes --gateway
-                    </div>
-                  </div>
                 </div>
               )}
+
+              <div className="space-y-3 rounded-xl p-3 text-left text-xs" style={cardStyle}>
+                <p className="font-medium text-white">Hermes Agent status</p>
+                <p style={mutedStyle}>
+                  Detected locally:{' '}
+                  <span className="font-semibold" style={{ color: 'var(--theme-text)' }}>
+                    {backendInfo?.agent?.installed ? 'Installed' : 'Not detected'}
+                  </span>
+                  {' · '}
+                  Gateway:{' '}
+                  <span className="font-semibold" style={{ color: 'var(--theme-text)' }}>
+                    {backendInfo?.agent?.running ? 'Running' : 'Stopped'}
+                  </span>
+                </p>
+
+                {backendInfo?.agent?.installed ? (
+                  <div className="rounded-lg border px-3 py-2" style={{ borderColor: 'var(--theme-border)' }}>
+                    <p className="font-medium text-white">Detected Hermes Agent</p>
+                    <p className="mt-1" style={mutedStyle}>Use one click to start the gateway and connect it to the dashboard.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <p className="font-medium text-white">Install Hermes Agent</p>
+                    <p style={mutedStyle}>1) Open Terminal (macOS) or PowerShell (Windows).</p>
+                    <p style={mutedStyle}>2) Run installer:</p>
+                    <div className="rounded-lg px-3 py-2 font-mono text-[11px]" style={{ background: 'rgba(0,0,0,0.2)' }}>
+                      curl -fsSL https://hermes-workspace.com/install.sh | bash
+                    </div>
+                    <p style={mutedStyle}>3) Start gateway:</p>
+                    <div className="rounded-lg px-3 py-2 font-mono text-[11px]" style={{ background: 'rgba(0,0,0,0.2)' }}>
+                      hermes gateway run
+                    </div>
+                  </div>
+                )}
+              </div>
 
               <div className="flex gap-2">
                 <button
@@ -716,6 +766,14 @@ export function ClaudeOnboarding() {
                   style={{ borderColor: 'var(--theme-border)' }}
                 >
                   Retry
+                </button>
+                <button
+                  onClick={() => void startGateway()}
+                  disabled={startingAgent}
+                  className="flex-1 rounded-xl border py-3 text-sm font-semibold transition-colors disabled:opacity-50"
+                  style={{ borderColor: 'var(--theme-border)' }}
+                >
+                  {startingAgent ? 'Starting gateway…' : 'Start Gateway'}
                 </button>
                 <button
                   onClick={() => {
