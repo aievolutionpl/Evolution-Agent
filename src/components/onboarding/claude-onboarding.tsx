@@ -4,13 +4,20 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {
+  Alert02Icon,
   CheckmarkCircle02Icon,
+  Copy01Icon,
+  Download04Icon,
+  PlayIcon,
   Plug01Icon,
+  RefreshIcon,
   Rocket01Icon,
   SparklesIcon,
 } from '@hugeicons/core-free-icons'
+import type { HermesInstallStatus } from '@/lib/hermes-status-types'
 import { cn } from '@/lib/utils'
 import { ProviderLogo } from '@/components/provider-logo'
+import { writeTextToClipboard } from '@/lib/clipboard'
 
 const KNOWN_PROVIDER_PREFIXES = [
   'openrouter',
@@ -49,7 +56,7 @@ function dispatchOnboardingCompletionChanged(completed: boolean) {
   )
 }
 
-type Step = 'welcome' | 'connect' | 'provider' | 'test' | 'done'
+type Step = 'welcome' | 'hermes' | 'connect' | 'provider' | 'test' | 'done'
 
 type GatewayStatusResponse = {
   capabilities?: {
@@ -140,6 +147,11 @@ function getEnhancedFeatureNames(
 export function ClaudeOnboarding() {
   const [show, setShow] = useState(false)
   const [step, setStep] = useState<Step>('welcome')
+  const [hermesStatus, setHermesStatus] = useState<HermesInstallStatus | null>(null)
+  const [hermesChecking, setHermesChecking] = useState(false)
+  const [hermesStarting, setHermesStarting] = useState(false)
+  const [hermesStartMessage, setHermesStartMessage] = useState<string>('')
+  const [hermesCopied, setHermesCopied] = useState<string | null>(null)
   const [backendStatus, setBackendStatus] = useState<
     'idle' | 'checking' | 'ready' | 'error'
   >('idle')
@@ -229,6 +241,74 @@ export function ClaudeOnboarding() {
       setAvailableModels([])
     }
   }, [canFetchModels])
+
+  const checkHermes = useCallback(async (): Promise<HermesInstallStatus | null> => {
+    setHermesChecking(true)
+    try {
+      const res = await fetch('/api/hermes-status?force=1', {
+        signal: AbortSignal.timeout(5_000),
+      })
+      if (!res.ok) {
+        setHermesStatus(null)
+        return null
+      }
+      const data = (await res.json()) as HermesInstallStatus
+      setHermesStatus(data)
+      return data
+    } catch {
+      setHermesStatus(null)
+      return null
+    } finally {
+      setHermesChecking(false)
+    }
+  }, [])
+
+  const startHermes = useCallback(async () => {
+    setHermesStarting(true)
+    setHermesStartMessage('Starting Hermes Agent…')
+    try {
+      const res = await fetch('/api/start-claude', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      })
+      const ct = res.headers.get('content-type') || ''
+      if (!ct.includes('application/json')) {
+        setHermesStartMessage(`Unexpected response (HTTP ${res.status}).`)
+        return
+      }
+      const data = (await res.json()) as { ok?: boolean; message?: string; error?: string; hint?: string }
+      if (res.ok && data.ok) {
+        setHermesStartMessage(String(data.message || 'Started — waiting for the gateway…'))
+        // Poll a few times for the gateway to come online.
+        for (let i = 0; i < 8; i += 1) {
+          await new Promise((r) => setTimeout(r, 1_500))
+          const status = await checkHermes()
+          if (status?.running) {
+            setHermesStartMessage('Hermes Agent gateway is online ✓')
+            return
+          }
+        }
+        setHermesStartMessage('Started — still waiting for the gateway to respond.')
+      } else {
+        const msg = String(data.error || 'Could not start hermes-agent')
+        setHermesStartMessage(`${msg}${data.hint ? `\nHint: ${data.hint}` : ''}`)
+      }
+    } catch (err) {
+      setHermesStartMessage(err instanceof Error ? err.message : String(err))
+    } finally {
+      setHermesStarting(false)
+    }
+  }, [checkHermes])
+
+  const copyHermesCommand = useCallback(async (command: string, key: string) => {
+    try {
+      await writeTextToClipboard(command)
+      setHermesCopied(key)
+      setTimeout(() => setHermesCopied(null), 2_000)
+    } catch {
+      // clipboard unavailable
+    }
+  }, [])
 
   const checkBackend = useCallback(async () => {
     setBackendStatus('checking')
@@ -506,11 +586,20 @@ export function ClaudeOnboarding() {
     border: '1px solid var(--theme-border)',
     color: 'var(--theme-text)',
   }
+  const futuristicCardStyle: React.CSSProperties = {
+    backgroundColor: 'rgba(15, 23, 42, 0.78)',
+    border: '1px solid rgba(99, 102, 241, 0.18)',
+    color: 'var(--theme-text)',
+    boxShadow:
+      '0 30px 80px -20px rgba(15, 23, 42, 0.85), 0 0 0 1px rgba(99, 102, 241, 0.08) inset, 0 0 60px -10px rgba(0, 229, 255, 0.18)',
+    backdropFilter: 'blur(20px) saturate(140%)',
+  }
 
-  const stepOrder: Array<Step> = ['welcome', 'connect', 'provider', 'test', 'done']
+  const stepOrder: Array<Step> = ['welcome', 'hermes', 'connect', 'provider', 'test', 'done']
   const stepIndex = stepOrder.indexOf(step)
   const stepLabels: Record<Step, string> = {
     welcome: 'Welcome',
+    hermes: 'Hermes',
     connect: 'Connect',
     provider: 'Provider',
     test: 'Test',
@@ -519,12 +608,26 @@ export function ClaudeOnboarding() {
 
   return (
     <div
-      className="fixed inset-0 z-[99999] flex items-center justify-center px-4"
+      className="fixed inset-0 z-[99999] flex items-center justify-center overflow-hidden px-4"
       style={{
-        backgroundColor: 'rgba(0,0,0,0.85)',
-        backdropFilter: 'blur(12px)',
+        backgroundColor: 'rgba(2, 6, 23, 0.85)',
+        backgroundImage:
+          'radial-gradient(900px 600px at 20% 10%, rgba(99,102,241,0.20), transparent 60%), radial-gradient(700px 500px at 85% 90%, rgba(0,229,255,0.12), transparent 60%), radial-gradient(500px 400px at 80% 10%, rgba(192,38,211,0.10), transparent 60%)',
+        backdropFilter: 'blur(14px)',
       }}
     >
+      {/* Subtle grid backdrop */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-[0.06]"
+        style={{
+          backgroundImage:
+            'linear-gradient(rgba(255,255,255,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.4) 1px, transparent 1px)',
+          backgroundSize: '40px 40px',
+          maskImage:
+            'radial-gradient(ellipse at center, black 30%, transparent 75%)',
+        }}
+      />
       <div className="relative w-full max-w-md">
         {/* Step progress (outside the animating card so it doesn't flicker) */}
         <div className="mb-3 flex items-center justify-center gap-2">
@@ -536,13 +639,19 @@ export function ClaudeOnboarding() {
                 key={id}
                 className={cn(
                   'h-1.5 rounded-full transition-all duration-300',
-                  isActive
-                    ? 'w-8 bg-accent-500'
-                    : isComplete
-                      ? 'w-4 bg-accent-500/60'
-                      : 'w-4 bg-white/15',
+                  isActive ? 'w-10' : 'w-4',
                 )}
                 title={stepLabels[id]}
+                style={{
+                  background: isActive
+                    ? 'linear-gradient(90deg, #00E5FF 0%, #6366F1 100%)'
+                    : isComplete
+                      ? 'linear-gradient(90deg, rgba(99,102,241,0.6), rgba(0,229,255,0.6))'
+                      : 'rgba(255,255,255,0.10)',
+                  boxShadow: isActive
+                    ? '0 0 12px rgba(99,102,241,0.45)'
+                    : undefined,
+                }}
               />
             )
           })}
@@ -560,22 +669,52 @@ export function ClaudeOnboarding() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -20, scale: 0.97 }}
           transition={{ duration: 0.25, ease: 'easeOut' }}
-          className="w-full rounded-2xl p-8"
-          style={cardStyle}
+          className="relative w-full overflow-hidden rounded-2xl p-8"
+          style={futuristicCardStyle}
         >
+          {/* Top accent gradient line */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px"
+            style={{
+              background:
+                'linear-gradient(90deg, transparent, rgba(0,229,255,0.55), rgba(99,102,241,0.55), transparent)',
+            }}
+          />
           {step === 'welcome' && (
             <div className="space-y-5 text-center">
-              <img
-                src="/aievolutionlabs-icon.svg"
-                alt="AI Evolution Labs"
-                className="mx-auto size-20 rounded-2xl"
-                style={{
-                  filter:
-                    'drop-shadow(0 8px 24px color-mix(in srgb, #00E5FF 35%, transparent))',
-                }}
-              />
+              <div className="relative mx-auto size-24">
+                {/* Outer orbiting halo */}
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-0 animate-ping rounded-3xl"
+                  style={{
+                    background:
+                      'conic-gradient(from 0deg, rgba(0,229,255,0.6), rgba(99,102,241,0.45), rgba(192,38,211,0.4), rgba(0,229,255,0.6))',
+                    filter: 'blur(14px)',
+                    opacity: 0.35,
+                  }}
+                />
+                <img
+                  src="/aievolutionlabs-icon.svg"
+                  alt="AI Evolution Labs"
+                  className="relative mx-auto size-20 rounded-2xl"
+                  style={{
+                    filter:
+                      'drop-shadow(0 12px 28px color-mix(in srgb, #00E5FF 45%, transparent))',
+                  }}
+                />
+              </div>
               <div className="space-y-1.5">
-                <h2 className="text-xl font-bold">Welcome to Evolution Agent</h2>
+                <h2
+                  className="bg-gradient-to-r bg-clip-text text-xl font-bold text-transparent"
+                  style={{
+                    backgroundImage:
+                      'linear-gradient(90deg, #67E8F9 0%, #A5B4FC 50%, #F0ABFC 100%)',
+                  }}
+                >
+                  Welcome to Evolution Agent
+                </h2>
                 <p
                   className="text-[11px] font-medium uppercase tracking-[0.18em]"
                   style={mutedStyle}
@@ -587,44 +726,288 @@ export function ClaudeOnboarding() {
                 Connect an OpenAI Codex / ChatGPT account, paste an API key, or
                 run a local model — and you&apos;re ready to chat.
               </p>
-              <div
-                className="grid grid-cols-3 gap-2 pt-1 text-[11px]"
-                style={mutedStyle}
-              >
-                <div
-                  className="flex flex-col items-center gap-1 rounded-xl p-2.5"
-                  style={cardStyle}
-                >
-                  <HugeiconsIcon icon={Plug01Icon} className="size-4" />
-                  <span>Connect</span>
-                </div>
-                <div
-                  className="flex flex-col items-center gap-1 rounded-xl p-2.5"
-                  style={cardStyle}
-                >
-                  <HugeiconsIcon icon={SparklesIcon} className="size-4" />
-                  <span>Configure</span>
-                </div>
-                <div
-                  className="flex flex-col items-center gap-1 rounded-xl p-2.5"
-                  style={cardStyle}
-                >
-                  <HugeiconsIcon icon={Rocket01Icon} className="size-4" />
-                  <span>Launch</span>
-                </div>
+              <div className="grid grid-cols-3 gap-2 pt-1 text-[11px]">
+                {[
+                  { icon: Plug01Icon, label: 'Connect', tint: '#22D3EE' },
+                  { icon: SparklesIcon, label: 'Configure', tint: '#A78BFA' },
+                  { icon: Rocket01Icon, label: 'Launch', tint: '#F472B6' },
+                ].map(({ icon, label, tint }) => (
+                  <div
+                    key={label}
+                    className="flex flex-col items-center gap-1.5 rounded-xl p-2.5"
+                    style={{
+                      background: `linear-gradient(160deg, color-mix(in srgb, ${tint} 18%, transparent), color-mix(in srgb, ${tint} 4%, transparent))`,
+                      border: `1px solid color-mix(in srgb, ${tint} 28%, transparent)`,
+                      color: 'var(--theme-text)',
+                    }}
+                  >
+                    <HugeiconsIcon
+                      icon={icon}
+                      className="size-4"
+                      style={{ color: tint }}
+                    />
+                    <span style={{ color: 'var(--theme-text)' }}>{label}</span>
+                  </div>
+                ))}
               </div>
               <button
                 onClick={() => {
-                  setStep('connect')
-                  void checkBackend()
+                  setStep('hermes')
+                  void checkHermes()
                 }}
-                className="w-full rounded-xl bg-accent-500 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent-600"
+                className="group relative w-full overflow-hidden rounded-xl py-3 text-sm font-semibold text-white transition-all"
+                style={{
+                  background:
+                    'linear-gradient(135deg, #00E5FF 0%, #6366F1 60%, #C026D3 100%)',
+                  boxShadow:
+                    '0 12px 32px -8px rgba(99, 102, 241, 0.55), 0 0 0 1px rgba(255,255,255,0.08) inset',
+                }}
               >
-                Get Started
+                <span
+                  className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  style={{
+                    background:
+                      'linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0))',
+                  }}
+                />
+                <span className="relative">Get Started</span>
               </button>
               <button onClick={complete} className="text-xs" style={mutedStyle}>
                 Skip setup
               </button>
+            </div>
+          )}
+
+          {step === 'hermes' && (
+            <div className="space-y-4 text-left">
+              <div className="text-center">
+                <div
+                  className="mx-auto mb-3 flex size-14 items-center justify-center rounded-2xl"
+                  style={{
+                    background:
+                      'linear-gradient(135deg, rgba(99,102,241,0.18), rgba(0,229,255,0.10))',
+                    color: '#A5B4FC',
+                    boxShadow:
+                      '0 0 0 1px rgba(165,180,252,0.20) inset, 0 12px 30px -10px rgba(99,102,241,0.45)',
+                  }}
+                >
+                  <HugeiconsIcon icon={Download04Icon} className="size-7" />
+                </div>
+                <h2 className="text-lg font-bold">Verify Hermes Agent</h2>
+                <p className="mt-1 text-xs" style={mutedStyle}>
+                  The workspace needs Hermes Agent running locally. We&apos;ll detect it,
+                  start it for you when possible, or guide you through the install.
+                </p>
+              </div>
+
+              {hermesChecking && !hermesStatus ? (
+                <div
+                  className="flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-3 py-3 text-sm"
+                  style={mutedStyle}
+                >
+                  <span className="size-2 animate-pulse rounded-full bg-accent-500" />
+                  Checking your machine…
+                </div>
+              ) : null}
+
+              {hermesStatus ? (
+                <>
+                  <div className="grid grid-cols-3 gap-2">
+                    <StatusPill
+                      label="Installed"
+                      ok={hermesStatus.installed}
+                    />
+                    <StatusPill label="Running" ok={hermesStatus.running} />
+                    <StatusPill
+                      label={hermesStatus.platform === 'unknown' ? 'OS' : labelForOs(hermesStatus.platform)}
+                      ok
+                      neutral
+                    />
+                  </div>
+
+                  {hermesStatus.installed && hermesStatus.running ? (
+                    <div
+                      className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-3 text-sm"
+                      style={{ color: '#6EE7B7' }}
+                    >
+                      <p className="flex items-center gap-2 font-medium">
+                        <HugeiconsIcon
+                          icon={CheckmarkCircle02Icon}
+                          className="size-4"
+                        />
+                        Hermes Agent is installed and running.
+                      </p>
+                      {hermesStatus.version ? (
+                        <p className="mt-1 text-xs opacity-80">
+                          version {hermesStatus.version}
+                        </p>
+                      ) : null}
+                    </div>
+                  ) : hermesStatus.installed ? (
+                    <div className="space-y-3">
+                      <div className="rounded-xl border border-indigo-500/30 bg-indigo-500/5 p-3 text-sm text-indigo-200">
+                        <p className="flex items-center gap-2 font-medium">
+                          <HugeiconsIcon icon={Alert02Icon} className="size-4" />
+                          Installed, but the gateway is not running.
+                        </p>
+                        <p className="mt-1 text-xs opacity-80">
+                          Click <strong>Start Hermes</strong> below — we&apos;ll boot
+                          it and verify the connection.
+                        </p>
+                      </div>
+                      <button
+                        onClick={startHermes}
+                        disabled={hermesStarting}
+                        className="flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-500 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:bg-indigo-400 disabled:opacity-60"
+                        style={{
+                          boxShadow:
+                            '0 10px 24px -10px rgba(99,102,241,0.55)',
+                        }}
+                      >
+                        {hermesStarting ? (
+                          <>
+                            <span className="size-3 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                            Starting…
+                          </>
+                        ) : (
+                          <>
+                            <HugeiconsIcon icon={PlayIcon} className="size-4" />
+                            Start Hermes
+                          </>
+                        )}
+                      </button>
+                      {hermesStartMessage ? (
+                        <pre
+                          className="whitespace-pre-wrap rounded-lg border border-white/10 bg-black/30 p-2.5 font-mono text-[11px] leading-5"
+                          style={mutedStyle}
+                        >
+                          {hermesStartMessage}
+                        </pre>
+                      ) : null}
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-3 text-sm text-amber-200">
+                        <p className="flex items-center gap-2 font-medium">
+                          <HugeiconsIcon
+                            icon={Download04Icon}
+                            className="size-4"
+                          />
+                          Hermes Agent is not installed yet.
+                        </p>
+                        <p className="mt-1 text-xs opacity-80">
+                          {hermesStatus.install.description}
+                        </p>
+                      </div>
+
+                      <div
+                        className="rounded-xl border border-white/10 p-3"
+                        style={cardStyle}
+                      >
+                        <div className="mb-2 flex items-center justify-between">
+                          <span
+                            className="text-[11px] font-semibold uppercase tracking-wider"
+                            style={mutedStyle}
+                          >
+                            {hermesStatus.install.label}
+                          </span>
+                          <button
+                            onClick={() =>
+                              void copyHermesCommand(
+                                hermesStatus.install.command,
+                                'primary',
+                              )
+                            }
+                            className="flex items-center gap-1 rounded-md border border-white/10 bg-white/5 px-2 py-1 text-[10px] font-medium hover:bg-white/10"
+                          >
+                            <HugeiconsIcon icon={Copy01Icon} className="size-3" />
+                            {hermesCopied === 'primary' ? 'Copied' : 'Copy'}
+                          </button>
+                        </div>
+                        <pre
+                          className="overflow-x-auto rounded-md bg-black/40 p-2 font-mono text-[11px] leading-5"
+                          style={{ color: 'var(--theme-text)' }}
+                        >
+                          <code>{hermesStatus.install.command}</code>
+                        </pre>
+                      </div>
+
+                      {hermesStatus.install.prerequisites?.map((p, i) => (
+                        <div
+                          key={i}
+                          className="rounded-xl border border-white/10 p-3"
+                          style={cardStyle}
+                        >
+                          <div className="mb-2 flex items-center justify-between">
+                            <span className="text-xs font-medium">
+                              {p.title}
+                            </span>
+                            <button
+                              onClick={() =>
+                                void copyHermesCommand(p.command, `pre-${i}`)
+                              }
+                              className="flex items-center gap-1 rounded-md border border-white/10 bg-white/5 px-2 py-1 text-[10px] font-medium hover:bg-white/10"
+                            >
+                              <HugeiconsIcon icon={Copy01Icon} className="size-3" />
+                              {hermesCopied === `pre-${i}` ? 'Copied' : 'Copy'}
+                            </button>
+                          </div>
+                          <pre
+                            className="overflow-x-auto rounded-md bg-black/40 p-2 font-mono text-[11px] leading-5"
+                            style={{ color: 'var(--theme-text)' }}
+                          >
+                            <code>{p.command}</code>
+                          </pre>
+                          {p.note ? (
+                            <p className="mt-1.5 text-[11px]" style={mutedStyle}>
+                              {p.note}
+                            </p>
+                          ) : null}
+                        </div>
+                      ))}
+
+                      <p className="text-[11px]" style={mutedStyle}>
+                        Run the command in a terminal, then click <strong>Re-check</strong>.
+                      </p>
+                    </div>
+                  )}
+                </>
+              ) : null}
+
+              <div className="flex gap-2 pt-1">
+                <button
+                  onClick={() => void checkHermes()}
+                  disabled={hermesChecking}
+                  className="flex flex-1 items-center justify-center gap-2 rounded-xl border py-2.5 text-sm font-semibold transition-colors disabled:opacity-50"
+                  style={{ borderColor: 'var(--theme-border)' }}
+                >
+                  <HugeiconsIcon
+                    icon={RefreshIcon}
+                    className={cn(
+                      'size-4',
+                      hermesChecking && 'animate-spin',
+                    )}
+                  />
+                  Re-check
+                </button>
+                <button
+                  onClick={() => {
+                    setStep('connect')
+                    void checkBackend()
+                  }}
+                  className="flex-1 rounded-xl py-2.5 text-sm font-semibold text-white transition-all"
+                  style={{
+                    background:
+                      hermesStatus?.running
+                        ? 'linear-gradient(135deg, #10B981, #059669)'
+                        : 'linear-gradient(135deg, #6366F1, #818CF8)',
+                    boxShadow:
+                      '0 10px 24px -10px rgba(99,102,241,0.45)',
+                  }}
+                >
+                  {hermesStatus?.running ? 'Continue →' : 'Skip for now →'}
+                </button>
+              </div>
             </div>
           )}
 
@@ -1337,6 +1720,45 @@ export function ClaudeOnboarding() {
         </motion.div>
       </AnimatePresence>
       </div>
+    </div>
+  )
+}
+
+function labelForOs(p: 'macos' | 'windows' | 'linux' | 'unknown'): string {
+  if (p === 'macos') return 'macOS'
+  if (p === 'windows') return 'Windows'
+  if (p === 'linux') return 'Linux'
+  return 'OS'
+}
+
+function StatusPill({
+  label,
+  ok,
+  neutral,
+}: {
+  label: string
+  ok: boolean
+  neutral?: boolean
+}) {
+  const color = neutral
+    ? { bg: 'rgba(255,255,255,0.05)', border: 'rgba(255,255,255,0.12)', dot: '#A5B4FC' }
+    : ok
+      ? { bg: 'rgba(16,185,129,0.10)', border: 'rgba(16,185,129,0.30)', dot: '#10B981' }
+      : { bg: 'rgba(244,114,182,0.10)', border: 'rgba(244,114,182,0.30)', dot: '#F472B6' }
+  return (
+    <div
+      className="flex items-center gap-2 rounded-xl px-2.5 py-2 text-[11px] font-medium"
+      style={{
+        background: color.bg,
+        border: `1px solid ${color.border}`,
+        color: 'var(--theme-text)',
+      }}
+    >
+      <span
+        className="inline-block size-2 rounded-full"
+        style={{ background: color.dot, boxShadow: `0 0 8px ${color.dot}` }}
+      />
+      <span className="truncate">{label}</span>
     </div>
   )
 }

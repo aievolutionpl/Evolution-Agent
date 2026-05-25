@@ -88,6 +88,7 @@ import { Route as ApiLocalProvidersRouteImport } from './routes/api/local-provid
 import { Route as ApiIntegrationsRouteImport } from './routes/api/integrations'
 import { Route as ApiHistoryRouteImport } from './routes/api/history'
 import { Route as ApiHermesTasksRouteImport } from './routes/api/hermes-tasks'
+import { Route as ApiHermesStatusRouteImport } from './routes/api/hermes-status'
 import { Route as ApiHermesConfigRouteImport } from './routes/api/hermes-config'
 import { Route as ApiGatewayStatusRouteImport } from './routes/api/gateway-status'
 import { Route as ApiGatewayReprobeRouteImport } from './routes/api/gateway-reprobe'
@@ -555,6 +556,11 @@ const ApiHermesTasksRoute = ApiHermesTasksRouteImport.update({
   path: '/api/hermes-tasks',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiHermesStatusRoute = ApiHermesStatusRouteImport.update({
+  id: '/api/hermes-status',
+  path: '/api/hermes-status',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiHermesConfigRoute = ApiHermesConfigRouteImport.update({
   id: '/api/hermes-config',
   path: '/api/hermes-config',
@@ -955,6 +961,7 @@ export interface FileRoutesByFullPath {
   '/api/gateway-reprobe': typeof ApiGatewayReprobeRoute
   '/api/gateway-status': typeof ApiGatewayStatusRoute
   '/api/hermes-config': typeof ApiHermesConfigRoute
+  '/api/hermes-status': typeof ApiHermesStatusRoute
   '/api/hermes-tasks': typeof ApiHermesTasksRouteWithChildren
   '/api/history': typeof ApiHistoryRoute
   '/api/integrations': typeof ApiIntegrationsRoute
@@ -1105,6 +1112,7 @@ export interface FileRoutesByTo {
   '/api/gateway-reprobe': typeof ApiGatewayReprobeRoute
   '/api/gateway-status': typeof ApiGatewayStatusRoute
   '/api/hermes-config': typeof ApiHermesConfigRoute
+  '/api/hermes-status': typeof ApiHermesStatusRoute
   '/api/hermes-tasks': typeof ApiHermesTasksRouteWithChildren
   '/api/history': typeof ApiHistoryRoute
   '/api/integrations': typeof ApiIntegrationsRoute
@@ -1257,6 +1265,7 @@ export interface FileRoutesById {
   '/api/gateway-reprobe': typeof ApiGatewayReprobeRoute
   '/api/gateway-status': typeof ApiGatewayStatusRoute
   '/api/hermes-config': typeof ApiHermesConfigRoute
+  '/api/hermes-status': typeof ApiHermesStatusRoute
   '/api/hermes-tasks': typeof ApiHermesTasksRouteWithChildren
   '/api/history': typeof ApiHistoryRoute
   '/api/integrations': typeof ApiIntegrationsRoute
@@ -1410,6 +1419,7 @@ export interface FileRouteTypes {
     | '/api/gateway-reprobe'
     | '/api/gateway-status'
     | '/api/hermes-config'
+    | '/api/hermes-status'
     | '/api/hermes-tasks'
     | '/api/history'
     | '/api/integrations'
@@ -1560,6 +1570,7 @@ export interface FileRouteTypes {
     | '/api/gateway-reprobe'
     | '/api/gateway-status'
     | '/api/hermes-config'
+    | '/api/hermes-status'
     | '/api/hermes-tasks'
     | '/api/history'
     | '/api/integrations'
@@ -1711,6 +1722,7 @@ export interface FileRouteTypes {
     | '/api/gateway-reprobe'
     | '/api/gateway-status'
     | '/api/hermes-config'
+    | '/api/hermes-status'
     | '/api/hermes-tasks'
     | '/api/history'
     | '/api/integrations'
@@ -1863,6 +1875,7 @@ export interface RootRouteChildren {
   ApiGatewayReprobeRoute: typeof ApiGatewayReprobeRoute
   ApiGatewayStatusRoute: typeof ApiGatewayStatusRoute
   ApiHermesConfigRoute: typeof ApiHermesConfigRoute
+  ApiHermesStatusRoute: typeof ApiHermesStatusRoute
   ApiHermesTasksRoute: typeof ApiHermesTasksRouteWithChildren
   ApiHistoryRoute: typeof ApiHistoryRoute
   ApiIntegrationsRoute: typeof ApiIntegrationsRoute
@@ -2493,6 +2506,13 @@ declare module '@tanstack/react-router' {
       path: '/api/hermes-tasks'
       fullPath: '/api/hermes-tasks'
       preLoaderRoute: typeof ApiHermesTasksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/hermes-status': {
+      id: '/api/hermes-status'
+      path: '/api/hermes-status'
+      fullPath: '/api/hermes-status'
+      preLoaderRoute: typeof ApiHermesStatusRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/hermes-config': {
@@ -3243,6 +3263,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiGatewayReprobeRoute: ApiGatewayReprobeRoute,
   ApiGatewayStatusRoute: ApiGatewayStatusRoute,
   ApiHermesConfigRoute: ApiHermesConfigRoute,
+  ApiHermesStatusRoute: ApiHermesStatusRoute,
   ApiHermesTasksRoute: ApiHermesTasksRouteWithChildren,
   ApiHistoryRoute: ApiHistoryRoute,
   ApiIntegrationsRoute: ApiIntegrationsRoute,

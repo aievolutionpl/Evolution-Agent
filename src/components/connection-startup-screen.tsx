@@ -1,16 +1,18 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { AuthStatus } from '@/lib/claude-auth'
+import type { HermesInstallStatus } from '@/lib/hermes-status-types'
 import { writeTextToClipboard } from '@/lib/clipboard'
 import { fetchClaudeAuthStatus } from '@/lib/claude-auth'
+import { cn } from '@/lib/utils'
 
 const POLL_INTERVAL_MS = 2_000
 const FAILURE_REVEAL_MS = 5_000
 // Fire one silent auto-start attempt this many ms after we still can't connect.
 const AUTO_START_DELAY_MS = 4_000
 
-type Platform = 'macos' | 'windows' | 'linux' | 'unknown'
+type ClientPlatform = 'macos' | 'windows' | 'linux' | 'unknown'
 
-function detectPlatform(): Platform {
+function detectClientPlatform(): ClientPlatform {
   if (typeof navigator === 'undefined') return 'unknown'
   const ua = navigator.userAgent.toLowerCase()
   if (ua.includes('win')) return 'windows'
@@ -19,30 +21,64 @@ function detectPlatform(): Platform {
   return 'unknown'
 }
 
-function getSetupSteps(
-  platform: Platform,
-): Array<{ title: string; command: string; note?: string }> {
+type SetupStep = { title: string; command: string; note?: string }
+
+function getFallbackSteps(platform: ClientPlatform): Array<SetupStep> {
+  if (platform === 'windows') {
+    return [
+      {
+        title: '1. Install or update WSL (one-time)',
+        command: 'wsl --install -d Ubuntu',
+        note: 'Run in an Administrator PowerShell. Reboot when prompted, then finish the Ubuntu first-run.',
+      },
+      {
+        title: '2. Run the Windows installer',
+        command:
+          'iwr https://raw.githubusercontent.com/outsourc-e/hermes-workspace/main/scripts/install.ps1 -UseBasicParsing | iex',
+        note: 'Installs hermes-agent inside WSL and adds a startup shortcut.',
+      },
+      {
+        title: '3. Start the workspace',
+        command: 'wsl -d Ubuntu -- bash -lc "cd ~/hermes-workspace && pnpm start:all"',
+        note: 'Boots the gateway + UI together.',
+      },
+    ]
+  }
+
+  if (platform === 'macos') {
+    return [
+      {
+        title: '1. Run the macOS installer',
+        command:
+          'curl -fsSL https://raw.githubusercontent.com/outsourc-e/hermes-workspace/main/install.sh | bash',
+        note: 'Installs hermes-agent via the official installer and registers a LaunchAgent.',
+      },
+      {
+        title: '2. Start the gateway',
+        command: 'hermes gateway run',
+        note: 'Already running after the installer if the LaunchAgent loaded.',
+      },
+      {
+        title: '3. Open the workspace',
+        command: 'cd ~/hermes-workspace && pnpm dev',
+      },
+    ]
+  }
+
   return [
     {
-      title: 'Use any OpenAI-compatible backend',
-      command: 'Set HERMES_API_URL to your backend base URL',
-      note: 'Portable chat works with any backend that exposes /v1/chat/completions (Ollama, LiteLLM, vLLM, etc.)',
-    },
-    {
-      title: 'Optional: install Hermes Agent locally',
+      title: '1. Run the Linux installer',
       command:
-        'curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash',
-      note: 'Vanilla hermes-agent unlocks sessions, skills, memory, jobs, and config automatically — no fork required',
+        'curl -fsSL https://raw.githubusercontent.com/outsourc-e/hermes-workspace/main/install.sh | bash',
+      note: 'Installs hermes-agent + clones the workspace under ~/hermes-workspace. Re-runnable.',
     },
     {
-      title: 'Set up your agent',
-      command: 'hermes setup',
-      note: 'Pick your providers once; Hermes Agent stores them under ~/.hermes',
-    },
-    {
-      title: 'Start the gateway',
+      title: '2. Start the gateway',
       command: 'hermes gateway run',
-      note: 'This starts the HTTP API on :8642 for the workspace',
+    },
+    {
+      title: '3. Open the workspace',
+      command: 'cd ~/hermes-workspace && pnpm dev',
     },
   ]
 }
@@ -55,16 +91,30 @@ declare global {
   }
 }
 
+type Phase = 'connecting' | 'installing-detect' | 'no-hermes' | 'hermes-stopped' | 'unknown-failure'
+
 export function ConnectionStartupScreen({ onConnected }: Props) {
   const [showFailureState, setShowFailureState] = useState(false)
+  const [phase, setPhase] = useState<Phase>('connecting')
   const [serverStarting, setServerStarting] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
   const [serverLog, setServerLog] = useState<Array<string>>([])
   const [copiedIdx, setCopiedIdx] = useState<number | null>(null)
   const [showManual, setShowManual] = useState(false)
+  const [hermesStatus, setHermesStatus] = useState<HermesInstallStatus | null>(null)
+  const [elapsedSec, setElapsedSec] = useState(0)
 
-  const platform = useRef<Platform>(detectPlatform())
-  const steps = getSetupSteps(platform.current)
+  const platform = useRef<ClientPlatform>(detectClientPlatform())
+  const fallbackSteps = useMemo(
+    () => getFallbackSteps(platform.current),
+    [],
+  )
+  // Server-detected platform overrides the UA-based guess once /api/hermes-status responds.
+  const serverPlatform = hermesStatus?.platform ?? platform.current
+  const platformSteps = useMemo(
+    () => getFallbackSteps(serverPlatform),
+    [serverPlatform],
+  )
 
   const onConnectedRef = useRef(onConnected)
   useEffect(() => {
@@ -81,21 +131,59 @@ export function ConnectionStartupScreen({ onConnected }: Props) {
     return () => clearTimeout(timer)
   }, [])
 
+  // Tick a seconds counter for the connecting state so users have a sense of
+  // progress while the gateway boots.
+  useEffect(() => {
+    if (showFailureState) return
+    const start = Date.now()
+    const tick = setInterval(() => {
+      setElapsedSec(Math.floor((Date.now() - start) / 1000))
+    }, 1000)
+    return () => clearInterval(tick)
+  }, [showFailureState])
+
+  const refreshHermesStatus = useCallback(async () => {
+    try {
+      const res = await fetch('/api/hermes-status', {
+        signal: AbortSignal.timeout(3_000),
+      })
+      if (!res.ok) return null
+      const data = (await res.json()) as HermesInstallStatus
+      setHermesStatus(data)
+      return data
+    } catch {
+      return null
+    }
+  }, [])
+
   useEffect(() => {
     isDone.current = false
     let pollTimer: ReturnType<typeof setTimeout> | null = null
     let autoStartTimer: ReturnType<typeof setTimeout> | null = null
     let autoStartFired = false
 
-    const failureTimer = setTimeout(() => {
-      if (!isDone.current) {
-        setShowFailureState(true)
+    const failureTimer = setTimeout(async () => {
+      if (isDone.current) return
+      setShowFailureState(true)
+      setPhase('installing-detect')
+      const status = await refreshHermesStatus()
+      // Cleanup may have run during the await; re-check before continuing.
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (isDone.current) return
+      if (!status) {
+        setPhase('unknown-failure')
+      } else if (!status.installed) {
+        setPhase('no-hermes')
+      } else if (!status.running) {
+        setPhase('hermes-stopped')
+      } else {
+        setPhase('unknown-failure')
       }
     }, FAILURE_REVEAL_MS)
 
     // After a short grace period, fire /api/start-claude once silently.
     // If hermes-agent is installed and just not running, this brings it back
-    // up without making the user click anything. The polling loop will see it.
+    // up without making the user click anything.
     const fireSilentAutoStart = async () => {
       if (autoStartFired || isDone.current) return
       autoStartFired = true
@@ -108,8 +196,6 @@ export function ConnectionStartupScreen({ onConnected }: Props) {
         if (!ct.includes('application/json')) return
         const data = (await res.json()) as { ok?: boolean; message?: string }
         if (res.ok && data.ok) {
-          // surface a one-line note so users see what happened if they're
-          // looking at the failure panel
           setServerLog([
             String(
               data.message ||
@@ -131,11 +217,16 @@ export function ConnectionStartupScreen({ onConnected }: Props) {
         if (isDone.current) return
         isDone.current = true
         clearTimeout(failureTimer)
-        if (autoStartTimer) clearTimeout(autoStartTimer)
+        clearTimeout(autoStartTimer)
         if (pollTimer) clearTimeout(pollTimer)
         onConnectedRef.current(status)
       } catch {
         if (isDone.current) return
+        // While polling, refresh the install status so the failure panel can
+        // show contextual messaging the moment it appears.
+        if (showFailureState) {
+          void refreshHermesStatus()
+        }
         pollTimer = setTimeout(tryConnect, POLL_INTERVAL_MS)
       }
     }
@@ -145,11 +236,10 @@ export function ConnectionStartupScreen({ onConnected }: Props) {
     return () => {
       isDone.current = true
       if (pollTimer) clearTimeout(pollTimer)
-      if (autoStartTimer) clearTimeout(autoStartTimer)
+      clearTimeout(autoStartTimer)
       clearTimeout(failureTimer)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [refreshHermesStatus, showFailureState])
 
   useEffect(() => {
     if (copiedIdx === null) return
@@ -190,6 +280,7 @@ export function ConnectionStartupScreen({ onConnected }: Props) {
           String(data.message || 'Started — waiting for connection...'),
         ])
         setServerStarting(false)
+        void refreshHermesStatus()
         return
       }
 
@@ -199,7 +290,6 @@ export function ConnectionStartupScreen({ onConnected }: Props) {
       if (hint) setServerLog((prev) => [...prev, `Hint: ${hint}`])
       setServerError(msg)
       setServerStarting(false)
-      // Show manual steps when auto-start fails
       setShowManual(true)
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
@@ -210,20 +300,48 @@ export function ConnectionStartupScreen({ onConnected }: Props) {
     }
   }
 
+  // Pick the primary install command for the detected platform.
+  const primaryInstallCommand = hermesStatus
+    ? hermesStatus.install.command
+    : (platformSteps[0]?.command ?? '')
+  const installLabel = hermesStatus
+    ? hermesStatus.install.label
+    : platform.current === 'windows'
+      ? 'Windows installer'
+      : platform.current === 'macos'
+        ? 'macOS installer'
+        : platform.current === 'linux'
+          ? 'Linux installer'
+          : 'Manual install'
+
+  // ─── Render ─────────────────────────────────────────────────────────────
+
+  const showInstallCard = phase === 'no-hermes'
+  const showStartCard = phase === 'hermes-stopped'
+
   return (
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto px-6 py-10 text-white"
       style={{
         backgroundColor: '#0A0E1A',
+        backgroundImage:
+          'radial-gradient(800px 600px at 50% 0%, rgba(99, 102, 241, 0.15), transparent 60%), radial-gradient(600px 500px at 50% 100%, rgba(0, 229, 255, 0.08), transparent 60%)',
         fontFamily: 'Inter, system-ui, sans-serif',
       }}
     >
       <div className="flex w-full max-w-lg flex-col items-center text-center">
-        <img
-          src="/logo.png"
-          alt="Evolution Agent"
-          className="mb-5 h-20 w-20 rounded-2xl object-cover shadow-[0_12px_40px_rgba(0,0,0,0.45)]"
-        />
+        {/* Animated logo with a glow halo */}
+        <div className="relative mb-5">
+          <span
+            aria-hidden="true"
+            className="absolute inset-0 -m-3 animate-ping rounded-3xl bg-indigo-400/20"
+          />
+          <img
+            src="/logo.png"
+            alt="Evolution Agent"
+            className="relative h-20 w-20 rounded-2xl object-cover shadow-[0_12px_40px_rgba(0,0,0,0.45)]"
+          />
+        </div>
 
         <h1 className="text-[2rem] font-semibold tracking-tight text-white">
           Hermes Workspace
@@ -231,71 +349,133 @@ export function ConnectionStartupScreen({ onConnected }: Props) {
 
         {/* Connecting spinner */}
         <div
-          className={[
+          className={cn(
             'mt-4 flex items-center gap-3 text-sm text-white/72 transition-opacity duration-300',
-            showFailureState ? 'opacity-0 h-0' : 'opacity-100',
-          ].join(' ')}
+            showFailureState ? 'h-0 opacity-0' : 'opacity-100',
+          )}
           aria-hidden={showFailureState}
         >
           <span className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-white/20 border-t-white/80" />
-          <span>Connecting to your backend...</span>
+          <span>
+            Connecting to your backend
+            {elapsedSec > 0 ? ` (${elapsedSec}s)` : ''}
+            …
+          </span>
         </div>
 
         {/* Failure state — setup guide */}
         <div
-          className={[
+          className={cn(
             'w-full overflow-hidden transition-all duration-500 ease-out',
             showFailureState
-              ? 'mt-6 max-h-[60rem] translate-y-0 opacity-100'
+              ? 'mt-6 max-h-[80rem] translate-y-0 opacity-100'
               : 'max-h-0 translate-y-2 opacity-0',
-          ].join(' ')}
+          )}
         >
           <div className="w-full rounded-3xl border border-white/10 bg-white/5 p-5 text-left shadow-[0_24px_80px_rgba(0,0,0,0.35)] backdrop-blur-sm">
-            <p className="text-base font-medium text-white">
-              Welcome! Let&apos;s connect your backend
-            </p>
-            <p className="mt-2 text-sm leading-6 text-white/60">
-              Hermes Workspace works with any OpenAI-compatible backend. Hermes Agent
-              gateway APIs unlock enhanced features automatically when they are
-              available.
-            </p>
-
-            {/* Auto-start section */}
-            <div className="mt-5">
-              <button
-                type="button"
-                disabled={serverStarting}
-                onClick={handleAutoStart}
-                className={[
-                  'w-full rounded-xl px-5 py-3 text-sm font-semibold transition',
-                  serverStarting
-                    ? 'cursor-not-allowed bg-indigo-900/70 text-indigo-200'
-                    : 'bg-indigo-500 text-white hover:bg-indigo-400',
-                ].join(' ')}
-              >
-                {serverStarting ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white/90" />
-                    Detecting...
-                  </span>
-                ) : (
-                  'Auto-Start Hermes Agent Gateway'
+            {/* Header changes with detected state */}
+            <div className="flex items-start gap-3">
+              <div
+                className={cn(
+                  'mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-full text-base',
+                  showInstallCard
+                    ? 'bg-amber-500/15 text-amber-300'
+                    : showStartCard
+                      ? 'bg-indigo-500/15 text-indigo-300'
+                      : 'bg-white/10 text-white/70',
                 )}
-              </button>
+                aria-hidden="true"
+              >
+                {showInstallCard ? '⤓' : showStartCard ? '▶' : '⚠'}
+              </div>
+              <div>
+                <p className="text-base font-medium text-white">
+                  {showInstallCard
+                    ? 'Hermes Agent is not installed on this machine'
+                    : showStartCard
+                      ? 'Hermes Agent is installed but the gateway is not running'
+                      : 'Let’s connect your backend'}
+                </p>
+                <p className="mt-1 text-sm leading-6 text-white/60">
+                  {showInstallCard
+                    ? `We detected your platform as ${labelForPlatform(serverPlatform)}. The one-liner below installs everything needed.`
+                    : showStartCard
+                      ? 'Click “Start Hermes” to boot the gateway. The workspace will reconnect automatically.'
+                      : 'Hermes Workspace works with any OpenAI-compatible backend. Hermes Agent gateway APIs unlock enhanced features automatically when they are available.'}
+                </p>
+                {hermesStatus?.version ? (
+                  <p className="mt-1 text-xs text-white/40">
+                    Detected: hermes-agent {hermesStatus.version}
+                  </p>
+                ) : null}
+              </div>
+            </div>
+
+            {/* Primary action card */}
+            <div className="mt-5">
+              {showInstallCard ? (
+                <PrimaryInstallCard
+                  label={installLabel}
+                  command={primaryInstallCommand}
+                  description={hermesStatus?.install.description}
+                  manualOnly={Boolean(hermesStatus?.install.manualOnly)}
+                  onCopy={(text) => handleCopy(text, -1)}
+                  copied={copiedIdx === -1}
+                />
+              ) : (
+                <button
+                  type="button"
+                  disabled={serverStarting}
+                  onClick={handleAutoStart}
+                  className={cn(
+                    'w-full rounded-xl px-5 py-3 text-sm font-semibold transition',
+                    serverStarting
+                      ? 'cursor-not-allowed bg-indigo-900/70 text-indigo-200'
+                      : 'bg-indigo-500 text-white hover:bg-indigo-400',
+                  )}
+                >
+                  {serverStarting ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white/90" />
+                      Detecting...
+                    </span>
+                  ) : showStartCard ? (
+                    'Start Hermes Agent Gateway'
+                  ) : (
+                    'Auto-Start Hermes Agent Gateway'
+                  )}
+                </button>
+              )}
 
               {/* Server log */}
               {serverLog.length > 0 ? (
                 <div
-                  className={[
+                  className={cn(
                     'mt-3 rounded-xl border p-3',
                     serverError
                       ? 'border-red-500/20 bg-red-950/30'
                       : 'border-emerald-500/20 bg-emerald-950/30',
-                  ].join(' ')}
+                  )}
                 >
                   <pre className="whitespace-pre-wrap font-mono text-xs leading-5 text-white/70">
                     {serverLog.join('\n')}
                   </pre>
+                </div>
+              ) : null}
+
+              {/* Show prerequisites (Windows: WSL) inline */}
+              {showInstallCard && hermesStatus?.install.prerequisites?.length ? (
+                <div className="mt-4 space-y-3">
+                  {hermesStatus.install.prerequisites.map((step, idx) => (
+                    <PrerequisiteCard
+                      key={`prereq-${idx}`}
+                      title={step.title}
+                      command={step.command}
+                      note={step.note}
+                      copied={copiedIdx === 100 + idx}
+                      onCopy={() => handleCopy(step.command, 100 + idx)}
+                    />
+                  ))}
                 </div>
               ) : null}
             </div>
@@ -315,48 +495,50 @@ export function ConnectionStartupScreen({ onConnected }: Props) {
 
             {/* Manual setup steps */}
             <div
-              className={[
+              className={cn(
                 'overflow-hidden transition-all duration-300',
-                showManual ? 'max-h-[40rem] opacity-100' : 'max-h-0 opacity-0',
-              ].join(' ')}
+                showManual ? 'max-h-[60rem] opacity-100' : 'max-h-0 opacity-0',
+              )}
             >
               <div className="space-y-4">
-                {steps.map((step, idx) => (
-                  <div
-                    key={idx}
-                    className="rounded-xl border border-white/8 bg-black/20 p-4"
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex items-center gap-2">
-                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-indigo-500/20 text-xs font-bold text-indigo-300">
-                          {idx + 1}
-                        </span>
-                        <span className="text-sm font-medium text-white/90">
-                          {step.title}
-                        </span>
+                {(platformSteps.length ? platformSteps : fallbackSteps).map(
+                  (step, idx) => (
+                    <div
+                      key={idx}
+                      className="rounded-xl border border-white/8 bg-black/20 p-4"
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-center gap-2">
+                          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-indigo-500/20 text-xs font-bold text-indigo-300">
+                            {idx + 1}
+                          </span>
+                          <span className="text-sm font-medium text-white/90">
+                            {step.title}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleCopy(step.command, idx)}
+                          className="shrink-0 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-xs font-medium text-white/60 transition hover:bg-white/10 hover:text-white/80"
+                        >
+                          {copiedIdx === idx ? '✓ Copied' : 'Copy'}
+                        </button>
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => handleCopy(step.command, idx)}
-                        className="shrink-0 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-xs font-medium text-white/60 transition hover:bg-white/10 hover:text-white/80"
-                      >
-                        {copiedIdx === idx ? '✓ Copied' : 'Copy'}
-                      </button>
+                      <pre className="mt-2 overflow-x-auto rounded-lg bg-black/40 p-3 font-mono text-xs leading-5 text-white/80">
+                        <code>{step.command}</code>
+                      </pre>
+                      {step.note ? (
+                        <p className="mt-2 text-xs text-white/40">{step.note}</p>
+                      ) : null}
                     </div>
-                    <pre className="mt-2 overflow-x-auto rounded-lg bg-black/40 p-3 font-mono text-xs leading-5 text-white/80">
-                      <code>{step.command}</code>
-                    </pre>
-                    {step.note ? (
-                      <p className="mt-2 text-xs text-white/40">{step.note}</p>
-                    ) : null}
-                  </div>
-                ))}
+                  ),
+                )}
               </div>
 
               {/* Env var hint */}
               <div className="mt-4 rounded-xl border border-white/6 bg-white/3 p-3">
                 <p className="text-xs font-medium text-white/50">
-                  Point{' '}
+                  Or point{' '}
                   <code className="rounded bg-white/10 px-1.5 py-0.5 font-mono text-white/70">
                     HERMES_API_URL
                   </code>{' '}
@@ -374,8 +556,102 @@ export function ConnectionStartupScreen({ onConnected }: Props) {
           <p className="mt-6 text-xs text-white/45">
             This page auto-refreshes when a compatible backend is detected
           </p>
-        ) : null}
+        ) : (
+          <button
+            type="button"
+            onClick={() => {
+              setShowFailureState(false)
+              setElapsedSec(0)
+              void refreshHermesStatus()
+            }}
+            className="mt-4 text-xs font-medium text-white/40 underline-offset-2 transition hover:text-white/70 hover:underline"
+          >
+            Recheck connection
+          </button>
+        )}
       </div>
+    </div>
+  )
+}
+
+function labelForPlatform(p: ClientPlatform): string {
+  if (p === 'macos') return 'macOS'
+  if (p === 'windows') return 'Windows'
+  if (p === 'linux') return 'Linux'
+  return 'your operating system'
+}
+
+function PrimaryInstallCard({
+  label,
+  command,
+  description,
+  manualOnly,
+  copied,
+  onCopy,
+}: {
+  label: string
+  command: string
+  description?: string
+  manualOnly: boolean
+  copied: boolean
+  onCopy: (cmd: string) => void
+}) {
+  return (
+    <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4">
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-sm font-semibold text-amber-200">{label}</p>
+        <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-amber-200">
+          {manualOnly ? 'Manual' : 'One-liner'}
+        </span>
+      </div>
+      {description ? (
+        <p className="mt-1 text-xs text-white/55">{description}</p>
+      ) : null}
+      <div className="mt-3 flex items-start gap-2">
+        <pre className="flex-1 overflow-x-auto rounded-lg bg-black/40 p-3 font-mono text-xs leading-5 text-white/85">
+          <code>{command}</code>
+        </pre>
+        <button
+          type="button"
+          onClick={() => onCopy(command)}
+          className="shrink-0 rounded-lg border border-white/15 bg-white/10 px-3 py-2 text-xs font-medium text-white/80 transition hover:bg-white/20"
+        >
+          {copied ? '✓ Copied' : 'Copy'}
+        </button>
+      </div>
+    </div>
+  )
+}
+
+function PrerequisiteCard({
+  title,
+  command,
+  note,
+  copied,
+  onCopy,
+}: {
+  title: string
+  command: string
+  note?: string
+  copied: boolean
+  onCopy: () => void
+}) {
+  return (
+    <div className="rounded-xl border border-white/8 bg-black/20 p-3">
+      <div className="flex items-start justify-between gap-2">
+        <span className="text-xs font-medium text-white/80">{title}</span>
+        <button
+          type="button"
+          onClick={onCopy}
+          className="shrink-0 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] font-medium text-white/60 transition hover:bg-white/10 hover:text-white/80"
+        >
+          {copied ? '✓ Copied' : 'Copy'}
+        </button>
+      </div>
+      <pre className="mt-2 overflow-x-auto rounded-lg bg-black/40 p-2.5 font-mono text-[11px] leading-5 text-white/80">
+        <code>{command}</code>
+      </pre>
+      {note ? <p className="mt-2 text-[11px] text-white/40">{note}</p> : null}
     </div>
   )
 }
