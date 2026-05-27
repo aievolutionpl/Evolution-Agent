@@ -4,7 +4,7 @@
  * Client-side heuristics to suggest cheaper/better models
  * Opt-in only (requires settings toggle)
  */
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useSettings } from './use-settings'
 
 type ModelTier = 'budget' | 'balanced' | 'premium'
@@ -164,18 +164,115 @@ export function useModelSuggestions(_opts: {
   messages: Array<Message>
   availableModels: Array<string>
 }) {
-  // DISABLED: was causing infinite re-render loop (Maximum update depth exceeded)
-  // TODO: fix the dependency array / memoization and re-enable
+  const { currentModel, sessionKey, messages, availableModels } = _opts
+  const { settings } = useSettings()
+  const [dismissedSuggestionKey, setDismissedSuggestionKey] = useState('')
+
+  const suggestion = useMemo(() => {
+    if (!settings.smartSuggestionsEnabled) return null
+    if (!currentModel || currentModel.trim() === '') return null
+    if (Date.now() - getLastShownTimestamp() < GLOBAL_COOLDOWN_MS) return null
+    if (isSessionDismissed(sessionKey)) return null
+    if (messages.length < 3) return null
+
+    const currentTier = getModelTier(currentModel)
+    const provider = getProvider(currentModel)
+    if (!provider) return null
+
+    if (
+      (currentTier === 'balanced' || currentTier === 'premium') &&
+      isSimpleTask(messages)
+    ) {
+      const cheaperModel =
+        settings.preferredBudgetModel &&
+        availableModels.includes(settings.preferredBudgetModel)
+          ? settings.preferredBudgetModel
+          : findModelInTier(provider, 'budget', availableModels)
+
+      if (cheaperModel && cheaperModel !== currentModel) {
+        return {
+          currentModel,
+          suggestedModel: cheaperModel,
+          reason: 'This chat seems lightweight',
+          costImpact: 'Save ~80% per message',
+        } satisfies Suggestion
+      }
+    }
+
+    if (!settings.onlySuggestCheaper) {
+      const lastMessage = messages[messages.length - 1]
+      if (lastMessage && isComplexTask(lastMessage)) {
+        const targetTier: ModelTier | null =
+          currentTier === 'budget'
+            ? 'balanced'
+            : currentTier === 'balanced'
+              ? 'premium'
+              : null
+
+        if (targetTier) {
+          const betterModel =
+            settings.preferredPremiumModel &&
+            availableModels.includes(settings.preferredPremiumModel)
+              ? settings.preferredPremiumModel
+              : findModelInTier(provider, targetTier, availableModels)
+
+          if (betterModel && betterModel !== currentModel) {
+            return {
+              currentModel,
+              suggestedModel: betterModel,
+              reason: 'This task looks complex',
+              costImpact:
+                targetTier === 'balanced'
+                  ? 'Better quality (~30% cost increase)'
+                  : 'Best quality (2x cost)',
+            } satisfies Suggestion
+          }
+        }
+      }
+    }
+
+    return null
+  }, [
+    availableModels,
+    currentModel,
+    messages,
+    sessionKey,
+    settings.onlySuggestCheaper,
+    settings.preferredBudgetModel,
+    settings.preferredPremiumModel,
+    settings.smartSuggestionsEnabled,
+  ])
+
+  const suggestionKey = suggestion
+    ? `${sessionKey}:${suggestion.currentModel}->${suggestion.suggestedModel}`
+    : ''
+
+  useEffect(() => {
+    if (suggestion && suggestionKey !== dismissedSuggestionKey) {
+      setLastShownTimestamp()
+    }
+  }, [dismissedSuggestionKey, suggestion, suggestionKey])
+
+  const dismiss = useCallback(() => {
+    if (suggestionKey) setDismissedSuggestionKey(suggestionKey)
+  }, [suggestionKey])
+
+  const dismissForSession = useCallback(() => {
+    addSessionDismissal(sessionKey)
+    if (suggestionKey) setDismissedSuggestionKey(suggestionKey)
+  }, [sessionKey, suggestionKey])
+
   return {
-    suggestion: null as Suggestion | null,
-    dismiss: () => {},
-    dismissForSession: () => {},
+    suggestion:
+      suggestionKey && suggestionKey === dismissedSuggestionKey
+        ? null
+        : suggestion,
+    dismiss,
+    dismissForSession,
   }
 }
 
-// -ignore -- disabled, will re-enable after fixing deps
-
-function _useModelSuggestionsDisabled({
+function _legacyReference({
   currentModel,
   sessionKey,
   messages,
