@@ -53,6 +53,13 @@ export type ChatSettings = {
    * surprised by sound on next page load.
    */
   soundOnChatComplete: boolean
+  /**
+   * Browser dictation language (Web Speech API). 'auto' uses navigator.language,
+   * otherwise a BCP-47 tag such as 'en-US', 'pl-PL', 'es-ES', 'de-DE'.
+   * Multi-language auto-detect requires an offline Whisper provider — Web
+   * Speech API itself is single-language per session.
+   */
+  dictationLanguage: 'auto' | string
 }
 
 type ChatSettingsState = {
@@ -72,7 +79,18 @@ function defaultChatSettings(): ChatSettings {
     chatWidth: 'comfortable',
     sidebarHoverExpand: false,
     soundOnChatComplete: false,
+    dictationLanguage: 'auto',
   }
+}
+
+export function resolveDictationLanguage(pref: 'auto' | string): string {
+  if (pref && pref !== 'auto') return pref
+  if (typeof navigator === 'undefined') return 'en-US'
+  return navigator.language || 'en-US'
+}
+
+export function selectDictationLanguage(state: ChatSettingsState): string {
+  return resolveDictationLanguage(state.settings.dictationLanguage)
 }
 
 function mergePersistedSettings(

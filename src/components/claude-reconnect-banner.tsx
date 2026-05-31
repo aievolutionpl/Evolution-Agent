@@ -12,9 +12,11 @@ type BannerState = 'hidden' | 'disconnected' | 'connected'
 async function probeClaudeHealth(): Promise<boolean> {
   // Use the portable-aware connection status endpoint first,
   // which works with both Hermes Agent and OpenAI-compatible backends.
+  // A hard 5s timeout prevents a hung gateway from stalling the banner state.
   try {
     const response = await fetch('/api/connection-status', {
       cache: 'no-store',
+      signal: AbortSignal.timeout(5_000),
     })
     if (response.ok) return true
   } catch {
@@ -24,6 +26,7 @@ async function probeClaudeHealth(): Promise<boolean> {
   try {
     const response = await fetch('/api/claude-proxy/health', {
       cache: 'no-store',
+      signal: AbortSignal.timeout(5_000),
     })
     return response.ok
   } catch {

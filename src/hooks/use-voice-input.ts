@@ -55,11 +55,20 @@ function pickRecorderMimeType(): string {
   return 'audio/mp4'
 }
 
+function resolveBrowserLanguage(): string {
+  if (typeof navigator === 'undefined') return 'en-US'
+  const fromNavigator = navigator.language || (navigator as any).userLanguage
+  if (typeof fromNavigator === 'string' && fromNavigator.length > 0) {
+    return fromNavigator
+  }
+  return 'en-US'
+}
+
 export function useVoiceInput(
   options: UseVoiceInputOptions = {},
 ): UseVoiceInputReturn {
   const {
-    lang = 'en-US',
+    lang = resolveBrowserLanguage(),
     interim = true,
     transcribe,
     onResult,
