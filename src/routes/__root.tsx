@@ -51,6 +51,10 @@ const DEFAULT_THEME = 'aievolution'
 const VALID_THEMES = [
   'aievolution',
   'aievolution-light',
+  'matrix',
+  'matrix-light',
+  'scifi',
+  'scifi-light',
   'claude-nous',
   'claude-nous-light',
   'claude-official',
@@ -69,7 +73,7 @@ const themeScript = `
     const root = document.documentElement
     const storedTheme = localStorage.getItem('${THEME_STORAGE_KEY}')
     const theme = ${JSON.stringify(VALID_THEMES)}.includes(storedTheme) ? storedTheme : '${DEFAULT_THEME}'
-    const lightThemes = ['aievolution-light', 'claude-nous-light', 'claude-official-light', 'claude-classic-light', 'claude-slate-light']
+    const lightThemes = ['aievolution-light', 'matrix-light', 'scifi-light', 'claude-nous-light', 'claude-official-light', 'claude-classic-light', 'claude-slate-light']
     const isDark = !lightThemes.includes(theme)
     root.classList.remove('light', 'dark', 'system')
     root.classList.add(isDark ? 'dark' : 'light')
@@ -92,8 +96,12 @@ const themeColorScript = `
     const root = document.documentElement
     const theme = root.getAttribute('data-theme') || '${DEFAULT_THEME}'
     const colors = {
-      'aievolution': '#02110F',
-      'aievolution-light': '#F0FCFC',
+      'aievolution': '#030D12',
+      'aievolution-light': '#F4FCFB',
+      'matrix': '#020804',
+      'matrix-light': '#F4FFF6',
+      'scifi': '#060B18',
+      'scifi-light': '#EEF1F5',
       'claude-nous': '#031A1A',
       'claude-nous-light': '#F8FAF8',
       'claude-official': '#0A0E1A',
@@ -104,7 +112,7 @@ const themeColorScript = `
       'claude-slate-light': '#F6F8FA',
     }
     const nextColor = colors[theme] || colors['${DEFAULT_THEME}']
-    const isDark = !['aievolution-light', 'claude-nous-light', 'claude-official-light', 'claude-classic-light', 'claude-slate-light'].includes(String(theme))
+    const isDark = !['aievolution-light', 'matrix-light', 'scifi-light', 'claude-nous-light', 'claude-official-light', 'claude-classic-light', 'claude-slate-light'].includes(String(theme))
 
     let meta = document.querySelector('meta[name="theme-color"]')
     if (!meta) {
@@ -157,6 +165,10 @@ export const Route = createRootRoute({
       {
         name: 'theme-color',
         content: '#0A0E1A',
+      },
+      {
+        name: 'mobile-web-app-capable',
+        content: 'yes',
       },
       {
         name: 'apple-mobile-web-app-capable',
@@ -437,7 +449,37 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             var bg = '#031A1A', txt = '#F8F1E3', muted = '#9CB2AE', accent = '#FFAC02';
             try {
               var theme = localStorage.getItem('${THEME_STORAGE_KEY}') || '${DEFAULT_THEME}';
-              if (theme === 'claude-nous') {
+              if (theme === 'aievolution') {
+                bg = '#030D12';
+                txt = '#EAFDF8';
+                muted = '#76A8A5';
+                accent = '#17E6D0';
+              } else if (theme === 'aievolution-light') {
+                bg = '#F4FCFB';
+                txt = '#072B31';
+                muted = '#4E7378';
+                accent = '#087F8C';
+              } else if (theme === 'matrix') {
+                bg = '#020804';
+                txt = '#D8FFE3';
+                muted = '#7CFF9B';
+                accent = '#00FF41';
+              } else if (theme === 'matrix-light') {
+                bg = '#F4FFF6';
+                txt = '#062A12';
+                muted = '#43744F';
+                accent = '#008F2D';
+              } else if (theme === 'scifi') {
+                bg = '#060B18';
+                txt = '#E0F7FA';
+                muted = '#5D9BB8';
+                accent = '#00F0FF';
+              } else if (theme === 'scifi-light') {
+                bg = '#EEF1F5';
+                txt = '#0A1628';
+                muted = '#5A6A7E';
+                accent = '#0097A7';
+              } else if (theme === 'claude-nous') {
                 bg = '#031A1A';
                 txt = '#F8F1E3';
                 muted = '#9CB2AE';
@@ -475,7 +517,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
               }
             } catch(e){}
 
-            var isDark = !['claude-nous-light','claude-official-light','claude-classic-light','claude-slate-light'].includes(theme);
+            var isDark = !['aievolution-light','matrix-light','scifi-light','claude-nous-light','claude-official-light','claude-classic-light','claude-slate-light'].includes(theme);
             var quips = ["Consulting the oracle...","Loading ancient knowledge...","Warming up the messenger...","Calibrating tool chain...","Summoning your agent...","Preparing the workspace...","Bridging realms...","Initializing agent runtime..."];
             var quip = quips[Math.floor(Math.random() * quips.length)];
 

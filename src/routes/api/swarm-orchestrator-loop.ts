@@ -1,10 +1,10 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { json } from '@tanstack/react-start'
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
+import { createFileRoute } from '@tanstack/react-router'
+import { json } from '@tanstack/react-start'
 import { isAuthenticated } from '../../server/auth-middleware'
 import { getProfilesDir } from '../../server/claude-paths'
-import { newestCheckpointFromMessages, readRuntimeJson, type ParsedSwarmCheckpoint } from '../../server/swarm-checkpoints'
+import { newestCheckpointFromMessages, readRuntimeJson } from '../../server/swarm-checkpoints'
 import { readWorkerMessages } from '../../server/swarm-chat-reader'
 import { getSwarmProfilePath, listSwarmWorkerIds } from '../../server/swarm-foundation'
 import { appendMissionContinuation, markMissionAssignmentsReviewedByWorker, recordMissionCheckpoint } from '../../server/swarm-missions'
@@ -12,6 +12,7 @@ import { appendSwarmMemoryEvent } from '../../server/swarm-memory'
 import { publishSwarmActionPrompt, publishSwarmCheckpointNotification } from '../../server/swarm-notifications'
 import { applySwarmModeToLoopFlags, readSwarmMode } from '../../server/swarm-mode'
 import { isSwarmWorkerId, readSwarmRoster } from '../../server/swarm-roster'
+import type { ParsedSwarmCheckpoint } from '../../server/swarm-checkpoints'
 
 type LoopRequest = {
   workerIds?: unknown
@@ -90,12 +91,12 @@ function runtimePatchFromCheckpoint(workerId: string, checkpoint: ParsedSwarmChe
   }
 }
 
-function writeRuntimePatch(workerId: string, patch: Record<string, unknown>, dryRun: boolean): string {
+async function writeRuntimePatch(workerId: string, patch: Record<string, unknown>, dryRun: boolean): Promise<string> {
   const profilePath = getSwarmProfilePath(workerId)
   const runtimePath = join(profilePath, 'runtime.json')
   if (dryRun) return runtimePath
   mkdirSync(profilePath, { recursive: true })
-  const current = readRuntimeJson(runtimePath)
+  const current = await readRuntimeJson(runtimePath)
   writeFileSync(runtimePath, JSON.stringify({ ...current, ...patch }, null, 2) + '\n')
   return runtimePath
 }
@@ -153,10 +154,10 @@ function recordCheckpoint(input: {
   return { notification, missionRecorded: Boolean(mission) }
 }
 
-function runWorkerLoop(workerId: string, staleMs: number, dryRun: boolean): WorkerLoopResult {
+async function runWorkerLoop(workerId: string, staleMs: number, dryRun: boolean): Promise<WorkerLoopResult> {
   const profilePath = join(getProfilesDir(), workerId)
   const runtimePath = join(profilePath, 'runtime.json')
-  const current = readRuntimeJson(runtimePath)
+  const current = await readRuntimeJson(runtimePath)
   const chat = readWorkerMessages(profilePath, 40)
   if (!chat.ok) {
     return {
@@ -180,7 +181,7 @@ function runWorkerLoop(workerId: string, staleMs: number, dryRun: boolean): Work
         runtimePath,
       }
     }
-    const savedPath = writeRuntimePatch(workerId, runtimePatchFromCheckpoint(workerId, checkpoint), dryRun)
+    const savedPath = await writeRuntimePatch(workerId, runtimePatchFromCheckpoint(workerId, checkpoint), dryRun)
     const recorded = recordCheckpoint({ workerId, checkpoint, current, dryRun })
     return {
       workerId,
@@ -205,7 +206,7 @@ function runWorkerLoop(workerId: string, staleMs: number, dryRun: boolean): Work
         lastCheckIn: new Date().toISOString(),
       }
     : {}
-  const savedPath = Object.keys(patch).length ? writeRuntimePatch(workerId, patch, dryRun) : runtimePath
+  const savedPath = Object.keys(patch).length ? await writeRuntimePatch(workerId, patch, dryRun) : runtimePath
   return {
     workerId,
     status: stale ? 'stale' : 'waiting',
@@ -388,7 +389,7 @@ export const Route = createFileRoute('/api/swarm-orchestrator-loop')({
         const autoContinue = loopFlags.autoContinue
         const allowExecution = loopFlags.allowExecution
         const missionId = typeof body.missionId === 'string' && body.missionId.trim() ? body.missionId.trim() : null
-        const results = workerIds.map((workerId) => runWorkerLoop(workerId, staleMinutes * 60_000, dryRun))
+        const results = await Promise.all(workerIds.map((workerId) => runWorkerLoop(workerId, staleMinutes * 60_000, dryRun)))
 
         const summary = {
           checkpointed: results.filter((item) => item.status === 'checkpointed').length,

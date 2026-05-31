@@ -85,10 +85,13 @@ const SECTIONS: Array<{ id: SectionId; label: string; icon: any }> = [
 ]
 
 const DARK_ENTERPRISE_THEMES = new Set<ThemeId>([
+  'aievolution',
   'claude-nous',
+  'matrix',
   'claude-official',
   'claude-classic',
   'claude-slate',
+  'scifi',
 ])
 
 function _isDarkEnterpriseTheme(theme: string | null): theme is ThemeId {
@@ -1507,18 +1510,36 @@ function AppearanceContent() {
 }
 
 const ENTERPRISE_THEME_FAMILIES: Array<ThemeId> = [
+  'aievolution',
   'claude-nous',
   'matrix',
   'claude-official',
   'claude-classic',
   'claude-slate',
+  'scifi',
 ]
 
 const ENTERPRISE_THEMES = THEMES.map((theme) => ({
   ...theme,
   desc: theme.description,
   preview:
-    theme.id === 'claude-nous'
+    theme.id === 'aievolution'
+      ? {
+          bg: '#030D12',
+          panel: '#0A2024',
+          border: 'rgba(23,230,208,0.24)',
+          accent: '#17E6D0',
+          text: '#EAFDF8',
+        }
+      : theme.id === 'aievolution-light'
+        ? {
+            bg: '#F4FCFB',
+            panel: '#FFFFFF',
+            border: 'rgba(0,133,168,0.2)',
+            accent: '#087F8C',
+            text: '#032D33',
+          }
+        : theme.id === 'claude-nous'
       ? {
           bg: '#041C1C',
           panel: '#06282A',
@@ -1590,13 +1611,29 @@ const ENTERPRISE_THEMES = THEMES.map((theme) => ({
                       accent: '#7eb8f6',
                       text: '#c9d1d9',
                     }
-                  : {
-                      bg: '#F6F8FA',
-                      panel: '#FFFFFF',
-                      border: '#D0D7DE',
-                      accent: '#3b82f6',
-                      text: '#24292f',
-                    },
+                  : theme.id === 'claude-slate-light'
+                    ? {
+                        bg: '#F6F8FA',
+                        panel: '#FFFFFF',
+                        border: '#D0D7DE',
+                        accent: '#3b82f6',
+                        text: '#24292f',
+                      }
+                    : theme.id === 'scifi'
+                      ? {
+                          bg: '#060B18',
+                          panel: '#112240',
+                          border: '#1A3A5C',
+                          accent: '#00F0FF',
+                          text: '#E0F7FA',
+                        }
+                      : {
+                          bg: '#EEF1F5',
+                          panel: '#F4F6F9',
+                          border: '#C4CDD8',
+                          accent: '#0097A7',
+                          text: '#0A1628',
+                        },
 }))
 
 function ThemeSwatch({
