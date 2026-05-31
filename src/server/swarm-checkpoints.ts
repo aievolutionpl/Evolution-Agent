@@ -1,5 +1,3 @@
-import { existsSync, readFileSync } from 'node:fs'
-
 export type ParsedSwarmCheckpoint = {
   stateLabel: 'DONE' | 'BLOCKED' | 'NEEDS_INPUT' | 'HANDOFF' | 'IN_PROGRESS'
   runtimeState: 'idle' | 'blocked' | 'waiting' | 'executing'
@@ -26,7 +24,7 @@ const STATE_MAP: Record<ParsedSwarmCheckpoint['stateLabel'], Pick<ParsedSwarmChe
 
 function normalizeLabel(value: string): Label | null {
   const upper = value.trim().toUpperCase().replace(/[ -]/g, '_')
-  return (LABELS as readonly string[]).includes(upper) ? upper as Label : null
+  return (LABELS as ReadonlyArray<string>).includes(upper) ? upper as Label : null
 }
 
 function clean(value: string | undefined): string | null {
@@ -86,9 +84,10 @@ export function newestCheckpointFromMessages(messages: Array<{ role?: string; co
   return null
 }
 
-export function readRuntimeJson(runtimePath: string): Record<string, unknown> {
-  if (!existsSync(runtimePath)) return {}
+export async function readRuntimeJson(runtimePath: string): Promise<Record<string, unknown>> {
   try {
+    const { existsSync, readFileSync } = await import('node:fs')
+    if (!existsSync(runtimePath)) return {}
     return JSON.parse(readFileSync(runtimePath, 'utf8')) as Record<string, unknown>
   } catch {
     return {}
