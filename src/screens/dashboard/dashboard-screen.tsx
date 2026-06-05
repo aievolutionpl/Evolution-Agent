@@ -1,6 +1,7 @@
 import {
   BubbleChatAddIcon,
   CheckmarkCircle02Icon,
+  ConnectIcon,
   ConsoleIcon,
   Edit02Icon,
   Moon02Icon,
@@ -943,6 +944,11 @@ export function DashboardScreen() {
             />
             <span>New Chat</span>
           </button>
+          <SecondaryAction
+            label="API & Models"
+            icon={ConnectIcon}
+            onClick={() => navigate({ to: '/settings/providers' })}
+          />
           <SecondaryAction
             label="Terminal"
             icon={ConsoleIcon}

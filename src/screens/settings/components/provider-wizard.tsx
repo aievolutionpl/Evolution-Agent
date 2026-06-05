@@ -239,36 +239,56 @@ export function ProviderWizard({
     setSaveState('saving')
     setSaveError('')
 
-    const profileKey = `${selectedProvider.id}:default`
-    const patch = {
-      auth: {
-        profiles: {
-          [profileKey]: {
-            provider: selectedProvider.id,
-            apiKey: apiKeyInput.trim(),
-          },
-        },
-      },
-    }
-
     const providerName = selectedProvider.name
     const providerId = selectedProvider.id
-    const patchBody = JSON.stringify({
-      raw: JSON.stringify(patch, null, 2),
-      reason: `Studio: add ${providerName} API key`,
-    })
+    const envKey = selectedProvider.envKey
+
+    if (!envKey) {
+      setSaveState('error')
+      setSaveError(
+        `${providerName} does not support direct API key saving yet.`,
+      )
+      return
+    }
+
+    const actions: Array<Record<string, unknown>> = [
+      {
+        action: 'set-api-key',
+        envKey,
+        value: apiKeyInput.trim(),
+      },
+    ]
+
+    if (providerId === 'custom') {
+      actions.push({
+        action: 'set-custom-provider',
+        provider: {
+          name: 'custom',
+          baseUrl: 'https://your-api.example.com/v1',
+          apiKeyEnv: envKey,
+          apiMode: 'openai',
+        },
+      })
+    }
 
     async function saveConfigAndRestart() {
-      const res = await fetch('/api/config-patch', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: patchBody,
-      })
+      for (const action of actions) {
+        const res = await fetch('/api/config-patch', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(action),
+        })
 
-      const data = (await res.json()) as { ok: boolean; error?: string }
+        const data = (await res.json().catch(() => ({}))) as {
+          ok?: boolean
+          error?: string
+        }
 
-      if (!data.ok) {
-        throw new Error(data.error || 'Failed to save config')
+        if (!res.ok || data.ok === false) {
+          throw new Error(
+            data.error || `Failed to save config (HTTP ${res.status})`,
+          )
+        }
       }
     }
 
@@ -615,8 +635,8 @@ export function ProviderWizard({
                   <>
                     <p className="mt-1 text-sm text-primary-600 text-pretty">
                       If you have Claude Code or the Hermes CLI installed,
-                      Hermes Agent can use the same auth token. Run the configure
-                      command to detect and import it automatically.
+                      Hermes Agent can use the same auth token. Run the
+                      configure command to detect and import it automatically.
                     </p>
 
                     <div className="mt-4 flex flex-col gap-3">
@@ -723,7 +743,8 @@ export function ProviderWizard({
                             strokeWidth={1.5}
                             className="inline mr-1"
                           />
-                          Key saved! Hermes Agent is restarting to apply changes.
+                          Key saved! Hermes Agent is restarting to apply
+                          changes.
                         </p>
                       ) : null}
                     </div>
@@ -745,8 +766,8 @@ export function ProviderWizard({
                     <div className="mt-4 rounded-xl border border-primary-200 bg-primary-100/70 px-3 py-2">
                       <p className="text-xs text-primary-700 text-pretty">
                         API keys are stored locally in{' '}
-                        <code className="font-mono">{CLAUDE_CONFIG_PATH}</code>,
-                        never sent to Studio.
+                        <code className="font-mono">~/.hermes/.env</code>, never
+                        sent to Studio.
                       </p>
                     </div>
 
@@ -856,7 +877,8 @@ export function ProviderWizard({
                     {verifyTitle}
                   </p>
                   <p className="mt-1 text-sm text-primary-600 text-pretty">
-                    {verificationMessage || 'Waiting for Hermes Agent to respond…'}
+                    {verificationMessage ||
+                      'Waiting for Hermes Agent to respond…'}
                   </p>
                 </div>
 
