@@ -7,6 +7,7 @@ export type ProviderInfo = {
   authTypes: Array<ProviderAuthType>
   docsUrl: string
   configExample: string
+  envKey?: string
 }
 
 export const CLAUDE_CONFIG_PATH = '~/.hermes/config.yaml'
@@ -18,6 +19,7 @@ export const PROVIDER_CATALOG: Array<ProviderInfo> = [
     description: 'Claude models — Haiku, Sonnet, and Opus.',
     authTypes: ['api-key', 'cli-token'],
     docsUrl: 'https://console.anthropic.com/settings/keys',
+    envKey: 'ANTHROPIC_API_KEY',
     configExample: JSON.stringify(
       {
         auth: {
@@ -39,6 +41,7 @@ export const PROVIDER_CATALOG: Array<ProviderInfo> = [
     description: 'GPT and reasoning models for chat and tools.',
     authTypes: ['api-key'],
     docsUrl: 'https://platform.openai.com/api-keys',
+    envKey: 'OPENAI_API_KEY',
     configExample: JSON.stringify(
       {
         auth: {
@@ -60,6 +63,7 @@ export const PROVIDER_CATALOG: Array<ProviderInfo> = [
     description: 'Gemini models with API key or OAuth.',
     authTypes: ['api-key', 'oauth'],
     docsUrl: 'https://aistudio.google.com/app/apikey',
+    envKey: 'GOOGLE_API_KEY',
     configExample: JSON.stringify(
       {
         auth: {
@@ -81,6 +85,7 @@ export const PROVIDER_CATALOG: Array<ProviderInfo> = [
     description: 'Unified access to many providers through one API.',
     authTypes: ['api-key'],
     docsUrl: 'https://openrouter.ai/keys',
+    envKey: 'OPENROUTER_API_KEY',
     configExample: JSON.stringify(
       {
         auth: {
@@ -102,6 +107,7 @@ export const PROVIDER_CATALOG: Array<ProviderInfo> = [
     description: 'MiniMax foundation models and multimodal APIs.',
     authTypes: ['api-key'],
     docsUrl: 'https://www.minimax.io/platform',
+    envKey: 'MINIMAX_API_KEY',
     configExample: JSON.stringify(
       {
         auth: {
@@ -123,6 +129,7 @@ export const PROVIDER_CATALOG: Array<ProviderInfo> = [
     description: 'DeepSeek chat and reasoning models via API key.',
     authTypes: ['api-key'],
     docsUrl: 'https://platform.deepseek.com/api_keys',
+    envKey: 'DEEPSEEK_API_KEY',
     configExample: JSON.stringify(
       {
         auth: {
@@ -133,6 +140,29 @@ export const PROVIDER_CATALOG: Array<ProviderInfo> = [
             },
           },
         },
+      },
+      null,
+      2,
+    ),
+  },
+  {
+    id: 'custom',
+    name: 'Custom API',
+    description:
+      'OpenAI-compatible endpoint with your own base URL and API key.',
+    authTypes: ['api-key'],
+    docsUrl: 'https://platform.openai.com/docs/api-reference',
+    envKey: 'CUSTOM_API_KEY',
+    configExample: JSON.stringify(
+      {
+        custom_providers: [
+          {
+            name: 'custom',
+            base_url: 'https://your-api.example.com/v1',
+            key_env: 'CUSTOM_API_KEY',
+            api_mode: 'openai',
+          },
+        ],
       },
       null,
       2,
@@ -161,7 +191,8 @@ export const PROVIDER_CATALOG: Array<ProviderInfo> = [
   {
     id: 'atomic-chat',
     name: 'Atomic Chat',
-    description: 'Local LLMs via Atomic Chat — run Llama, Gemma, Qwen and more on your machine.',
+    description:
+      'Local LLMs via Atomic Chat — run Llama, Gemma, Qwen and more on your machine.',
     authTypes: ['local'],
     docsUrl: 'https://atomic.chat',
     configExample: JSON.stringify(

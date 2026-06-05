@@ -49,7 +49,8 @@ afterEach(() => {
 
 async function loadHandlers(modulePath: string) {
   const mod = await import(modulePath)
-  return (mod as any).Route.server.handlers
+  return (mod as { Route: { server: { handlers: unknown } } }).Route.server
+    .handlers
 }
 
 describe('canonical /api/hermes-config route', () => {
@@ -95,9 +96,9 @@ describe('canonical /api/hermes-config route', () => {
     const body = await res.json()
 
     expect(body).toMatchObject({ ok: true, message: 'Default model updated.' })
-    expect(
-      fs.readFileSync(path.join(tmpHome, 'config.yaml'), 'utf-8'),
-    ).toMatch(/provider: openrouter/)
+    expect(fs.readFileSync(path.join(tmpHome, 'config.yaml'), 'utf-8')).toMatch(
+      /provider: openrouter/,
+    )
   })
 
   it('PATCH legacy { config } body deep-merges and preserves siblings', async () => {
@@ -120,6 +121,46 @@ describe('canonical /api/hermes-config route', () => {
     expect(onDisk).toContain('user_profile_enabled: true')
   })
 
+  it('PATCH path/value bodies update dotted config paths from the providers screen', async () => {
+    const handlers = await loadHandlers('./hermes-config')
+    const res = await handlers.PATCH({
+      request: new Request('http://localhost/api/hermes-config', {
+        method: 'PATCH',
+        body: JSON.stringify({
+          path: 'agents.defaults.contextTokens',
+          value: 64000,
+        }),
+      }),
+    })
+    const body = await res.json()
+
+    expect(body.ok).toBe(true)
+    const onDisk = fs.readFileSync(path.join(tmpHome, 'config.yaml'), 'utf-8')
+    expect(onDisk).toContain('contextTokens: 64000')
+  })
+
+  it('PATCH remove-provider removes known provider API keys', async () => {
+    fs.writeFileSync(
+      path.join(tmpHome, '.env'),
+      `OPENAI_API_KEY=sk-openai\nOPENROUTER_API_KEY=sk-openrouter\n`,
+      'utf-8',
+    )
+
+    const handlers = await loadHandlers('./hermes-config')
+    const res = await handlers.PATCH({
+      request: new Request('http://localhost/api/hermes-config', {
+        method: 'PATCH',
+        body: JSON.stringify({ action: 'remove-provider', provider: 'openai' }),
+      }),
+    })
+    const body = await res.json()
+
+    expect(body).toMatchObject({ ok: true, message: 'Provider removed.' })
+    const onDisk = fs.readFileSync(path.join(tmpHome, '.env'), 'utf-8')
+    expect(onDisk).not.toContain('OPENAI_API_KEY')
+    expect(onDisk).toContain('OPENROUTER_API_KEY=sk-openrouter')
+  })
+
   it('PATCH rejects malformed action bodies with 400', async () => {
     const handlers = await loadHandlers('./hermes-config')
     const res = await handlers.PATCH({
@@ -140,7 +181,11 @@ describe('canonical /api/hermes-config route', () => {
     const res = await handlers.PATCH({
       request: new Request('http://localhost/api/hermes-config', {
         method: 'PATCH',
-        body: JSON.stringify({ action: 'set-api-key', envKey: 'X', value: 'y' }),
+        body: JSON.stringify({
+          action: 'set-api-key',
+          envKey: 'X',
+          value: 'y',
+        }),
       }),
     })
     expect(res.status).toBe(503)

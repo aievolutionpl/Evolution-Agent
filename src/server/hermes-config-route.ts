@@ -3,13 +3,8 @@ import path from 'node:path'
 import YAML from 'yaml'
 import { z } from 'zod'
 
-import { createCapabilityUnavailablePayload } from '@/lib/feature-gates'
-
 import { isAuthenticated } from './auth-middleware'
-import {
-  ensureGatewayProbed,
-  getCapabilities,
-} from './gateway-capabilities'
+import { ensureGatewayProbed, getCapabilities } from './gateway-capabilities'
 import { normalizeHermesConfigState } from './hermes-config-migration'
 import {
   applyHermesConfigPatch,
@@ -23,6 +18,7 @@ import {
   getDiscoveredModels,
   getDiscoveryStatus,
 } from './local-provider-discovery'
+import { createCapabilityUnavailablePayload } from '@/lib/feature-gates'
 
 type AuthResult = Response | true
 
@@ -32,6 +28,7 @@ const ACTION_MESSAGES: Record<string, string> = {
   'remove-api-key': 'API key removed.',
   'set-custom-provider': 'Custom provider saved.',
   'remove-custom-provider': 'Custom provider removed.',
+  'remove-provider': 'Provider removed.',
 }
 
 const LEGACY_SAVE_MESSAGE = 'Saved.'
@@ -64,12 +61,31 @@ const PatchActionSchema = z.discriminatedUnion('action', [
     action: z.literal('remove-custom-provider'),
     name: z.string().min(1),
   }),
+  z.object({
+    action: z.literal('remove-provider'),
+    provider: z.string().min(1),
+  }),
 ])
 
 const LegacyPatchSchema = z.object({
   config: z.record(z.string(), z.unknown()).optional(),
   env: z.record(z.string(), z.union([z.string(), z.null()])).optional(),
 })
+
+const PathValuePatchSchema = z.object({
+  path: z.string().min(1),
+  value: z.unknown(),
+})
+
+const PROVIDER_ENV_KEYS: Record<string, Array<string>> = {
+  anthropic: ['ANTHROPIC_API_KEY'],
+  openai: ['OPENAI_API_KEY'],
+  google: ['GOOGLE_API_KEY', 'GEMINI_API_KEY'],
+  openrouter: ['OPENROUTER_API_KEY'],
+  minimax: ['MINIMAX_API_KEY'],
+  deepseek: ['DEEPSEEK_API_KEY'],
+  custom: ['CUSTOM_API_KEY'],
+}
 
 async function authorize(request: Request): Promise<AuthResult> {
   const result = isAuthenticated(request) as AuthResult
@@ -99,12 +115,31 @@ export async function handleHermesConfigGet({
   if (auth !== true) return auth
 
   const paths = resolveHermesConfigPaths()
+  const files = readHermesConfigFiles(paths)
+
   if (!getCapabilities().config) {
-    return unavailablePayload({ paths, claudeHome: paths.hermesHome })
+    const state = normalizeHermesConfigState({
+      paths,
+      config: files.config,
+      env: files.env,
+      authProfiles: files.authProfiles,
+      localProviders: [],
+      localModels: [],
+    })
+    const providers = state.providers.map((p) => ({
+      ...p,
+      maskedKeys: p.maskedCredentials,
+    }))
+
+    return unavailablePayload({
+      ...state,
+      ok: false,
+      providers,
+      claudeHome: paths.hermesHome,
+    })
   }
 
   await ensureDiscovery()
-  const files = readHermesConfigFiles(paths)
   const state = normalizeHermesConfigState({
     paths,
     config: files.config,
@@ -191,6 +226,72 @@ function applyLegacyEnvBody(
   fs.writeFileSync(envPath, stringifyEnv(current), 'utf-8')
 }
 
+function setPathValue(
+  target: Record<string, unknown>,
+  dottedPath: string,
+  value: unknown,
+): void {
+  const segments = dottedPath
+    .split('.')
+    .map((segment) => segment.trim())
+    .filter(Boolean)
+  if (segments.length === 0) return
+
+  let current = target
+  for (const segment of segments.slice(0, -1)) {
+    const existing = current[segment]
+    if (!existing || typeof existing !== 'object' || Array.isArray(existing)) {
+      current[segment] = {}
+    }
+    current = current[segment] as Record<string, unknown>
+  }
+
+  current[segments[segments.length - 1]] = value
+}
+
+function applyPathValueBody(
+  configPath: string,
+  dottedPath: string,
+  value: unknown,
+): void {
+  const update: Record<string, unknown> = {}
+  setPathValue(update, dottedPath, value)
+  applyLegacyConfigBody(configPath, update)
+}
+
+function applyRemoveProviderBody(
+  paths: ReturnType<typeof resolveHermesConfigPaths>,
+  providerId: string,
+): void {
+  const config = readHermesConfigFiles(paths).config
+  const envUpdates: Record<string, null> = {}
+  for (const envKey of PROVIDER_ENV_KEYS[providerId] ?? []) {
+    envUpdates[envKey] = null
+  }
+
+  if (Object.keys(envUpdates).length > 0) {
+    applyLegacyEnvBody(paths.envPath, envUpdates)
+  }
+
+  const customProviders = Array.isArray(config.custom_providers)
+    ? config.custom_providers.filter((entry) => {
+        if (!entry || typeof entry !== 'object' || Array.isArray(entry))
+          return true
+        const record = entry as Record<string, unknown>
+        return record.name !== providerId && record.id !== providerId
+      })
+    : null
+
+  if (customProviders) {
+    if (customProviders.length === 0)
+      applyLegacyConfigBody(paths.configPath, { custom_providers: null })
+    else
+      applyLegacyConfigBody(paths.configPath, {
+        custom_providers: customProviders,
+      })
+  }
+}
+
 export async function handleHermesConfigPatch({
   request,
 }: {
@@ -227,12 +328,37 @@ export async function handleHermesConfigPatch({
     const parsed = PatchActionSchema.safeParse(body)
     if (!parsed.success) {
       return Response.json(
-        { ok: false, error: 'Invalid patch action body', issues: parsed.error.issues },
+        {
+          ok: false,
+          error: 'Invalid patch action body',
+          issues: parsed.error.issues,
+        },
         { status: 400 },
       )
     }
+    if (parsed.data.action === 'remove-provider') {
+      applyRemoveProviderBody(paths, parsed.data.provider)
+      return Response.json({
+        ok: true,
+        message: ACTION_MESSAGES[parsed.data.action],
+      })
+    }
+
     const result = applyHermesConfigPatch(paths, parsed.data)
-    return Response.json({ ...result, message: ACTION_MESSAGES[parsed.data.action] })
+    return Response.json({
+      ...result,
+      message: ACTION_MESSAGES[parsed.data.action],
+    })
+  }
+
+  const pathValue = PathValuePatchSchema.safeParse(body)
+  if (pathValue.success) {
+    applyPathValueBody(
+      paths.configPath,
+      pathValue.data.path,
+      pathValue.data.value,
+    )
+    return Response.json({ ok: true, message: LEGACY_SAVE_MESSAGE })
   }
 
   const legacy = LegacyPatchSchema.safeParse(body)
@@ -243,7 +369,8 @@ export async function handleHermesConfigPatch({
     )
   }
 
-  if (legacy.data.config) applyLegacyConfigBody(paths.configPath, legacy.data.config)
+  if (legacy.data.config)
+    applyLegacyConfigBody(paths.configPath, legacy.data.config)
   if (legacy.data.env) applyLegacyEnvBody(paths.envPath, legacy.data.env)
 
   return Response.json({ ok: true, message: LEGACY_SAVE_MESSAGE })

@@ -32,11 +32,13 @@ import { cn } from '@/lib/utils'
 async function getConfig(): Promise<Record<string, unknown>> {
   const res = await fetch('/api/claude-config')
   if (!res.ok) throw new Error(`Failed to load config: HTTP ${res.status}`)
-  const data = await res.json() as { config?: Record<string, unknown> }
+  const data = (await res.json()) as { config?: Record<string, unknown> }
   return data.config ?? {}
 }
 
-async function patchConfig(patch: Record<string, unknown>): Promise<Record<string, unknown>> {
+async function patchConfig(
+  patch: Record<string, unknown>,
+): Promise<Record<string, unknown>> {
   const res = await fetch('/api/claude-config', {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
@@ -457,7 +459,7 @@ function getDraftValue(
   config: ClaudeConfig | undefined,
   draftValues: Record<string, string>,
 ): string {
-  if (draftValues[setting.id] !== undefined) return draftValues[setting.id]
+  if (Object.hasOwn(draftValues, setting.id)) return draftValues[setting.id]
   if (!setting.path) return ''
   const rawValue = readPath(config, setting.path)
   if (setting.formatter) return setting.formatter(rawValue)
@@ -1142,8 +1144,8 @@ function ActiveModelCard({
                   Fallback Model
                 </h3>
                 <p className="text-sm text-primary-600">
-                  Optional secondary model Hermes Agent can use if the primary path
-                  fails.
+                  Optional secondary model Hermes Agent can use if the primary
+                  path fails.
                 </p>
               </div>
               <Button
@@ -1304,7 +1306,8 @@ function ProviderManagementSection(props: {
         {modelsQuery.error ? (
           <div className="rounded-xl border border-primary-200 bg-white px-4 py-3">
             <p className="mb-2 text-sm text-primary-700">
-              Unable to load providers right now. Check your Hermes Agent connection.
+              Unable to load providers right now. Check your Hermes Agent
+              connection.
             </p>
             <Button
               variant="outline"
@@ -1431,14 +1434,16 @@ export function ProvidersScreen({ embedded = false }: ProvidersScreenProps) {
   const configQuery = useQuery({
     queryKey: ['claude', 'config'],
     queryFn: async () => {
-      const response = await fetch('/api/config-get')
+      const response = await fetch('/api/claude-config')
       const payload = (await response
         .json()
         .catch(() => ({}))) as ConfigQueryResponse
       if (!response.ok || payload.ok === false) {
         throw new Error(payload.error || `HTTP ${response.status}`)
       }
-      return payload.payload ?? {}
+      return (
+        payload.payload ?? (payload as { config?: ClaudeConfig }).config ?? {}
+      )
     },
     retry: 1,
     enabled: configAvailable,
