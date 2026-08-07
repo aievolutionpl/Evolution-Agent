@@ -1,371 +1,386 @@
 <div align="center">
 
+<img src="assets/cover.svg" alt="Seedance 2.5 Director — AI Evolution Labs × AI Evolution Polska" width="100%" />
+
 # 🎬 Seedance 2.5 Director
 
-### Production-grade prompting skill for cinematic AI video, advertising and social content
+### Agent-native directing system for cinematic AI video, advertising and social content
 
 **Built by [AI Evolution Labs](https://aievolutionlabs.io) × AI Evolution Polska**
 
-[![Seedance](https://img.shields.io/badge/Seedance-2.5-111111?style=for-the-badge)](#)
-[![AI Video](https://img.shields.io/badge/AI_Video-Director-7c3aed?style=for-the-badge)](#)
-[![Ads](https://img.shields.io/badge/Cinematic-Ads-f59e0b?style=for-the-badge)](#)
-[![Social](https://img.shields.io/badge/Reels-Shorts-ec4899?style=for-the-badge)](#)
-[![Skill](https://img.shields.io/badge/Agent-Skill-10b981?style=for-the-badge)](#)
+[![Seedance](https://img.shields.io/badge/Seedance-2.5-111111?style=for-the-badge)](https://dreamina.capcut.com/seedance/seedance-2-5)
+[![AI Video](https://img.shields.io/badge/AI_Video-Director-0ea5e9?style=for-the-badge)](SKILL.md)
+[![Ads](https://img.shields.io/badge/Cinematic-Ads-f59e0b?style=for-the-badge)](references/advertising-playbook.md)
+[![Social](https://img.shields.io/badge/Reels-Shorts-ec4899?style=for-the-badge)](references/social-media-playbook.md)
+[![Agent Skill](https://img.shields.io/badge/Agent-Skill-10b981?style=for-the-badge)](AGENTS.md)
 
-**Turn a rough idea, image, product shot or script into a directed Seedance prompt with shot logic, camera movement, lighting, audio, continuity and a deliberate final frame.**
+**Don’t prompt video. Direct it.**
+
+Turn a rough idea, image, product shot, script, storyboard or campaign brief into a production-ready Seedance 2.5 workflow with intelligent generation routing, scenario design, camera direction, lighting, sound, continuity and anti-AI-slop QA.
+
+[📖 Read the skill](SKILL.md) · [🤖 Agent runtime](AGENTS.md) · [🧠 Claude adapter](CLAUDE.md) · [📋 Universal master prompt](MASTER_PROMPT.md) · [🎞️ Examples](examples/SHOWCASE.md)
+
+🌐 **[Interactive project page](https://instasite.ai/create/dc3f2586-b30c-4fb7-9652-25058b92332f)**
 
 </div>
 
 ---
 
-## What this is
+## Why this exists
 
-Most AI video prompts are adjective soup:
+Most AI-video prompts are adjective soup:
 
 ```text
-cinematic, epic, ultra realistic, dynamic camera, dramatic lighting...
+cinematic, epic, ultra realistic, dynamic camera, dramatic lighting, masterpiece...
 ```
 
 That is not directing.
 
-**Seedance 2.5 Director** teaches an AI agent to think like a director, cinematographer and commercial creative before it writes the prompt.
+**Seedance 2.5 Director** teaches an AI agent to make production decisions before it writes the final prompt.
 
-The core production pipeline is:
+The system asks:
 
 ```text
-IDEA
-  ↓
-OBJECTIVE
-  ↓
-REFERENCE AUTHORITY
-  ↓
-CONTINUITY LOCKS
-  ↓
-SHOT DESIGN
-  ↓
-ACTION + PHYSICS
-  ↓
-CAMERA + LENS
-  ↓
-LIGHT + PRODUCTION DESIGN
-  ↓
-AUDIO
-  ↓
-END STATES
-  ↓
-FAILURE PREVENTION
-  ↓
-SEEDANCE PROMPT
+What is the actual communication goal?
+What must stay identical?
+Should this start from text, an image, several references or a storyboard?
+What visibly happens?
+Where is the camera and why does it move?
+What should the viewer hear?
+What must be true at the end?
+What would make this look like generic AI slop?
 ```
 
-The result is a prompt that is easier for a video model to follow and easier for a human to iterate.
+Then it writes the prompt.
 
 ---
 
-## Built for
+# ⚡ Core workflow
 
-- 🎬 cinematic scenes
-- 📱 TikTok, Instagram Reels and YouTube Shorts
-- 📣 paid social and performance ads
-- 🛍️ product and ecommerce commercials
-- 💎 luxury campaigns
-- 🍔 food cinematography
-- 🚗 automotive videos
-- 👗 fashion and beauty
-- 🏠 architecture and interiors
-- 🤖 technology and futuristic scenes
-- 🗣️ dialogue and lip-sync scenes
-- ⚡ transformations and VFX-style sequences
-- 🎥 image-to-video and reference-to-video workflows
-- 🧩 multi-reference prompting
-- 🛠️ repairing weak AI generations
+```text
+IDEA / IMAGE / SCRIPT / CAMPAIGN BRIEF
+                ↓
+            INTENT
+                ↓
+       AUDIENCE / USE CASE
+                ↓
+       GENERATION ROUTING
+   T2V · T2I→I2V · I2V · R2V
+   STORYBOARD · MOTION REFERENCE
+                ↓
+       SCRIPT / STORY SPINE
+                ↓
+       REFERENCE AUTHORITY
+                ↓
+        CONTINUITY LOCKS
+                ↓
+         SHOT / BEAT PLAN
+                ↓
+        ACTION + PHYSICS
+                ↓
+      CAMERA + LENS + FOCUS
+                ↓
+    LIGHT + PRODUCTION DESIGN
+                ↓
+   PERFORMANCE + HUMANIZER
+                ↓
+      SOUND + MUSIC + FOLEY
+                ↓
+           END STATES
+                ↓
+       ANTI-AI-SLOP QA
+                ↓
+      FINAL SEEDANCE PROMPT
+```
+
+The first principle is simple:
+
+> **Route before prompt.**
 
 ---
 
-## The main idea
+# 🧭 It chooses how the video should be generated
 
-A strong video prompt should answer these questions:
+The agent does **not** assume Text-to-Video is always the answer.
 
-1. **What is the viewer supposed to feel or understand?**
-2. **Which references control identity, product, wardrobe, environment, motion or style?**
-3. **What must never drift?**
-4. **What visibly happens in each beat?**
-5. **Where is the camera?**
-6. **Why does the camera move?**
-7. **What lighting creates the intended look?**
-8. **What should we hear?**
-9. **What must visibly be true at the end of each important beat?**
-10. **What expensive failure should the prompt prevent?**
+| Situation | Preferred route |
+|---|---|
+| New fictional concept with no strict identity | **T2V** |
+| No source image, but exact composition matters | **T2I → I2V** |
+| User already has a valuable photo / product / room | **I2V** |
+| Several assets control identity, product, motion or audio | **R2V** |
+| Multi-shot story or client-approved shot plan | **Storyboard / animatic** |
+| Complicated movement or product handling | **Motion reference / R2V** |
+| Most of the clip works and one layer failed | **Targeted repair / edit when supported** |
 
-If an instruction does not help answer one of those questions, it is probably noise.
+Full routing logic: [`references/generation-routing.md`](references/generation-routing.md)
+
+## The key I2V rule
+
+```text
+PRESERVE FIRST.
+ANIMATE SECOND.
+```
+
+If the image already contains the correct person, product, room, car, food item or composition, the agent focuses the prompt on **motion and change**, not on redescribing and accidentally redesigning the source.
 
 ---
 
-# Quick start
+# 🖼️ Text-to-Image is part of the video workflow
 
-Give your agent an idea such as:
-
-```text
-Create a 10-second vertical ad for a luxury perfume.
-I have one product image and one marble bathroom reference.
-Make it expensive, cinematic and suitable for Instagram Reels.
-```
-
-The skill should turn that into something closer to:
+Sometimes the smartest route is:
 
 ```text
-FORMAT
-9:16 vertical, 10 seconds, premium live-action perfume commercial.
-
-REFERENCE AUTHORITY
-@Image1 = exact perfume bottle geometry, cap, label position and glass colour.
-@Image2 = marble bathroom architecture, material palette and warm practical lighting only.
-
-CONTINUITY LOCKS
-Preserve exact bottle proportions and label position in every shot. No redesign, no duplicate bottle, no warped glass.
-
-0–2.5s — HOOK
-Macro shot through a foreground water droplet. Rack focus reveals the perfume bottle standing on wet dark marble. A narrow warm rim light traces the glass edges. Camera performs a slow 85mm-feel push-in.
-End state: bottle silhouette and cap are clearly readable.
-
-2.5–5s — MATERIAL DESIRE
-Extreme close-up of condensation sliding down the bottle. Controlled highlights move across the glass while the camera makes a subtle lateral slider move.
-End state: premium glass texture and liquid colour are clearly visible.
-
-5–7.5s — HUMAN INTERACTION
-A clean hand enters from camera-right and lifts the bottle naturally by the base. No finger intersections. Camera tracks upward with the bottle.
-End state: bottle remains undeformed and fully controlled in the hand.
-
-7.5–10s — HERO FRAME
-Cut to a stable 85mm beauty shot. Bottle returns to the marble surface. Slow micro push-in. Warm practical bokeh behind it, crisp edge separation, clean negative space above for post-production copy.
-End state: campaign-ready product hero frame, motion settled.
-
-AUDIO
-Soft room ambience, one delicate glass contact sound, restrained luxury electronic pulse, subtle low-frequency finish.
-
-CONSTRAINTS
-Exact product geometry throughout. No random text. No extra hands. No melting glass. No camera clipping. Natural reflections and physically plausible contact.
+idea
+→ generate a production-ready start frame
+→ inspect composition / identity / lighting
+→ animate the approved frame
 ```
 
-The difference is simple: **the second prompt directs a scene.**
+A good starting image is designed for motion:
+
+- clear subject separation
+- physically plausible pose
+- visible hands / joints when needed
+- depth layers for camera movement
+- room in frame for the planned action
+- coherent light sources
+- no impossible overlaps
+- useful negative space for social / ads
+
+The skill treats the first image as a **keyframe**, not just pretty artwork.
 
 ---
 
-# Three prompting modes
+# 🎬 Cinematic directing, not cinematic keywords
 
-## 1. FAST PROMPT
+The skill translates vague requests into concrete cinematography.
 
-Use when the user needs a quick generation and the idea is simple.
-
-Output:
+Instead of:
 
 ```text
-Subject + observable action + environment + camera + light + end frame + constraints
+dynamic cinematic camera, epic lighting
 ```
 
-## 2. PRODUCTION PROMPT
-
-Default for ads, social videos and scenes with references.
-
-Includes:
-
-- format
-- reference binding
-- continuity locks
-- scene
-- beats / shots
-- camera
-- light
-- audio
-- end states
-- constraints
-
-## 3. DIRECTOR MODE
-
-Use for high-value commercials, complex transformations, story scenes or multi-reference projects.
-
-Adds:
-
-- creative objective
-- visual strategy
-- shot hierarchy
-- transition logic
-- sound design
-- reference authority map
-- continuity plan
-- hero-frame strategy
-- failure-risk analysis
-
----
-
-# Cinematic prompting
-
-The skill does **not** use `cinematic` as a substitute for cinematography.
-
-It chooses:
+it aims for direction such as:
 
 ```text
-emotion
-+ composition
-+ shot size
-+ camera angle
-+ motivated camera move
-+ lens feel
-+ focus behaviour
-+ lighting direction
-+ foreground/background depth
-+ atmosphere
-+ sound
-+ final composition
+low-angle medium tracking shot, camera moves backward at walking speed with a stable horizon, 35mm lens feel, focus locked on the eyes, large soft key from camera-left, warm practicals behind the subject and restrained negative fill on the far cheek
 ```
 
-Example:
+The cinematic system covers:
 
-❌ Weak:
-
-```text
-cinematic man walking through city, dramatic, epic, dynamic camera
-```
-
-✅ Directed:
-
-```text
-low-angle medium tracking shot, camera moving backward at the subject's walking speed, 35mm lens feel, wet pavement creating foreground reflections, soft cyan storefront light camera-left and warm tungsten practicals behind him, shallow atmospheric haze, focus locked on his eyes while background lights stretch into soft bokeh
-```
+- shot size
+- angle
+- blocking
+- lens perspective
+- camera speed
+- focus behaviour
+- foreground / midground / background depth
+- motivated transitions
+- lighting continuity
+- deliberate final frames
 
 See [`references/cinematic-playbook.md`](references/cinematic-playbook.md).
 
 ---
 
-# Advertising mode
+# 🧠 Anti-AI Slop Engine
 
-For advertising, pretty footage is not enough.
+The skill includes a dedicated visual humanizer and anti-slop layer.
 
-The skill first decides what the ad is doing:
+It actively removes patterns that make AI video feel synthetic:
 
-- stop the scroll
-- create desire
-- demonstrate a benefit
-- show proof
-- create product trust
-- reveal a transformation
-- make the brand feel premium
-- land on a conversion-ready hero frame
+❌ purposeless orbit cameras  
+❌ constant floating-gimbal movement  
+❌ generic cyberpunk / neon defaults  
+❌ fog and particles everywhere  
+❌ plastic skin  
+❌ frozen facial performance  
+❌ floating feet  
+❌ impossible hands  
+❌ rubbery food  
+❌ melting products  
+❌ morphing architecture  
+❌ random subtitles  
+❌ transitions with no story purpose  
+❌ cuts every second just to look “dynamic”
 
-A useful 10-second commercial structure:
+Instead it adds restrained physical cues when appropriate:
+
+✅ breathing  
+✅ weight transfer  
+✅ eye movement before head movement  
+✅ fingers settling around an object  
+✅ cloth / hair inertia  
+✅ natural reaction timing  
+✅ believable acceleration and stopping  
+✅ environmental motion with a physical cause
+
+Core rule:
 
 ```text
-0–2s    PATTERN INTERRUPT / HOOK
-2–5s    DESIRE / PROBLEM / DISCOVERY
-5–8s    BENEFIT / DEMONSTRATION / PAYOFF
-8–10s   PRODUCT HERO / BRAND FRAME / EDITING SPACE
+SPECIFIC CAUSALITY > DECORATIVE SPECTACLE
 ```
 
-The model should not be trusted to generate critical marketing copy perfectly. When copy matters, the skill prefers a clean composition with negative space so text can be added in post.
+See [`references/anti-ai-slop.md`](references/anti-ai-slop.md).
+
+---
+
+# 📣 Built for advertising
+
+This is not only a cinematic prompt library.
+
+Commercial mode begins with the marketing job:
+
+```text
+AUDIENCE
+→ PROBLEM / DESIRE
+→ ONE MESSAGE
+→ PROOF / DEMONSTRATION
+→ BENEFIT / RESULT
+→ HERO FRAME
+→ CTA HANDOFF
+```
+
+The skill supports:
+
+- ecommerce
+- product ads
+- local-service campaigns
+- food advertising
+- beauty
+- fashion
+- automotive
+- interiors / renovation
+- technology
+- luxury
+- paid social
+- creator / UGC-style ads
+
+For real client assets:
+
+```text
+ACCURACY FIRST.
+MESSAGE SECOND.
+CINEMATIC POLISH THIRD.
+```
+
+A beautiful shot is useless if the product shape, room architecture or service promise becomes wrong.
 
 See [`references/advertising-playbook.md`](references/advertising-playbook.md).
 
 ---
 
-# Short-form social mode
+# 📱 Social media director mode
 
-For 8–15 second social video:
+For Reels, TikTok and Shorts the skill treats short-form as its own format rather than “vertical cinema”.
 
-- lead with a visually understandable first frame
-- use about 3–5 meaningful beats
-- change perspective roughly every 2–3 seconds when it improves retention
-- never cut only because “viral videos need cuts”
-- every new camera angle should reveal information, escalate action or improve payoff
-- land on a deliberate ending rather than stopping randomly
+It focuses on:
 
-Recommended structure:
+- still-readable first-frame hook
+- fast premise recognition
+- vertical-safe composition
+- readable face / product scale
+- 3–5 meaningful beats for many short clips
+- perspective changes only when new information appears
+- escalation / proof
+- payoff
+- clean end or loop point
+
+A useful short-form structure:
 
 ```text
-HOOK → ESCALATION → PAYOFF → HERO / LOOP
+HOOK
+→ CURIOSITY
+→ PROGRESSION / PROOF
+→ PAYOFF
+→ CLEAN END
 ```
+
+See [`references/social-media-playbook.md`](references/social-media-playbook.md).
 
 ---
 
-# Reference authority
+# ✍️ It can write the scenario before the prompt
 
-One of the most important rules in this project:
+When the concept contains several events, dialogue, a transformation, before/after, comedy or an advertising message, the agent first solves the scenario.
 
-> **Every reference gets a job.**
+It creates a one-sentence story spine, then only the beats that matter.
+
+Example:
+
+```text
+An unfinished fireplace room becomes a complete warm living space through one team's craft, so the viewer understands they can handle the entire transformation.
+```
+
+Then:
+
+```text
+PROBLEM
+→ CRAFT / PROOF
+→ MOTIVATED TRANSITION
+→ FINISHED RESULT
+```
+
+Only after the story works does it design the shots.
+
+See [`references/script-storyboard.md`](references/script-storyboard.md).
+
+---
+
+# 🔊 Sound is a production layer
+
+The Director can plan:
+
+- dialogue
+- room / street / environment ambience
+- foley
+- product-contact sounds
+- cinematic SFX
+- music direction
+- beat timing
+- sound bridges
+- mix priority
+
+It does not default to “epic cinematic music”.
+
+Example:
+
+```text
+AUDIO
+Dialogue: foreground and clean
+Ambience: quiet luxury bathroom room tone
+Foley: delicate glass contact on marble
+Music: restrained electronic pulse, no aggressive drums
+Sync cue: subtle low accent lands on the final hero frame
+```
+
+See [`references/sound-music.md`](references/sound-music.md).
+
+---
+
+# 🧩 Reference authority
+
+Seedance 2.5 is especially useful when the agent knows **why each reference exists**.
 
 Example:
 
 ```text
 REFERENCE AUTHORITY
-@Image1 controls exact face identity only.
-@Image2 controls wardrobe only.
-@Image3 controls product geometry only.
-@Image4 controls environment only.
-@Video1 controls movement timing and camera pacing only.
-@Audio1 controls rhythm only.
+@Image1 = exact face identity and hairstyle
+@Image2 = outfit only; ignore its face
+@Image3 = exact product geometry and label position
+@Video1 = body movement and timing only
+@Audio1 = rhythm only
+@Storyboard1 = shot order and framing only
 ```
 
-Do not let references silently compete with each other.
+This reduces reference collisions and identity / product drift.
 
 ---
 
-# Continuity locks
-
-For recurring subjects, the agent identifies the expensive properties that must stay fixed.
-
-### Character
-
-```text
-exact face
-hair
-wardrobe
-body proportions
-age presentation
-key accessories
-```
-
-### Product
-
-```text
-geometry
-proportions
-packaging
-logo position
-materials
-colour
-```
-
-### Environment
-
-```text
-architecture
-important prop positions
-time of day
-weather
-light direction
-```
-
----
-
-# Camera philosophy
-
-Every camera move needs a reason.
-
-| Goal | Useful moves |
-|---|---|
-| Reveal | dolly-in, rack focus, foreground slide, crane-down |
-| Energy | side tracking, low backward tracking, controlled handheld |
-| Product luxury | macro slider, slow orbit, top-down descent, micro push-in |
-| Scale | wide low-angle, crane-up, foreground parallax |
-| Intimacy | locked close-up, subtle breathing handheld, slow push-in |
-| Impact | rapid push-in, whip into planned cut, low-angle reveal |
-
-Avoid prompts that stack unrelated camera verbs.
-
----
-
-# End-state prompting
-
-A major part of this skill is **end-state design**.
+# 🎯 End states make prompts controllable
 
 Weak:
 
@@ -376,166 +391,194 @@ the transformation finishes
 Better:
 
 ```text
-End state: the armour is fully locked around the torso and arms, the faceplate closes, both feet are planted on the floor, the subject faces camera and all moving parts settle before the final beat.
+end state: armour panels are fully locked, helmet is closed, both feet contact the floor and the subject faces camera while motion settles
 ```
 
-Visible end states give complex generations a target.
+The skill uses visible end states for important beats so the model has something concrete to land on.
 
 ---
 
-# Physics and interaction
+# 🤖 Agent compatibility
 
-The skill explicitly describes interactions when ambiguity would cause AI errors.
+The folder is structured so different agents can understand the same directing system.
 
-Instead of:
+| Agent / environment | Entry file |
+|---|---|
+| Hermes / skill-aware agent | [`SKILL.md`](SKILL.md) |
+| Codex / AGENTS-aware workflows | [`AGENTS.md`](AGENTS.md) |
+| Claude / Claude Code | [`CLAUDE.md`](CLAUDE.md) |
+| Generic LLM / custom agent | [`MASTER_PROMPT.md`](MASTER_PROMPT.md) |
+| Machine-readable discovery | [`manifest.json`](manifest.json) |
+
+## Generic installation
+
+Copy this folder into the location your agent uses for reusable instructions / skills.
+
+Then tell the agent to read the appropriate entry file.
+
+### Minimal generic usage
 
 ```text
-he puts wood into the fireplace
+Read MASTER_PROMPT.md and use it as your Seedance directing policy.
+Then turn this idea into a 10-second vertical product ad: [idea]
 ```
 
-Use:
+### Agent-aware usage
 
 ```text
-he reaches for the metal handle with his right hand, opens the glass fireplace door outward first, then uses his left hand to place one log through the open doorway onto the existing embers; the log never passes through the glass
+Use the seedance-2-5-director skill.
+Animate this supplied image into a premium 10-second Reel.
+Preserve the exact product.
 ```
 
-Small physical details often decide whether a generated scene feels believable.
+The agent should decide the route itself.
 
 ---
 
-# Prompt libraries
+# 📂 Project structure
 
-This skill includes dedicated playbooks:
-
-- [`references/prompt-patterns.md`](references/prompt-patterns.md) — production prompt templates
-- [`references/cinematic-playbook.md`](references/cinematic-playbook.md) — cinematography, camera, lens and lighting
-- [`references/advertising-playbook.md`](references/advertising-playbook.md) — ads, products, ecommerce and conversion creative
-- [`references/failure-diagnosis.md`](references/failure-diagnosis.md) — repair weak generations without destroying what already works
+```text
+seedance-2-5-director/
+├── README.md
+├── SKILL.md
+├── AGENTS.md
+├── CLAUDE.md
+├── MASTER_PROMPT.md
+├── manifest.json
+├── assets/
+│   └── cover.svg
+├── examples/
+│   └── SHOWCASE.md
+└── references/
+    ├── model-profile.md
+    ├── generation-routing.md
+    ├── cinematic-playbook.md
+    ├── advertising-playbook.md
+    ├── social-media-playbook.md
+    ├── script-storyboard.md
+    ├── sound-music.md
+    ├── anti-ai-slop.md
+    ├── prompt-patterns.md
+    └── failure-diagnosis.md
+```
 
 ---
 
-# Agent output contract
+# 🧪 Example request
 
-When the user asks for a Seedance prompt, the agent should normally return:
+```text
+I have one photo of a burger.
+Make a 10-second Reel that makes it look premium and hot.
+The burger itself must not change.
+```
+
+The skill should reason approximately like this:
+
+```text
+ROUTE
+I2V because the supplied image defines the exact food build.
+
+MOTION BUDGET
+Low-to-medium because food geometry must remain stable.
+
+STORY
+texture hook → reveal → one physical interaction → hero frame
+
+ANTI-SLOP
+no floating ingredients, no impossible cheese stretch, no rubber physics
+
+AUDIO
+foreground grill sizzle + clean cut / contact + restrained music
+```
+
+Then it returns the production-ready prompt.
+
+See the full gallery in [`examples/SHOWCASE.md`](examples/SHOWCASE.md).
+
+---
+
+# 🛠️ Failure repair
+
+If one part of a generation fails, the skill does not blindly rewrite everything.
+
+It identifies the first causal failure:
+
+```text
+face drift
+hand anatomy
+grip / contact
+product mutation
+architecture drift
+camera chaos
+bad lip sync
+weak ad proof
+AI slop
+```
+
+Then patches only that layer where possible.
+
+See [`references/failure-diagnosis.md`](references/failure-diagnosis.md).
+
+---
+
+# 🧪 Seedance 2.5 model notes
+
+The skill is written specifically around current **Seedance 2.5** production guidance.
+
+Official Dreamina material currently describes Seedance 2.5 workflows including:
+
+- Text-to-Video
+- Image-to-Video
+- Reference-to-Video
+- multimodal image / video / audio / script / storyboard inputs
+- motion guidance using green-screen / white-model style references
+- longer continuous video workflows
+- stronger continuity
+- local refinement / editing workflows
+- commercial, ecommerce, social and cinematic use cases
+
+Official materials also advertise up to **30-second standard video**, **up to 50 multimodal inputs** and **4K-oriented output workflows**, while availability and exact controls can vary by provider, account, region and rollout stage.
+
+For that reason the skill separates:
 
 ```text
 CREATIVE DIRECTION
-One concise explanation of the idea.
-
-SEEDANCE PROMPT
-The finished production-ready prompt.
-
-REFERENCE MAP
-Only when references exist.
-
-WHY IT SHOULD WORK
-Up to 3 useful notes when needed.
-```
-
-If the user says “just give me the prompt”, return only the prompt.
-
----
-
-# Quality gate
-
-Before returning a prompt, the skill silently checks:
-
-- one clear idea
-- feasible action density
-- correct reference authority
-- identity/product continuity
-- useful shot progression
-- motivated camera movement
-- plausible physics
-- readable product/subject
-- manageable dialogue length
-- deliberate sound hierarchy
-- visible end states
-- clean final frame
-
-If several checks fail, it rewrites the prompt before showing it.
-
----
-
-# Example use cases
-
-### Luxury ad
-
-```text
-Turn this perfume photo into a 10-second vertical cinematic ad.
-```
-
-### Food commercial
-
-```text
-Create a macro burger commercial. Make the meat, steam and sauce look believable, not AI-generated.
-```
-
-### Social transformation
-
-```text
-I walk toward camera and transform into futuristic armour. 10 seconds, 9:16.
-```
-
-### Architecture
-
-```text
-Turn this finished interior photo into a premium renovation reel with three camera perspectives.
-```
-
-### Dialogue
-
-```text
-Two people talk in a café. Keep both faces consistent and preserve eyelines between cuts.
-```
-
-### Reference-driven video
-
-```text
-Image 1 is my face. Image 2 is the outfit. Image 3 is the environment. Video 1 is the movement reference. Build the best Seedance prompt.
-```
-
----
-
-# Capability discipline
-
-Seedance capabilities and limits may vary by provider and rollout stage.
-
-The skill therefore separates:
-
-**Creative planning**
-
 from
+PROVIDER-SPECIFIC EXECUTION PARAMETERS
+```
 
-**provider-specific execution claims**.
+It never assumes a UI field or API parameter exists without verification.
 
-If a workflow depends on current duration, number/type of references, editing, audio, resolution, extension or API parameters, the agent should verify the selected provider instead of inventing a limit.
+Official references:
 
-Official Dreamina materials currently describe structured cinematic prompts, `@` reference tagging, multimodal reference workflows, camera direction, audio, ads and social production as core Seedance 2.5 workflows.
+- [Seedance 2.5 official overview](https://dreamina.capcut.com/seedance/seedance-2-5)
+- [How to use Seedance 2.5](https://dreamina.capcut.com/seedance/how-to-use-seedance-2-5)
+- [Seedance 2.5 R2V](https://dreamina.capcut.com/seedance/seedance-2-5-r2v-reference-to-video)
+- [Seedance 2.5 motion reference guide](https://dreamina.capcut.com/seedance/seedance-2-5-motion-reference-guide)
 
 ---
 
-# Philosophy
+# Principles
 
-> **A strong AI video prompt is not a bag of adjectives. It is a directed scene.**
-
-We want AI-generated video to feel intentional:
-
-- cleaner motion
-- better continuity
-- stronger composition
-- fewer random model decisions
-- easier iteration
-- better commercial usability
+```text
+ROUTE BEFORE PROMPT.
+STORY BEFORE CAMERA.
+ACCURACY BEFORE SPECTACLE.
+CAUSE BEFORE EFFECT.
+DESIGN THE FIRST FRAME.
+DESIGN THE LAST FRAME.
+DIRECT THE SCENE.
+DO NOT DECORATE THE PROMPT.
+```
 
 ---
 
 <div align="center">
 
-## AI Evolution Labs × AI Evolution Polska
+### Built for people who want AI video to feel directed, not generated.
 
-**Practical AI systems, creative workflows and production tools.**
+**AI Evolution Labs × AI Evolution Polska**
 
-Built for creators, marketers, agencies and AI agents that need to ship better work.
+[AI Evolution Labs](https://aievolutionlabs.io) · [Seedance 2.5 official](https://dreamina.capcut.com/seedance/seedance-2-5)
 
 </div>
