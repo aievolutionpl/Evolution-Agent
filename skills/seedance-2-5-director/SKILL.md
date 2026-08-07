@@ -1,257 +1,783 @@
 ---
 name: seedance-2-5-director
-description: Turns rough ideas, scripts, images, video references, products, characters, and social concepts into production-ready Seedance 2.5 video prompts with shot planning, reference binding, continuity locks, camera direction, timing, audio, end states, and failure diagnosis.
+description: Production-grade directing skill for Seedance 2.5. Turns rough ideas, scripts, images, products, characters, storyboards and references into cinematic, advertising, social and product-video prompts with reference authority, continuity locks, shot design, camera language, lighting, audio, timing, end states, physics and failure diagnosis.
 ---
 
 # Seedance 2.5 Director
 
-## Purpose
-Use this skill whenever the user wants to create, improve, diagnose, or structure a prompt for Seedance 2.5 or a Seedance-style multimodal video workflow.
+Built by **AI Evolution Labs × AI Evolution Polska**.
 
-The agent must think like a director and cinematographer, not like a keyword generator.
+Use this skill whenever the user wants to create, improve, structure or repair a prompt for Seedance 2.5 or a closely related multimodal AI-video workflow.
 
-The goal is not to make the prompt sound impressive. The goal is to make the resulting video controllable, coherent, visually strong, and easy to iterate.
+The agent must behave like a **director + cinematographer + commercial creative + prompt engineer**.
 
-## Core rule
-Convert every request into a small production plan:
+The objective is not to make the prompt sound impressive.
 
-`INTENT -> REFERENCES -> CONTINUITY -> SHOT DESIGN -> ACTION -> CAMERA -> LIGHT -> AUDIO -> END STATE -> CONSTRAINTS`
+The objective is to make the resulting video:
 
-Do not rely on vague phrases such as `cinematic`, `epic`, `viral`, `professional`, or `dynamic camera` without defining what they mean visually.
+- visually intentional
+- physically believable
+- easy for the model to follow
+- consistent across shots
+- commercially useful when required
+- cinematic without AI-video cliché
+- easy to diagnose and iterate
 
-## 1. Resolve the video objective
-Before writing the final prompt, infer:
+---
 
-- output type: ad, reel, short film, product shot, dialogue, transformation, explainer, meme, music visual, POV, or cinematic scene
-- aspect ratio: default to user intent; use 9:16 for short-form social when unspecified and clearly intended for Reels/TikTok/Shorts
+# 1. Core production rule
+
+Convert the request into this production chain:
+
+```text
+INTENT
+→ FORMAT
+→ REFERENCES
+→ REFERENCE AUTHORITY
+→ CONTINUITY LOCKS
+→ VISUAL STRATEGY
+→ SHOT / BEAT DESIGN
+→ ACTION + PHYSICS
+→ CAMERA + LENS + FOCUS
+→ LIGHT + PRODUCTION DESIGN
+→ AUDIO
+→ END STATES
+→ FAILURE PREVENTION
+→ FINAL SEEDANCE PROMPT
+```
+
+Never use words such as `cinematic`, `epic`, `viral`, `luxury`, `professional`, `dynamic camera`, `beautiful lighting` or `high-end` as substitutes for visible direction.
+
+Translate them into concrete production decisions.
+
+---
+
+# 2. First infer the job
+
+Before writing the prompt, infer the closest mode.
+
+## CINEMATIC
+Use for short films, trailers, dramatic scenes, atmosphere, storytelling and visually polished sequences.
+
+Read:
+`references/cinematic-playbook.md`
+
+## COMMERCIAL / ADVERTISING
+Use for product ads, paid social, ecommerce, service ads, luxury campaigns, food, beauty, automotive, fashion and conversion creative.
+
+Read:
+`references/advertising-playbook.md`
+
+## SOCIAL SHORT-FORM
+Use for TikTok, Reels and Shorts where the visual idea must become understandable quickly.
+
+## PRODUCT
+Use when real product geometry, packaging or visual identity matters.
+
+## DIALOGUE
+Use when speaker identity, eyelines, mouth movement and timing matter.
+
+## TRANSFORMATION
+Use when a person, product, room, object or environment changes form.
+
+## REFERENCE-DRIVEN
+Use when images, videos, audio, storyboards or character sheets define different properties.
+
+## CONTINUOUS TAKE
+Use when one uninterrupted action matters more than fast cuts.
+
+## FAILURE REPAIR
+Use when the user already generated a weak result and wants to fix it.
+
+Read:
+`references/failure-diagnosis.md`
+
+---
+
+# 3. Choose the prompt depth
+
+Do not over-engineer every request.
+
+## FAST PROMPT
+Use for simple one-shot ideas.
+
+Structure:
+
+```text
+subject
++ observable action
++ environment
++ camera
++ light
++ sound if relevant
++ final state
++ critical constraints
+```
+
+## PRODUCTION PROMPT
+Default for most serious Seedance jobs.
+
+Include:
+
+- format
+- visual intent
+- references
+- continuity
+- beats / shots
+- camera
+- lighting
+- audio
+- end states
+- constraints
+
+## DIRECTOR MODE
+Use for:
+
+- premium ads
+- multi-shot cinematic scenes
+- transformation videos
+- complex reference workflows
+- high-value client work
+- videos with dialogue and sound design
+
+Add:
+
+- commercial / narrative objective
+- reference authority map
+- visual hierarchy
+- transition logic
+- hero-frame design
+- failure-risk analysis
+
+---
+
+# 4. Resolve format intelligently
+
+Infer when obvious.
+
+### Vertical short-form
+Default to `9:16` when the user clearly means TikTok, Instagram Reels or YouTube Shorts and gives no ratio.
+
+### Feed / social ad
+Use the user's requested ratio. Do not assume 9:16 when the asset is clearly intended as 4:5 or 1:1.
+
+### Cinematic / website / YouTube
+Use 16:9 only when context supports it.
+
+Also identify:
+
 - target duration
+- realism vs stylization
 - one main visual idea
 - emotional tone
-- required final state
+- final frame
 
-If the user gives enough context, do not ask unnecessary questions. Make the strongest reasonable production decision.
+Do not ask questions if the available context already supports a strong choice.
 
-## 2. Choose the generation route
-Select only the route needed by the task.
+---
 
-### Text-to-video
-Use for a new scene with no strict identity or product requirement.
+# 5. Choose the generation route
 
-### Image-to-video
-Use when a supplied image defines the subject, product, environment, composition, or opening frame.
+## Text-to-video
+Use when no strict identity or design must be preserved.
 
-### Reference-to-video
-Use when multiple assets define different things such as identity, outfit, product, environment, motion, style, camera, or audio.
+## Image-to-video
+Use when an image defines:
 
-### Storyboard-driven video
-Use when the video contains multiple planned shots, a narrative sequence, or several camera perspectives.
+- subject
+- composition
+- environment
+- product
+- opening frame
 
-### Edit / extend / continuation
-Use only when the selected provider exposes the required operation. Do not invent a provider capability.
+## Reference-to-video
+Use when different assets control different properties.
 
-## 3. Bind references explicitly
-Never dump references into the prompt without assigning their jobs.
+## Storyboard-driven video
+Use when multi-shot sequence and visual order matter.
 
-Write reference roles before scene instructions.
+## Edit / continuation / extension
+Use only when the selected provider actually supports it.
+
+Do not invent provider capabilities.
+
+---
+
+# 6. Reference authority is mandatory
+
+Never dump references into the prompt without assigning jobs.
+
+Use:
+
+```text
+REFERENCE AUTHORITY
+@Image1 = exact face identity only
+@Image2 = outfit and body styling only
+@Image3 = product geometry only
+@Image4 = environment and architecture only
+@Video1 = motion timing and blocking only
+@Video2 = camera pacing only
+@Audio1 = rhythm / voice / sound reference only
+```
+
+If the interface does not support `@` tags, use semantic labels such as `Image 1`.
+
+## Rules
+
+- every reference gets a purpose
+- avoid two references silently controlling the same property
+- if blending is intentional, say what should be blended
+- do not let a style image redesign a real product
+- do not let an outfit reference overwrite face identity
+- do not let a motion reference become the source of appearance unless intended
+
+---
+
+# 7. Continuity locks
+
+Identify the properties that would be expensive to regenerate if they drift.
+
+## Character locks
+
+Preserve:
+
+- exact recognizable face
+- hairstyle
+- age presentation
+- outfit
+- body proportions
+- important accessories
+
+## Product locks
+
+Preserve:
+
+- exact silhouette
+- proportions
+- packaging
+- cap / handle / buttons / wheels / physical geometry
+- material
+- colour
+- logo location when required
+
+## Environment locks
+
+Preserve:
+
+- architecture
+- doors / windows / walls
+- furniture or key prop positions
+- time of day
+- weather
+- important light direction
+
+Put locks globally once.
+
+Repeat only the 2–3 most expensive constraints near the end of the prompt when needed.
+
+---
+
+# 8. One central visual idea
+
+Every clip should have one dominant idea.
+
+Examples:
+
+- a perfume bottle emerges through condensation
+- a man walks into a game world
+- an unfinished fireplace room transforms into a finished interior
+- a burger reveals its cross-section
+- armour builds around a walking subject
+- a car emerges from darkness into sunrise
+
+If the user gives five unrelated ideas, select one main visual spine and make the others support it.
+
+---
+
+# 9. Design shots before writing prose
+
+For every shot or beat decide:
+
+1. PURPOSE
+2. SHOT SIZE
+3. CAMERA ANGLE
+4. SUBJECT ACTION
+5. CAMERA MOVEMENT
+6. LENS FEEL when useful
+7. FOCUS BEHAVIOUR when useful
+8. LIGHT
+9. SOUND
+10. END STATE
+
+Each shot should have one main job.
+
+Bad:
+
+```text
+camera zooms, pans, orbits, cranes and shakes dramatically
+```
+
+Better:
+
+```text
+medium low-angle tracking shot, camera moves backward at the subject's walking speed while keeping his scale consistent; subtle handheld micro-motion only
+```
+
+---
+
+# 10. Camera must be motivated
+
+Before using a move, silently finish:
+
+> The camera moves because the viewer needs to ______.
+
+Examples:
+
+- discover the product
+- understand the environment
+- feel speed
+- inspect craftsmanship
+- reveal scale
+- land on an emotional reaction
+- reveal the finished transformation
+
+If the move has no reason, keep the camera stable.
+
+Useful camera syntax:
+
+```text
+[shot size]
++ [angle]
++ [movement]
++ [speed]
++ [lens feel]
++ [focus behaviour]
+```
 
 Example:
 
 ```text
-REFERENCE BINDING
-Image 1 = exact character identity and face
-Image 2 = exact outfit and body proportions
-Image 3 = environment and production design
-Video 1 = motion and camera pacing reference
-Audio 1 = rhythm and energy reference
+low-angle medium close-up, slow dolly-in, 50mm lens feel, focus locked on the eyes while warm practical lights fall into soft background bokeh
 ```
 
-If the interface supports explicit tags such as `@Image1`, use them. Otherwise keep semantic names such as `Image 1`.
+See `references/cinematic-playbook.md` for the camera library.
 
-A reference may control one or more clearly stated properties. Avoid giving two references authority over the same property unless the intended blend is explicit.
+---
 
-## 4. Write continuity locks
-For anything that must persist, define observable invariants.
+# 11. Lens discipline
 
-### Character locks
-Preserve:
-- exact face and recognizable identity
-- hairstyle
-- outfit
-- body proportions
-- age presentation
-- accessories that matter
+Use lens language only when it changes composition.
 
-### Product locks
-Preserve:
-- exact shape and proportions
-- logo placement when required
-- packaging geometry
-- material
-- colour
-- labels only when legibility is essential
+- `24–28mm feel` → environment, action, strong parallax
+- `35mm feel` → natural cinematic narrative
+- `50mm feel` → balanced human perspective
+- `85mm feel` → portrait compression, beauty, luxury
+- `macro` → tactile surface, food, product, mechanisms
 
-### Environment locks
-Preserve:
-- architecture
-- important prop positions
-- time of day
-- weather
-- dominant light direction
+Never stack contradictory lens descriptions.
 
-Do not repeat every detail in every beat. Put global locks once, then repeat only the 2–3 most expensive constraints near the end of the prompt.
+---
 
-## 5. Design shots before prose
-Each shot should have one dominant purpose.
+# 12. Lighting must have logic
 
-For every shot decide:
+Do not write only:
 
-1. shot size: extreme wide, wide, medium, medium close-up, close-up, macro
-2. angle: eye level, low angle, high angle, overhead, Dutch only when intentional
-3. camera move: static, dolly-in, dolly-out, tracking, orbit, crane, pan, tilt, handheld, whip pan, rack-focus-led reveal
-4. subject action
-5. screen direction and spatial relationship
-6. end state
+```text
+dramatic cinematic lighting
+```
 
-Prefer one primary camera move per shot. Combine moves only when they describe one coherent motion.
+Describe:
 
-Bad:
-`camera zooms, pans, orbits, cranes, shakes and flies around dramatically`
+- source
+- direction
+- softness
+- contrast
+- temperature
+- practical lights
+- reflections
+- atmosphere only when motivated
 
-Better:
-`medium tracking shot, camera moves backward at walking speed while keeping the subject centered; subtle handheld micro-motion`
+Example:
 
-## 6. Timing strategy
-Do not force timestamps into every prompt.
+```text
+warm tungsten practicals behind the subject, cool ambient street light entering from camera-left, soft neutral key on the face, wet pavement producing controlled reflections
+```
 
-Use one of three modes.
+Avoid random neon, fog, particles and lens flares unless they belong to the scene.
 
-### Mode A: continuous action
-Use no timestamps when the scene is one fluid shot or one uninterrupted action.
+---
 
-### Mode B: staged beats
-Default for most narrative clips. Split the video into 2–5 logical beats and state an observable end state for each.
+# 13. Action must be observable
 
-### Mode C: timed beats
-Use exact time ranges when rhythm, dialogue, audio sync, a transformation point, or a fixed social edit requires them.
+Replace abstract direction with body behaviour.
 
-Timestamps are timing guidance, not frame-accurate edit guarantees.
+Weak:
 
-## 7. Short-form social mode
-For 8–15 second Reels, TikTok, and Shorts:
-
-- open with a visually legible hook in the first shot
-- use approximately 3–5 visual beats
-- a new perspective around every 2–3 seconds is a useful default when it improves energy
-- do not force a cut every second
-- every change of camera must reveal new information or increase intensity
-- build toward a payoff, reveal, joke, transformation, product beauty shot, or final hero frame
-
-A camera change with no narrative purpose is noise.
-
-## 8. Action and physics
-Describe observable movement rather than abstract intent.
-
-Bad:
-`he looks powerful and confident`
+```text
+he looks confident
+```
 
 Better:
-`he squares his shoulders, raises his chin slightly, and walks toward camera without breaking eye contact`
 
-For interactions, describe object state and contact:
+```text
+he straightens his shoulders, raises his chin slightly and walks toward camera without breaking eye contact
+```
 
-- which hand holds the object
-- whether a door is open before something passes through it
-- where the prop starts and where it ends
-- whether the subject sits, turns, grabs, pours, jumps, lands, or releases
+Weak:
 
-Keep anatomy, weight, momentum, collision, cloth, liquid, smoke, hair, and object motion physically plausible unless stylization is requested.
+```text
+she is surprised
+```
 
-## 9. Camera language
-Replace generic adjectives with direct cinematography.
+Better:
+
+```text
+her eyes widen, she stops mid-step and turns her head toward the sound
+```
+
+---
+
+# 14. Physics and interaction layer
+
+AI video often fails on interactions because the prompt skips object state.
+
+Describe when relevant:
+
+- which hand touches the object
+- whether the door/lid is open first
+- where the object starts
+- what contact occurs
+- where it ends
+- weight and momentum
+- whether feet remain in contact with ground
+- how liquid, fabric, hair, steam, smoke or food moves
+
+Example:
+
+```text
+he grips the metal handle with his right hand, opens the glass fireplace door outward first, then places one log through the open doorway with his left hand; the log never passes through the glass
+```
+
+Physical logic is more valuable than extra style adjectives.
+
+---
+
+# 15. Timing strategy
+
+Choose one timing mode before writing beats.
+
+## A. Continuous action
+No timestamps.
+
+Use for:
+
+- one uninterrupted shot
+- elegant product move
+- slow cinematic action
+- POV
+
+## B. Staged beats
+Default for most storytelling.
+
+Use 2–5 meaningful beats with visible end states.
+
+## C. Timed beats
+Use explicit ranges when timing matters for:
+
+- music
+- dialogue
+- social edit rhythm
+- transformation point
+- external reference timing
+
+Timestamps are guidance, not guaranteed frame-accurate cuts.
+
+---
+
+# 16. Short-form social mode
+
+For 8–15 seconds:
+
+- first frame must communicate visually
+- use about 3–5 meaningful beats
+- perspective may change around every 2–3 seconds when useful
+- every camera change must reveal, escalate or pay off
+- do not cut every second by default
+- finish on payoff, hero frame or loop-compatible state
 
 Useful structure:
 
-`[shot size] + [angle] + [movement] + [speed] + [lens feel] + [focus behaviour]`
+```text
+HOOK
+→ ESCALATION
+→ PAYOFF
+→ HERO / LOOP
+```
+
+Avoid meaningless “viral” chaos.
+
+---
+
+# 17. Advertising mode
+
+When the job is commercial, first choose the ad objective:
+
+- stop attention
+- show problem
+- create desire
+- demonstrate feature
+- prove result
+- show craftsmanship
+- establish trust
+- communicate transformation
+- create a premium impression
+- land on a product hero frame
+
+## 10-second ad formula
+
+```text
+0–2s   HOOK
+2–5s   DESIRE / DISCOVERY / PROBLEM
+5–8s   BENEFIT / DEMONSTRATION / PAYOFF
+8–10s  HERO FRAME / CLEAN BRAND SPACE
+```
+
+## Product rule
+
+At least one shot should provide a stable, clearly readable product.
+
+Do not hide the product behind camera tricks.
+
+## Marketing text rule
+
+For critical copy such as:
+
+- price
+- offer
+- CTA
+- URL
+- exact typography
+- legal text
+
+prefer clean negative space and post-production overlays rather than depending on generated text.
+
+Read `references/advertising-playbook.md`.
+
+---
+
+# 18. Cinematic mode
+
+Translate `cinematic` into:
+
+```text
+emotion
++ composition
++ shot size
++ angle
++ motivated move
++ lens feel
++ focus
++ light
++ depth layers
++ sound
++ end frame
+```
+
+Avoid universal AI-video clichés:
+
+- random floating particles
+- unmotivated smoke
+- constant orbit shots
+- meaningless anamorphic flare
+- heavy slow motion everywhere
+- excessive speed ramps
+- camera teleporting around the subject
+
+Read `references/cinematic-playbook.md`.
+
+---
+
+# 19. Product / ecommerce mode
+
+If a real product reference exists:
+
+```text
+@Image1 controls exact product geometry, material, colour, packaging and logo position.
+```
+
+Then lock it.
+
+Give the product:
+
+- readable silhouette
+- controlled reflections
+- clean edge separation
+- one stable beauty shot
+- believable human interaction if used
+- deliberate hero frame
+
+Do not let the product melt, stretch, duplicate or transform unless requested.
+
+---
+
+# 20. Food mode
+
+Prioritize appetite cues that follow physics:
+
+- actual meat texture
+- crisp surfaces
+- subtle hot steam
+- realistic sauce viscosity
+- believable cheese movement
+- natural knife / hand contact
+- controlled macro highlights
+
+Avoid floating ingredients and impossible splash effects unless intentionally stylized.
+
+---
+
+# 21. Dialogue mode
+
+Dialogue requires simpler staging.
+
+For each speaker:
+
+- bind identity
+- bind voice if available
+- establish camera-left / camera-right
+- preserve eyeline
+- allocate enough time for the sentence
+- reduce complex movement during speech
+- avoid excessive camera motion during lip sync
 
 Example:
 
-`low-angle medium shot, slow dolly-in, 50mm lens feel, shallow depth of field, focus locked on the eyes while the background falls softly out of focus`
+```text
+Character A remains camera-left and looks slightly camera-right toward Character B.
+Character B remains camera-right and looks slightly camera-left.
+```
 
-Use lens language only when it improves composition:
-- 24–28mm feel: environmental, energetic, close spatial depth
-- 35mm feel: natural cinematic context
-- 50mm feel: balanced human perspective
-- 85mm feel: portrait compression, premium subject isolation
-- macro: product/material detail
+Never swap voices between characters.
 
-Avoid contradictory optics and movement.
+---
 
-## 10. Lighting and production design
-Define only the light that affects the result.
+# 22. Transformation mode
 
-Prefer:
-- direction
-- softness
-- colour temperature
-- practical sources
-- contrast
-- reflections
-- atmosphere
+Never write:
+
+```text
+he transforms into a robot
+```
+
+for a complex transformation.
+
+Split it into visible phases:
+
+```text
+BEFORE
+→ INITIATION
+→ INTERMEDIATE BUILD
+→ LOCK-IN
+→ HERO REVEAL
+```
+
+Each phase needs an observable end state.
 
 Example:
-`warm tungsten practicals inside the shop, cool blue street light through the windows, soft key from camera-left, wet pavement producing controlled neon reflections`
 
-Do not stack meaningless style words.
+```text
+End state: chest armour is locked in place, both arms are fully covered, helmet remains open, feet remain planted and the original outfit is no longer visible on the torso.
+```
 
-## 11. Audio direction
-When audio is part of the generation, treat it as another production layer.
+---
 
-Specify separately:
+# 23. End-state prompting
+
+End states are mandatory for important multi-stage actions.
+
+Weak:
+
+```text
+the room is renovated
+```
+
+Strong:
+
+```text
+End state: walls are fully painted in warm off-white, fireplace surround is complete, floor is clean, tools are removed and the camera sees the finished room with no construction debris.
+```
+
+An end state must be visible.
+
+---
+
+# 24. Audio is a production layer
+
+When audio is relevant, separate it:
 
 ```text
 AUDIO
-Dialogue: ...
-Ambience: ...
-SFX: ...
-Music: ...
-Timing cue: ...
+Dialogue:
+Ambience:
+SFX:
+Music:
+Timing cue:
 ```
 
-Keep dialogue short enough for the shot duration. If lip sync matters, reduce competing actions and camera complexity during the spoken line.
+Rules:
 
-Do not add music automatically when the user requests clean dialogue, ASMR, ambience, or diegetic sound only.
+- dialogue should fit duration
+- physical sounds should align with visible contact
+- music should not overpower dialogue
+- do not add music when the user asks for ambience / ASMR / natural sound only
+- restraint often feels more expensive than constant sound effects
 
-## 12. End states
-For each important beat, define what must visibly be true at the end.
+---
 
-Weak:
-`the transformation finishes`
+# 25. Transition logic
 
-Strong:
-`end state: the armour is fully locked around the body, the helmet faceplate closes, both feet are planted on the floor, and the subject faces camera`
+Choose the transition rather than hoping the model invents a good one.
 
-End states dramatically improve multi-stage prompt clarity.
+Useful types:
 
-## 13. Constraints
-Add only constraints that prevent expensive failures.
+- hard cut
+- match cut
+- occlusion cut
+- whip-pan cut
+- motivated light wipe
+- continuous movement
 
-Typical constraints:
-- preserve exact identity
-- no extra people
-- no duplicate limbs or fingers
-- no wardrobe changes
-- no product deformation
-- no teleporting props
-- no random text
-- no unplanned cuts
-- no camera clipping through objects
-- natural physics
-- preserve background architecture
+Do not use cross dissolves as a repair for unrelated shots.
 
-Do not create a giant negative-prompt dump. Prioritize failure modes relevant to the scene.
+---
 
-## 14. Prompt assembly format
-Unless a simpler prompt is clearly sufficient, output the final production prompt in this order:
+# 26. Hero-frame rule
+
+Ads, product scenes and social videos should usually land on a deliberate frame.
+
+Define:
+
+- subject / product position
+- pose or object state
+- camera distance
+- orientation
+- motion settled or moving
+- background
+- light
+- negative space if copy will be added later
+
+A final frame should be usable for:
+
+- edit point
+- thumbnail
+- campaign still
+- continuation
+
+---
+
+# 27. Prompt assembly
+
+Default production format:
 
 ```text
 TITLE / INTENT
@@ -259,29 +785,38 @@ TITLE / INTENT
 FORMAT
 Aspect ratio:
 Duration:
-Style / medium:
+Medium / realism:
 
-REFERENCE BINDING
+CREATIVE / COMMERCIAL OBJECTIVE
+...
+
+REFERENCE AUTHORITY
 ...
 
 CONTINUITY LOCKS
 ...
 
-SCENE
+SCENE / PRODUCTION DESIGN
 ...
 
-SHOT / BEAT 1
+BEAT 1 — [purpose]
+Action:
+Camera:
+Lens / focus:
+Lighting:
+Audio:
+End state:
+
+BEAT 2 — [purpose]
+...
+
+FINAL BEAT — HERO / PAYOFF
+Composition:
 Action:
 Camera:
 Lighting:
 Audio:
 End state:
-
-SHOT / BEAT 2
-...
-
-FINAL SHOT / PAYOFF
-...
 
 GLOBAL AUDIO
 ...
@@ -292,106 +827,197 @@ CONSTRAINTS
 
 Do not output empty headings.
 
-## 15. Output contract for agents
-When this skill is triggered, return:
+For a simple clip, compress this structure rather than filling unnecessary sections.
 
-1. `Creative direction` — one or two sentences explaining the chosen concept
-2. `Seedance prompt` — one production-ready prompt, normally in English unless the user requests another language; preserve spoken dialogue in the requested language
-3. `Reference map` — only when references exist
-4. `Why this should work` — maximum 3 concise bullets when useful
-5. `Failure fix` — only when diagnosing an existing bad generation
+---
 
-If the user asks only for the prompt, output only the finished prompt.
+# 28. Constraint discipline
 
-## 16. Prompt linter
-Before returning the prompt, silently verify:
+Use constraints to prevent expensive failures.
 
-### Story
-- Is there one clear central idea?
-- Is the action physically possible within the duration?
-- Does each beat add new information?
+Possible constraints:
 
-### References
-- Does every reference have a role?
-- Are there conflicting reference authorities?
+- preserve exact identity
+- exact subject count
+- no duplicate limbs
+- no warped hands
+- no wardrobe drift
+- no product deformation
+- no object teleportation
+- no random text
+- no unplanned cut
+- no camera clipping through geometry
+- preserve architecture
+- natural physics
 
-### Continuity
-- Are identity/product invariants explicit?
-- Are expensive locks repeated near the end when needed?
+Do not dump a giant negative-prompt list unrelated to the scene.
 
-### Camera
-- Does every shot have a clear composition?
-- Is there one primary camera intention per shot?
-- Are cuts or transitions purposeful?
+---
 
-### Timing
-- Is the number of events plausible for the duration?
-- Are timestamps used only when useful?
+# 29. Failure diagnosis
 
-### Audio
-- Can dialogue fit comfortably?
-- Do audio cues match visible events?
+When the user shows a bad result, do not rewrite everything blindly.
 
-### Physics
-- Are hand/object interactions described where ambiguity would cause errors?
-- Are important doors, lids, tools, vehicles, or props in valid states before interaction?
+Find the **first causal failure**.
 
-### Final frame
-- Does the video land on a deliberate end state instead of stopping randomly?
+Examples:
 
-If two or more checks fail, rewrite the prompt before returning it.
+- face drift → strengthen identity authority and reduce competing visual changes
+- outfit drift → move wardrobe into global continuity locks
+- warped hands → simplify action and state hand/contact order
+- product mutation → strengthen product geometry authority and reduce aggressive movement
+- random cuts → define one continuous shot or exact cut points
+- chaotic camera → remove secondary movement verbs
+- teleporting prop → state start position, contact event and end position
+- poor lip sync → shorten dialogue and simplify movement
+- weak transformation → split into phases and visible end states
+- AI-slop social edit → reduce beat count and remove arbitrary camera changes
 
-## 17. Failure diagnosis
-When the user shows a failed generation, do not rewrite everything blindly.
+Read `references/failure-diagnosis.md`.
 
-Identify the first causal failure and patch that layer.
+Patch the failed layer and preserve what worked.
 
-- face drift -> strengthen identity binding and reduce competing transformations
-- outfit drift -> convert wardrobe into a continuity lock
-- extra person -> clarify subject count and blocking
-- warped hands -> simplify hand action and state grip/contact explicitly
-- object teleports -> add start position, interaction, and end state
-- messy camera -> remove secondary movements
-- random cuts -> specify continuous shot or exact planned cuts
-- weak motion -> replace emotional adjective with observable body movement
-- bad transformation -> split into stages with visible end states
-- unreadable product -> reduce motion and give the product a dedicated hero beat
-- poor lip sync -> shorten dialogue and reduce camera/action complexity
-- chaotic short-form edit -> reduce beat count; keep camera changes around meaningful 2–3 second story beats
+---
 
-See `references/failure-diagnosis.md` for the expanded patch table.
+# 30. Prompt linter
 
-## 18. Do not do these
+Before returning a production prompt, silently score it.
+
+## Story / ad logic
+- one central idea?
+- clear payoff?
+- commercially clear if an ad?
+
+## Reference authority
+- every asset has a job?
+- any conflicting authority?
+
+## Continuity
+- identity/product locks explicit?
+- environment stable where needed?
+
+## Shot logic
+- every beat has a purpose?
+- action density feasible?
+
+## Camera
+- one main camera intention per shot?
+- camera movement motivated?
+
+## Lighting
+- source and direction understandable?
+- style words translated into actual light?
+
+## Physics
+- interactions physically possible?
+- important object state described?
+
+## Timing
+- enough time for each action?
+- dialogue fits?
+
+## Audio
+- hierarchy clear?
+- sound synchronized to visible action?
+
+## Final frame
+- deliberate landing?
+- usable for editing / campaign if relevant?
+
+If 2 or more major checks fail, rewrite before returning.
+
+---
+
+# 31. Output contract
+
+Default response when this skill is triggered:
+
+### Creative direction
+1–2 concise sentences.
+
+### Seedance prompt
+One production-ready prompt, normally in English because video generators often follow production language well. Preserve dialogue in the user's requested language.
+
+### Reference map
+Only when references exist.
+
+### Why it should work
+Maximum 3 concise bullets when useful.
+
+### Failure fix
+Only when repairing an existing generation.
+
+If the user asks for only the prompt, output only the finished prompt.
+
+---
+
+# 32. Never do these
+
 Never:
 
-- write a giant comma-separated keyword soup
-- use `cinematic` as a substitute for camera direction
-- add a camera change every second by default
-- overload a 10-second clip with 8 unrelated events
-- allow multiple references to compete for the same identity without instructions
-- mix mutually exclusive camera positions in one shot
-- treat timestamps as guaranteed frame-accurate cuts
-- add dialogue, music, captions, or logos the user did not request
-- invent current model limits or provider features
-- promise that a model will preserve tiny text perfectly
+- write giant keyword soup
+- use `cinematic` as the whole camera instruction
+- add a cut every second by default
+- overload a 10-second video with unrelated events
+- let references compete silently
+- mix impossible camera positions in one shot
+- overuse orbit shots
+- add random fog, sparks and particles everywhere
+- add music or dialogue that was not requested when it hurts the concept
+- invent current Seedance limits
+- promise perfect tiny text generation
+- hide a real product behind unnecessary effects
+- rewrite every working part because one small layer failed
 
-## 19. Capability discipline
-Seedance 2.5 capabilities and interface controls can differ by provider and rollout stage.
+---
 
-When a workflow depends on current limits, supported reference types, maximum duration, editing, extension, native audio, resolution, or API parameters, verify the selected provider before stating the capability as fact.
+# 33. Capability discipline
 
-Creative prompt planning may proceed without provider access, but execution-specific claims must be verified.
+Seedance 2.5 capabilities, interface options and provider limits can differ by platform and rollout.
 
-## Final principle
-A strong Seedance prompt is a directed scene, not a bag of adjectives.
+When the request depends on current facts such as:
 
-Every instruction should answer at least one of these questions:
+- maximum duration
+- number / type of references
+- audio support
+- editing / local edits
+- extension
+- resolution
+- API fields
+- provider-specific reference syntax
 
+verify the current provider before stating those details as fact.
+
+Creative directing can proceed without that provider verification.
+
+---
+
+# 34. Reference files
+
+Read only what the job needs:
+
+- `README.md` → project overview and examples
+- `references/cinematic-playbook.md` → cinematic camera, lens, lighting, transitions and anti-slop rules
+- `references/advertising-playbook.md` → paid ads, product, ecommerce, service and commercial structures
+- `references/prompt-patterns.md` → reusable prompt formats
+- `references/failure-diagnosis.md` → targeted repair table
+
+---
+
+# Final principle
+
+> **A strong Seedance prompt is a directed scene, not a bag of adjectives.**
+
+Every instruction should answer at least one of these:
+
+- What is the viewer supposed to see first?
 - What must stay the same?
 - What visibly happens?
 - Where is the camera?
-- How does the camera move?
+- Why does it move?
 - What changes over time?
 - What must be true at the end?
 - What should we hear?
-- Which failure would be expensive to regenerate?
+- What failure would be expensive to regenerate?
+
+If it answers none of them, remove it.
