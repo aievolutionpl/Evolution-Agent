@@ -1,197 +1,486 @@
-# Seedance 2.5 Prompt Patterns
+# Seedance 2.5 Prompt Pattern Library
 
-Use these as structural patterns, not copy-paste decoration.
+Use these as production structures, not decorative copy-paste blocks.
 
-## Pattern 1: 10-second social cinematic
+The agent should adapt them to the subject, reference assets, duration and intended channel.
+
+---
+
+# Pattern 1 — 10s cinematic social short
 
 ```text
 FORMAT
-9:16 vertical, 10 seconds, realistic live-action.
+9:16 vertical, 10 seconds, realistic live-action cinematic short.
 
-REFERENCE BINDING
-Image 1 = exact subject identity.
-Image 2 = outfit and styling.
+VISUAL INTENT
+One visually clear idea with escalating scale and a deliberate final payoff.
+
+REFERENCE AUTHORITY
+@Image1 = exact subject identity.
+@Image2 = outfit / styling only.
+@Image3 = environment only.
 
 CONTINUITY LOCKS
-Preserve exact face, hairstyle, outfit, body proportions, and environment continuity.
+Preserve exact face, hair, outfit, body proportions and environment architecture.
 
 0–2.5s — HOOK
-Action: Start on the most visually surprising state or motion.
-Camera: Close or medium-close composition, immediate readable subject focus.
-End state: viewer understands the main visual premise.
+Action: Begin with the most visually understandable surprising moment.
+Camera: medium-close or close composition; one readable primary movement.
+Lighting: establish one clear motivated source.
+Audio: one immediate physical or musical cue.
+End state: the viewer understands the central visual premise.
 
 2.5–5s — ESCALATION
-Action: One clear development.
-Camera: Change perspective to reveal new information, not just movement for its own sake.
-End state: scene is visibly more intense or advanced.
+Action: one clear development.
+Camera: new perspective that reveals information, not a random cut.
+End state: visual stakes are visibly higher.
 
 5–7.5s — PAYOFF BUILD
-Action: Main transformation, reveal, interaction, or joke lands.
-Camera: Use the strongest angle for scale or emotion.
-End state: core action is complete.
+Action: main transformation / reveal / interaction reaches completion.
+Camera: strongest angle for scale, emotion or product readability.
+End state: core action is visibly complete.
 
-7.5–10s — HERO FRAME
-Action: Subject settles into a final pose or product state.
-Camera: Controlled push-in or stable beauty shot.
-End state: clean deliberate final frame.
+7.5–10s — HERO / LOOP
+Action: motion resolves into a clean final pose or visually loopable state.
+Camera: stable beauty composition or controlled micro push-in.
+End state: deliberate final frame.
 
 AUDIO
-Match sound effects to visible actions. Music supports pacing but does not overpower dialogue.
+Synchronize physical sounds with visible contact. Music supports pacing but does not overpower key SFX or dialogue.
 
 CONSTRAINTS
-No identity drift, no extra people, no random text, no warped anatomy, no unplanned cuts, natural physics.
+No identity drift, no arbitrary text, no extra people, no warped anatomy, no unplanned cuts, natural physics.
 ```
 
-## Pattern 2: Product ad
+---
+
+# Pattern 2 — premium product commercial
 
 ```text
-INTENT
-Premium product reveal focused on material, form, and use.
+AD OBJECTIVE
+Create desire through material quality, product clarity and controlled premium motion.
 
-REFERENCE BINDING
-Image 1 = exact product geometry and packaging.
-Image 2 = target environment and art direction.
+FORMAT
+9:16 or 16:9, 10–15 seconds, realistic commercial cinematography.
 
-CONTINUITY LOCKS
-Preserve exact product proportions, colour, logo location, material, and packaging shape throughout.
+REFERENCE AUTHORITY
+@Image1 = exact product geometry, packaging, material, colour and logo placement.
+@Image2 = environment / art direction only.
+
+PRODUCT LOCKS
+Preserve exact product proportions and physical design in every shot. No redesign, duplication, stretching, melting or relabelling.
 
 SHOT 1 — DISCOVERY
-Action: Product enters or is revealed naturally.
-Camera: Macro or close detail, slow controlled move.
-Lighting: Define reflections and edge separation.
-End state: product identity is clearly readable.
+Macro or close detail. Product partially hidden by motivated foreground. Camera slowly reveals it.
+End state: silhouette and key geometry are clearly readable.
 
-SHOT 2 — USE
-Action: One believable interaction demonstrating the benefit.
-Camera: Medium or detail tracking shot.
+SHOT 2 — MATERIAL DESIRE
+Macro slider or restrained orbit. Controlled reflections travel across material.
+End state: finish, texture and material quality are obvious.
+
+SHOT 3 — USE / INTERACTION
+One believable human interaction demonstrating use or scale.
 End state: product remains undeformed and clearly visible.
 
-SHOT 3 — HERO
-Action: Motion resolves.
-Camera: Stable beauty composition with subtle push-in.
-End state: clean campaign-ready hero frame.
-
-CONSTRAINTS
-Do not redesign packaging. Do not invent labels. No melting geometry. No hand-object intersections. No unnecessary background activity.
-```
-
-## Pattern 3: Dialogue scene
-
-```text
-REFERENCE BINDING
-Image 1 = Character A identity.
-Image 2 = Character B identity.
-Image 3 = location.
-
-BLOCKING
-Character A stands camera-left. Character B stands camera-right. Preserve screen direction across cuts.
-
-SHOT 1
-Medium two-shot. Establish both characters before dialogue begins.
-
-SHOT 2
-Medium close-up on Character A during line A. Minimal body movement. Natural eye line toward Character B.
-Dialogue A: "..."
-
-SHOT 3
-Reverse medium close-up on Character B. Match eye line and lighting direction.
-Dialogue B: "..."
+FINAL SHOT — HERO
+Stable 85mm-feel beauty frame, subtle micro push-in, clean edge separation and negative space for post-production copy.
+End state: campaign-ready hero composition.
 
 AUDIO
-Clean dialogue, quiet room ambience, no music unless requested.
+Minimal premium sound design: room tone, tactile contact, restrained music cue.
 
 CONSTRAINTS
-Preserve both identities. No voice swapping. No overlapping dialogue unless intentional. No random extras. Keep mouth movement aligned with spoken line.
+No random text. No extra hands. No product deformation. No camera clipping. Physically accurate reflections and contact.
 ```
 
-## Pattern 4: Transformation
+---
 
-Never compress a complex transformation into one vague sentence.
+# Pattern 3 — direct-response product ad
 
 ```text
-STAGE 1 — BEFORE
-Describe exact starting state.
-End state: starting form is fully readable.
+AD OBJECTIVE
+Communicate one product benefit quickly and visibly.
 
-STAGE 2 — INITIATION
-Describe first physical change and where it begins.
-End state: transformation has reached a clear intermediate state.
+FORMAT
+9:16, 10 seconds, clear realistic paid-social style.
 
-STAGE 3 — LOCK-IN
-Describe how pieces/material/energy settle physically.
-End state: transformation is structurally complete.
+0–2s — PROBLEM / PATTERN INTERRUPT
+Show the problem in one readable image or action.
+Camera: close enough that the viewer understands immediately.
+End state: problem is obvious.
 
-STAGE 4 — REVEAL
-Camera changes to the strongest hero angle.
-End state: final transformed design is stable and fully visible.
+2–5s — PRODUCT DISCOVERY
+Product enters naturally or is revealed by the user.
+End state: product is clearly identifiable.
+
+5–8s — DEMONSTRATION
+Show exactly one benefit through physical action.
+End state: benefit/result is visible, not merely implied.
+
+8–10s — RESULT + HERO
+Show satisfying result and product in clean composition.
+Leave negative space for CTA text in post.
+
+CONSTRAINTS
+One message only. No generic stock-like filler. Product remains accurate.
 ```
 
-## Pattern 5: One continuous take
+---
+
+# Pattern 4 — food commercial
+
+```text
+FORMAT
+9:16, 10 seconds, realistic premium food cinematography.
+
+REFERENCE AUTHORITY
+@Image1 = exact food build, ingredient order, colour and proportions.
+
+FOOD LOCKS
+Same food item throughout. No ingredient duplication or geometry drift.
+
+0–2s — TEXTURE HOOK
+Extreme macro of the most appetizing physical detail: grilled surface, crust, glaze, steam, condensation or fresh cut.
+Camera: controlled macro slide.
+Audio: realistic cooking / texture sound.
+End state: material texture is clearly readable.
+
+2–5s — REVEAL
+Open / cut / pull apart / pour in one physically plausible action.
+Camera stable enough to preserve food geometry.
+End state: interior or ingredient structure is clearly visible.
+
+5–8s — APPETITE PAYOFF
+One tactile interaction such as bite preparation, knife slice, sauce coating or steam reveal.
+End state: food remains structured and believable.
+
+8–10s — HERO
+Whole product / dish in clean three-quarter beauty composition.
+Warm directional key, crisp texture, subtle background separation, copy space.
+
+CONSTRAINTS
+No floating ingredients unless intentional. No impossible cheese strings. No warped hands. Realistic sauce viscosity and steam behaviour.
+```
+
+---
+
+# Pattern 5 — interior / renovation service ad
+
+```text
+AD OBJECTIVE
+Show craft and transformation from problem to finished result.
+
+REFERENCE AUTHORITY
+@Image1 = exact room architecture before work.
+@Image2 = target finished design / colours / materials.
+
+ENVIRONMENT LOCKS
+Preserve room geometry, wall positions, windows, doors, fireplace/chimney placement and floor plan.
+
+SHOT 1 — BEFORE
+Wide or medium-wide shot of unfinished/problem area.
+End state: problem clearly visible.
+
+SHOT 2 — CRAFT
+One believable trade action: plastering, painting, fitting, tiling, installation.
+Describe tool contact and body position.
+End state: one stage of work visibly complete.
+
+SHOT 3 — TRANSFORMATION
+Transition into finished state without changing architecture.
+End state: finishes are complete, tools/debris removed.
+
+FINAL SHOT — FINISHED ROOM
+Slow controlled wide-to-medium push-in or lateral reveal.
+Natural practical lighting, clean room, deliberate final composition.
+End state: polished portfolio-ready finished interior.
+
+CONSTRAINTS
+No changing walls, windows, doors or fireplace geometry. No floating tools. No construction debris in final frame.
+```
+
+---
+
+# Pattern 6 — cinematic human transformation
+
+Never compress a complex transformation into one sentence.
+
+```text
+REFERENCE AUTHORITY
+@Image1 = exact human identity.
+@Image2 = target transformed design.
+
+CONTINUITY LOCKS
+Preserve exact face, body scale and screen position unless the transformation explicitly changes them.
+
+STAGE 1 — BEFORE
+Show clear readable starting state.
+End state: original subject is fully recognizable.
+
+STAGE 2 — INITIATION
+Transformation begins in one specific location on the body/object.
+Describe material emergence and physical attachment.
+End state: a clear partial stage exists.
+
+STAGE 3 — BUILD
+Transformation spreads in a defined direction.
+Keep feet/contact and body movement physically grounded.
+End state: most major components are in place.
+
+STAGE 4 — LOCK-IN
+Moving parts settle mechanically or organically.
+End state: transformation structurally complete.
+
+STAGE 5 — HERO REVEAL
+Change to the strongest final angle only after the transformation is complete.
+End state: stable transformed subject, motion settled, identity still recognizable if required.
+
+CONSTRAINTS
+No duplicate limbs, no second face, no teleporting armour/components, no random wardrobe reappearance.
+```
+
+---
+
+# Pattern 7 — two-person dialogue scene
+
+```text
+REFERENCE AUTHORITY
+@Image1 = Character A identity.
+@Image2 = Character B identity.
+@Image3 = location.
+@Audio1 = Character A voice only if supplied.
+@Audio2 = Character B voice only if supplied.
+
+BLOCKING
+Character A remains camera-left and faces slightly camera-right.
+Character B remains camera-right and faces slightly camera-left.
+Preserve screen direction and eyeline across cuts.
+
+SHOT 1 — ESTABLISH
+Medium two-shot. Both characters visible before speech begins.
+
+SHOT 2 — CHARACTER A
+Medium close-up. Minimal body movement during dialogue.
+Dialogue A: "..."
+End state: Character A finishes line and maintains eyeline to Character B.
+
+SHOT 3 — CHARACTER B
+Reverse medium close-up. Match lighting direction and eye line.
+Dialogue B: "..."
+End state: reaction lands before cut.
+
+AUDIO
+Clean dialogue foreground. Quiet room ambience. Music only when requested.
+
+CONSTRAINTS
+No voice swapping, no overlapping speech unless intentional, no identity drift, no random extras, no aggressive camera movement during spoken lines.
+```
+
+---
+
+# Pattern 8 — one continuous take
 
 ```text
 One uninterrupted shot. No cuts.
 
 Start with [shot size and camera position].
 The subject [observable action].
-Camera [single coherent movement] while maintaining [framing rule].
-As the subject reaches [location/object], [second action] happens naturally without teleportation.
-Camera continues the same motion and ends at [final composition].
+Camera [one coherent movement] while maintaining [framing rule].
+As the subject reaches [location/object], [next physical action] happens naturally without teleportation.
+Camera continues the same movement or smoothly changes speed while preserving spatial orientation.
+Finish at [final composition].
 
-End state: [visible final arrangement].
+END STATE
+[visible arrangement, subject position, object positions, motion settled/moving]
 
-Constraints: no cuts, no resets, no subject duplication, preserve screen direction and spatial continuity.
+CONSTRAINTS
+No cuts, no resets, no subject duplication, preserve screen direction, preserve architecture and object continuity.
 ```
 
-## Pattern 6: Reference-heavy scene
+---
+
+# Pattern 9 — luxury fashion / beauty editorial
+
+```text
+VISUAL INTENT
+Elegant editorial motion built around silhouette, face and material response.
+
+REFERENCE AUTHORITY
+@Image1 = exact face identity.
+@Image2 = exact garment / beauty styling.
+@Image3 = environment / art direction only.
+
+SHOT 1 — SILHOUETTE
+Wide or medium-long shot. Subject enters or turns into light.
+Camera: restrained 50–85mm feel.
+End state: outfit/body silhouette readable.
+
+SHOT 2 — MATERIAL / FACE
+Medium close-up or detail. Fabric, jewellery, skin or hair responds naturally to subtle movement.
+Lighting: large soft source with controlled negative fill.
+End state: key premium detail is readable.
+
+SHOT 3 — EDITORIAL MOTION
+One controlled walk, turn, hair movement or garment movement.
+Camera tracks rather than spins.
+End state: subject returns to stable pose.
+
+FINAL — HERO
+85mm-feel portrait, clean background separation, natural skin texture, minimal movement.
+
+CONSTRAINTS
+No outfit redesign, no plastic skin, no duplicated jewellery, no face drift.
+```
+
+---
+
+# Pattern 10 — automotive cinematic ad
 
 ```text
 REFERENCE AUTHORITY
-Image 1 controls identity only.
-Image 2 controls outfit only.
-Image 3 controls product geometry only.
-Image 4 controls environment only.
-Video 1 controls movement timing and camera pace only.
-Audio 1 controls rhythm only.
+@Image1 = exact vehicle design, body shape, wheels, lights and paint colour.
+@Image2 = location / environment only.
 
-Do not blend identities, wardrobe, product design, or environment properties across references unless explicitly requested.
+VEHICLE LOCKS
+Preserve exact body geometry and wheel design. Tyres remain in physical contact with road. No body morphing.
+
+SHOT 1 — SHAPE REVEAL
+Low detail shot along body line or headlight.
+Slow lateral camera move.
+End state: vehicle identity begins to read.
+
+SHOT 2 — MOTION
+Low side tracking at vehicle speed.
+Stable horizon, realistic wheel rotation and suspension response.
+End state: full side profile is readable.
+
+SHOT 3 — ENVIRONMENT / PERFORMANCE
+Wide 24–35mm-feel shot showing vehicle moving through location.
+No impossible drifting unless requested.
+
+FINAL — HERO
+Vehicle stationary or moving slowly into a clean three-quarter front composition.
+Controlled reflections, realistic contact shadow, subtle atmospheric depth.
+
+CONSTRAINTS
+No warped wheels, no changing badge/body shape, no road clipping, no floating car, no duplicate vehicle unless requested.
 ```
 
-## Camera vocabulary
+---
 
-Use combinations that describe one readable intention.
+# Pattern 11 — futuristic technology reveal
 
-### Reveal
-- slow dolly-in
-- lateral slide from behind foreground object
-- rack focus from foreground detail to subject
-- crane down into medium shot
+```text
+REFERENCE AUTHORITY
+@Image1 = exact device/product design.
+@Image2 = environment style only.
 
-### Energy
-- side tracking at subject speed
-- low-angle backward tracking
-- controlled handheld follow
-- whip pan into a planned cut
+SHOT 1 — IDLE STATE
+Clean close or medium shot. Device inactive and clearly readable.
 
-### Premium product
-- macro slider move
-- slow orbit around stationary object
-- top-down controlled descent
-- close push-in with crisp edge lighting
+SHOT 2 — ACTIVATION
+One physical feature activates: light, mechanism, screen, hinge, module or robotic movement.
+Describe order and contact.
+End state: activation complete.
 
-### Scale
-- wide low-angle shot
-- crane up and away
-- foreground parallax tracking
-- long-lens compression for layered depth
+SHOT 3 — DEMONSTRATION
+Show one feature through a visible result.
 
-## Final-frame rule
+FINAL — HERO
+Stable premium product frame. Cool practicals in environment, neutral key on product, restrained reflections.
 
-Whenever possible, specify a final frame suitable for editing, thumbnail selection, or continuation.
+CONSTRAINTS
+No random floating UI, no product redesign, no excessive neon, no unexplained sparks.
+```
 
-A final frame should define:
-- subject position
-- pose or product state
-- camera distance
-- orientation
-- important prop positions
-- motion state: moving or settled
+---
+
+# Pattern 12 — UGC-style ad
+
+```text
+FORMAT
+9:16, 10–15 seconds, believable smartphone creator aesthetic.
+
+REFERENCE AUTHORITY
+@Image1 = exact creator identity if required.
+@Image2 = exact product.
+
+VISUAL STYLE
+Natural phone-camera perspective, practical room light, slight controlled handheld motion, no studio-commercial perfection.
+
+BEAT 1 — HUMAN HOOK
+Creator shows or reacts to the problem/product immediately.
+
+BEAT 2 — SIMPLE DEMO
+One believable hand interaction showing the use case.
+
+BEAT 3 — RESULT
+Creator reaction or visible outcome.
+
+FINAL
+Product and creator readable together; leave clean area for post caption if needed.
+
+CONSTRAINTS
+No cinematic fog, no excessive dolly movement, no warped hands, no product mutation, keep gestures human and casual.
+```
+
+---
+
+# Reference-heavy scene authority block
+
+Use whenever many assets exist:
+
+```text
+REFERENCE AUTHORITY
+@Image1 controls identity only.
+@Image2 controls outfit only.
+@Image3 controls product geometry only.
+@Image4 controls environment only.
+@Video1 controls movement timing and blocking only.
+@Video2 controls camera pacing only.
+@Audio1 controls rhythm only.
+
+Do not blend identity, wardrobe, product design or environment properties unless explicitly requested.
+```
+
+---
+
+# Final-frame block
+
+Append when a clean final composition matters:
+
+```text
+FINAL FRAME
+Subject/product position:
+Pose/state:
+Camera distance:
+Orientation:
+Important prop positions:
+Background:
+Lighting:
+Negative space:
+Motion state: settled / moving.
+```
+
+---
+
+# Minimal repair block
+
+Use during iteration instead of rewriting the full prompt:
+
+```text
+KEEP
+- [working identity]
+- [working environment]
+- [working lighting]
+- [working shots]
+
+CHANGE ONLY
+- [failed layer]
+
+PATCH
+- [specific observable instruction]
+
+END STATE
+- [visible target]
+```
