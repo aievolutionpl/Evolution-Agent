@@ -1,0 +1,37 @@
+{
+  "name": "seedance-2-5-director",
+  "display_name": "Seedance 2.5 Director",
+  "version": "2.0.0",
+  "publisher": "AI Evolution Labs × AI Evolution Polska",
+  "description": "Agent-native directing system for cinematic AI video, social content and advertising with Seedance 2.5.",
+  "entrypoint": "SKILL.md",
+  "adapters": {
+    "codex_and_agents": "AGENTS.md",
+    "claude": "CLAUDE.md",
+    "generic": "MASTER_PROMPT.md"
+  },
+  "modes": [
+    "text-to-video",
+    "text-to-image-to-video",
+    "image-to-video",
+    "reference-to-video",
+    "storyboard-to-video",
+    "motion-reference",
+    "cinematic",
+    "social-media",
+    "advertising",
+    "product-video",
+    "service-video",
+    "dialogue",
+    "transformation",
+    "failure-repair"
+  ],
+  "principles": [
+    "route-before-prompt",
+    "story-before-camera",
+    "accuracy-before-spectacle",
+    "cause-before-effect",
+    "anti-ai-slop",
+    "designed-final-frame"
+  ]
+}
