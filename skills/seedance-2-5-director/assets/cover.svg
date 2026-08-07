@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#05070b"/>
+      <stop offset="0.55" stop-color="#07131d"/>
+      <stop offset="1" stop-color="#020406"/>
+    </linearGradient>
+    <radialGradient id="glowA" cx="65%" cy="42%" r="45%">
+      <stop offset="0" stop-color="#16bff2" stop-opacity=".20"/>
+      <stop offset="1" stop-color="#16bff2" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowB" cx="25%" cy="75%" r="40%">
+      <stop offset="0" stop-color="#ff8a32" stop-opacity=".14"/>
+      <stop offset="1" stop-color="#ff8a32" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft"><feGaussianBlur stdDeviation="22"/></filter>
+    <filter id="shadow"><feDropShadow dx="0" dy="20" stdDeviation="28" flood-color="#000" flood-opacity=".55"/></filter>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#glowA)"/>
+  <rect width="1600" height="900" fill="url(#glowB)"/>
+  <g opacity=".12" stroke="#8edfff" stroke-width="1">
+    <path d="M0 132H1600M0 260H1600M0 388H1600M0 516H1600M0 644H1600M0 772H1600"/>
+    <path d="M180 0V900M360 0V900M540 0V900M720 0V900M900 0V900M1080 0V900M1260 0V900M1440 0V900"/>
+  </g>
+  <g transform="translate(98 92)">
+    <text x="0" y="0" dominant-baseline="hanging" fill="#d9e5ec" font-family="Inter,Arial,sans-serif" font-size="25" font-weight="700" letter-spacing="4">AI EVOLUTION LABS  ×  AI EVOLUTION POLSKA</text>
+    <text x="0" y="95" dominant-baseline="hanging" fill="#ffffff" font-family="Inter,Arial,sans-serif" font-size="102" font-weight="900" letter-spacing="-3">SEEDANCE 2.5</text>
+    <text x="0" y="202" dominant-baseline="hanging" fill="#20c8ff" font-family="Inter,Arial,sans-serif" font-size="118" font-weight="900" letter-spacing="-4">DIRECTOR</text>
+    <text x="4" y="345" dominant-baseline="hanging" fill="#b8c6cf" font-family="Inter,Arial,sans-serif" font-size="34" font-weight="500">Agent-native prompting system for cinematic AI video, ads and social content.</text>
+    <text x="4" y="410" dominant-baseline="hanging" fill="#ffffff" font-family="Inter,Arial,sans-serif" font-size="31" font-weight="800">DON’T PROMPT. DIRECT.</text>
+    <g transform="translate(0 486)" font-family="Inter,Arial,sans-serif">
+      <g><rect width="205" height="58" rx="29" fill="#0b1720" stroke="#20c8ff" stroke-opacity=".55"/><text x="102" y="37" text-anchor="middle" fill="#dff7ff" font-size="21" font-weight="800">CINEMATIC</text></g>
+      <g transform="translate(222 0)"><rect width="235" height="58" rx="29" fill="#0b1720" stroke="#20c8ff" stroke-opacity=".55"/><text x="117" y="37" text-anchor="middle" fill="#dff7ff" font-size="21" font-weight="800">COMMERCIAL</text></g>
+      <g transform="translate(474 0)"><rect width="240" height="58" rx="29" fill="#0b1720" stroke="#20c8ff" stroke-opacity=".55"/><text x="120" y="37" text-anchor="middle" fill="#dff7ff" font-size="21" font-weight="800">SOCIAL MEDIA</text></g>
+    </g>
+    <g transform="translate(0 590)" font-family="Inter,Arial,sans-serif" font-size="22">
+      <text x="0" y="0" fill="#70ddff" font-weight="800">ROUTE</text><text x="81" y="0" fill="#8399a5">→</text>
+      <text x="119" y="0" fill="#70ddff" font-weight="800">SCRIPT</text><text x="207" y="0" fill="#8399a5">→</text>
+      <text x="245" y="0" fill="#70ddff" font-weight="800">SHOTS</text><text x="331" y="0" fill="#8399a5">→</text>
+      <text x="369" y="0" fill="#70ddff" font-weight="800">CAMERA</text><text x="474" y="0" fill="#8399a5">→</text>
+      <text x="512" y="0" fill="#70ddff" font-weight="800">LIGHT</text><text x="585" y="0" fill="#8399a5">→</text>
+      <text x="623" y="0" fill="#70ddff" font-weight="800">SOUND</text><text x="711" y="0" fill="#8399a5">→</text>
+      <text x="749" y="0" fill="#70ddff" font-weight="800">QA</text>
+    </g>
+  </g>
+  <g transform="translate(1000 160)" filter="url(#shadow)">
+    <rect x="0" y="0" width="458" height="548" rx="32" fill="#081019" stroke="#263b49" stroke-width="2"/>
+    <rect x="36" y="36" width="386" height="260" rx="24" fill="#0a1822" stroke="#1a4052"/>
+    <circle cx="229" cy="166" r="85" fill="none" stroke="#20c8ff" stroke-width="5" opacity=".85"/>
+    <circle cx="229" cy="166" r="51" fill="none" stroke="#ff9c50" stroke-width="3" opacity=".8"/>
+    <path d="M229 86V246M149 166H309" stroke="#a9ebff" stroke-width="2" opacity=".45"/>
+    <circle cx="229" cy="166" r="12" fill="#ffffff"/>
+    <text x="38" y="344" fill="#ffffff" font-family="Inter,Arial,sans-serif" font-size="27" font-weight="800">AGENT DIRECTOR MODE</text>
+    <text x="38" y="392" fill="#93aab7" font-family="Inter,Arial,sans-serif" font-size="21">T2V · I2V · R2V · STORYBOARD</text>
+    <text x="38" y="431" fill="#93aab7" font-family="Inter,Arial,sans-serif" font-size="21">CAMERA · LIGHT · AUDIO · CONTINUITY</text>
+    <rect x="38" y="472" width="170" height="42" rx="21" fill="#113848"/><text x="123" y="499" text-anchor="middle" fill="#6ae0ff" font-family="Inter,Arial,sans-serif" font-size="18" font-weight="800">ANTI-AI SLOP</text>
+    <rect x="224" y="472" width="198" height="42" rx="21" fill="#3a2517"/><text x="323" y="499" text-anchor="middle" fill="#ffb275" font-family="Inter,Arial,sans-serif" font-size="18" font-weight="800">BRAND-SAFE ADS</text>
+  </g>
+  <text x="98" y="840" fill="#657a87" font-family="Inter,Arial,sans-serif" font-size="21">Open agent skill · built for Hermes, Codex, Claude and file-aware AI agents</text>
+</svg>
